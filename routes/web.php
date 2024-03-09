@@ -42,7 +42,7 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::middleware(['Auth'])->group(function() {
+// Route::middleware(['auth'])->group(function() {
     Route::resource('users', UserController::class);
     Route::resource('locations', LocationController::class);
     Route::resource('measurements', UnitMeasurementController::class);
@@ -55,7 +55,7 @@ Route::middleware(['Auth'])->group(function() {
     Route::get('reports/product', [RecieveInventoryController::class, 'monthlyReportProduct'])->name('reports.product');
     Route::get('reports/issue/product', [IssueInventoryController::class, 'monthlyReportProduct'])->name('reports.issue.product');
     Route::get('reports/supplier', [RecieveInventoryController::class, 'monthlyReportSupplier'])->name('reports.supplier');
-});
+// });
 
 
 Route::resource('academic-years', AcademicYearController::class);

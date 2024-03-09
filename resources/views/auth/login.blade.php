@@ -102,6 +102,9 @@
                 <!--Continually expanded and constantly improved Inspinia Admin Them (IN+)-->
             </p>
             <p>Login in. To see it in action.</p>
+            @if($errors->any())
+    {{ implode('', $errors->all('<div>:message</div>')) }}
+@endif
             <form class="m-t" method="POST" role="form" action="{{route('login')}}">
                 @csrf
                 <div class="form-group @error('email') has-error @enderror">

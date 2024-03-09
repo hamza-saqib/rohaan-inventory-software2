@@ -67,7 +67,9 @@ class LoginController extends Controller
             ->back()
             ->withInput($request->only($this->username(), 'remember'))
             ->withErrors(['is_active' => 'Invalid credentials']);
-        } else {
+        }
+
+        if ($this->attemptLogin($request)) {
             if ($request->hasSession()) {
                 $request->session()->put('auth.password_confirmed_at', time());
             }
