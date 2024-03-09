@@ -20,6 +20,7 @@ use App\Http\Controllers\SchoolController;
 use App\Http\Controllers\UnitMeasurementController;
 use App\Http\Controllers\VendorController;
 use App\Http\Controllers\VoucherController;
+use App\Http\Middleware\EnsureUserLogedIn;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -40,9 +41,9 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home')->middleware(EnsureUserLogedIn::class);
 
-// Route::middleware(['auth'])->group(function() {
+Route::middleware(EnsureUserLogedIn::class)->group(function() {
     Route::resource('users', UserController::class);
     Route::resource('locations', LocationController::class);
     Route::resource('measurements', UnitMeasurementController::class);
@@ -55,7 +56,7 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
     Route::get('reports/product', [RecieveInventoryController::class, 'monthlyReportProduct'])->name('reports.product');
     Route::get('reports/issue/product', [IssueInventoryController::class, 'monthlyReportProduct'])->name('reports.issue.product');
     Route::get('reports/supplier', [RecieveInventoryController::class, 'monthlyReportSupplier'])->name('reports.supplier');
-// });
+});
 
 
 Route::resource('academic-years', AcademicYearController::class);

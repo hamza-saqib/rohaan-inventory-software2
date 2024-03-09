@@ -13,10 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        // Schema::create('locations', function (Blueprint $table) {
-        //     $table->id();
-        //     $table->timestamps();
-        // });
+        Schema::table('usrdb', function (Blueprint $table) {
+            $table->string('email')->nullable();
+            $table->string('password')->nullable();
+        });
     }
 
     /**
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('locations');
+        //
     }
 };
