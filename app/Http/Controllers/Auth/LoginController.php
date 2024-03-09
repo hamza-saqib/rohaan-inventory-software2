@@ -51,7 +51,6 @@ class LoginController extends Controller
     public function login(Request $request)
     {
         $this->validateLogin($request);
-
         // If the class is using the ThrottlesLogins trait, we can automatically throttle
         // the login attempts for this application. We'll key this by the username and
         // the IP address of the client making these requests into this application.
@@ -62,15 +61,13 @@ class LoginController extends Controller
             return $this->sendLockoutResponse($request);
         }
 
-        $user = User::where('email', $request->input('email'))->where('is_active', true)->get()->first();
+        $user = User::where($this->username(), $request->input('email'))->get()->first();
         if(is_null($user)){
             return redirect()
             ->back()
             ->withInput($request->only($this->username(), 'remember'))
-            ->withErrors(['is_active' => 'You must be active to login, contact support.']);
-        }
-
-        if ($this->attemptLogin($request)) {
+            ->withErrors(['is_active' => 'Invalid credentials']);
+        } else {
             if ($request->hasSession()) {
                 $request->session()->put('auth.password_confirmed_at', time());
             }
@@ -84,5 +81,28 @@ class LoginController extends Controller
         $this->incrementLoginAttempts($request);
 
         return $this->sendFailedLoginResponse($request);
+    }
+
+     /**
+     * Get the login username to be used by the controller.
+     *
+     * @return string
+     */
+    public function username()
+    {
+        return 'usid';
+    }
+
+    protected function validateLogin(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|string',
+            'password' => 'required|string',
+        ]);
+    }
+
+    protected function credentials(Request $request)
+    {
+        return $request->only($this->username(), 'paswrd');
     }
 }

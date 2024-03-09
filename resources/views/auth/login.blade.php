@@ -105,7 +105,7 @@
             <form class="m-t" method="POST" role="form" action="{{route('login')}}">
                 @csrf
                 <div class="form-group @error('email') has-error @enderror">
-                    <input id="email" name="email" type="email" class="form-control" placeholder="Email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+                    <input id="email" name="email" type="text" class="form-control" placeholder="Username" value="{{ old('email') }}" required autocomplete="email" autofocus>
 
                 </div>
                 <div class="form-group @error('email') has-error @enderror @error('password') has-error @enderror @error('is_active') has-error @enderror">
