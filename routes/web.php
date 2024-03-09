@@ -53,9 +53,9 @@ Route::middleware(EnsureUserLogedIn::class)->group(function() {
     Route::resource('grn', GRNController::class);
     Route::resource('issue-inventories', IssueInventoryController::class);
     Route::resource('recieve-inventories', RecieveInventoryController::class);
-    Route::get('reports/product', [RecieveInventoryController::class, 'monthlyReportProduct'])->name('reports.product');
+    Route::get('reports/receipt/product', [RecieveInventoryController::class, 'monthlyReportProduct'])->name('reports.product');
     Route::get('reports/issue/product', [IssueInventoryController::class, 'monthlyReportProduct'])->name('reports.issue.product');
-    Route::get('reports/supplier', [RecieveInventoryController::class, 'monthlyReportSupplier'])->name('reports.supplier');
+    Route::get('reports/receipt/supplier', [RecieveInventoryController::class, 'monthlyReportSupplier'])->name('reports.supplier');
 });
 
 

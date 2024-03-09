@@ -132,7 +132,7 @@
                 </ul>
             </li>
 
-            <li class="@if (request()->is('issue-inventories*')) {{ 'active' }} @else {{ '' }} @endif">
+            <li class="@if (request()->is('issue-inventories*') || request()->is('reports/iss*')) {{ 'active' }} @else {{ '' }} @endif">
                 <a href="{{ route('issue-inventories.index') }}">
                     <i class="fa fa-arrow-up"></i>
                     <span class="nav-label">Issue Inventory</span>
@@ -144,7 +144,7 @@
                     <li><a href="{{ route('reports.issue.product') }}">Item Monthly Report</a></li>
                 </ul>
             </li>
-            <li class="@if (request()->is('recieve-inventories*') || request()->is('reports*')) {{ 'active' }} @else {{ '' }} @endif">
+            <li class="@if (request()->is('recieve-inventories*') || request()->is('reports/rec*')) {{ 'active' }} @else {{ '' }} @endif">
                 <a href="{{ route('recieve-inventories.index') }}">
                     <i class="fa fa-arrow-down"></i>
                     <span class="nav-label">Inventory Receipt</span>
