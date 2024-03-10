@@ -38,7 +38,7 @@
             </div> --}}
             <h1>Forms</h1>
             <div class="row">
-                <a href="{{ route('students.create') }}">
+                <a href="{{ route('issue-inventories.create') }}">
                     <div class="col-lg-3">
                         <div class="widget style1 navy-bg">
                             <div class="row">
@@ -51,19 +51,19 @@
                     </div>
                 </a>
 
-                <a href="{{ route('teachers.create') }}">
+                <a href="{{ route('recieve-inventories.create') }}">
                     <div class="col-lg-3">
                         <div class="widget style1 navy-bg">
                             <div class="row">
                                 <div class="col-xs-12 text-left">
                                     <span> Create New</span>
-                                    <h2 class="font-bold">Issue Reciept</h2>
+                                    <h2 class="font-bold">Inventory Reciept</h2>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </a>
-                <a href="{{ route('teachers.create') }}">
+                <a href="{{ route('vendors.create') }}">
                     <div class="col-lg-3">
                         <div class="widget style1 navy-bg">
                             <div class="row">
@@ -76,7 +76,7 @@
                     </div>
                 </a>
 
-                <a href="{{ route('teachers.create') }}">
+                <a href="{{ route('products.create') }}">
                     <div class="col-lg-3">
                         <div class="widget style1 navy-bg">
                             <div class="row">
@@ -93,37 +93,49 @@
             </div>
             <h1>Reports</h1>
             <div class="row">
-                <a href="{{ route('students.create') }}">
+                <a href="{{ route('reports.issue.product') }}">
                     <div class="col-lg-3">
                         <div class="widget style1 red-bg">
                             <div class="row">
                                 <div class="col-xs-12 text-left">
-                                    <span>Inventory Reciept</span>
-                                    <h2 class="font-bold">Item Monthy</h2>
+                                    <span>Monthly</span>
+                                    <h2>Issue Item Report</h2>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </a>
-                <a href="{{ route('students.create') }}">
+                <a href="{{ route('reports.product') }}">
                     <div class="col-lg-3">
                         <div class="widget style1 red-bg">
                             <div class="row">
                                 <div class="col-xs-12 text-left">
-                                    <span>Inventory Reciept</span>
-                                    <h2 class="font-bold">Suplier Monthly</h2>
+                                    <span>Monthly</span>
+                                    <h2>Reciept Item Report</h2>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </a>
-                <a href="{{ route('students.create') }}">
+                <a href="{{ route('reports.supplier') }}">
                     <div class="col-lg-3">
                         <div class="widget style1 red-bg">
                             <div class="row">
                                 <div class="col-xs-12 text-left">
-                                    <span>Issue Inventory</span>
-                                    <h2 class="font-bold">Item Monthly</h2>
+                                    <span>Monthly</span>
+                                    <h2>Reciept Supplier Report</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                <a href="{{ route('reports.products.ledger') }}">
+                    <div class="col-lg-3">
+                        <div class="widget style1 red-bg">
+                            <div class="row">
+                                <div class="col-xs-12 text-left">
+                                    <span>By Product</span>
+                                    <h2>Item Ledger Report</h2>
                                 </div>
                             </div>
                         </div>

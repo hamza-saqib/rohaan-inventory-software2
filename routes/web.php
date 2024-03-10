@@ -56,6 +56,9 @@ Route::middleware(EnsureUserLogedIn::class)->group(function() {
     Route::get('reports/receipt/product', [RecieveInventoryController::class, 'monthlyReportProduct'])->name('reports.product');
     Route::get('reports/issue/product', [IssueInventoryController::class, 'monthlyReportProduct'])->name('reports.issue.product');
     Route::get('reports/receipt/supplier', [RecieveInventoryController::class, 'monthlyReportSupplier'])->name('reports.supplier');
+    Route::get('reports/products/ledger', [ProductController::class, 'ledger'])->name('reports.products.ledger');
+    Route::get('reports/issue/voucher/{isno}', [IssueInventoryController::class, 'voucher'])->name('issue-inventories.voucher');
+    Route::get('reports/issue/voucher-pdf/{isno}', [IssueInventoryController::class, 'voucherPrint'])->name('issue-inventories.voucher.print');
 });
 
 

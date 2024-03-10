@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title-meta')
-    <title>{{ config('app.name') }} | Inventory Issue List</title>
+    <title>{{ config('app.name') }} | Item Ledger Report</title>
 
     <meta name="description" content="this is description">
 @endsection
@@ -20,29 +20,45 @@
 
         <div class="row wrapper border-bottom white-bg page-heading">
             <div class="col-sm-4">
-                <h2>Inventory Issue Management</h2>
+                <h2>Item Ledger Report</h2>
                 <ol class="breadcrumb">
                     <li>
-                        <a href="#">Issue Inventory</a>
+                        <a href="#">Item</a>
                     </li>
                     <li class="active">
-                        <strong>List</strong>
+                        <strong>Report</strong>
                     </li>
                 </ol>
             </div>
-            <div class="col-sm-8">
-                <div class="title-action">
-                    <a href="{{ route('issue-inventories.create') }}" class="btn btn-primary">+ Create New</a>
-                </div>
-            </div>
+
         </div>
 
         <div class="wrapper wrapper-content animated fadeInRight">
             <div class="row">
                 <div class="ibox-content m-b-sm border-bottom">
                     <div class="row">
-                        <form action="{{ route('issue-inventories.index') }}" method="GET">
+                        <form action="{{ route('reports.products.ledger') }}" method="GET">
                             @csrf
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <label class="control-label" for="date_modified">Item</label>
+                                    <div class="input-group date">
+                                        <select class="form-control" name="product_code" required>
+                                            <option selected disabled>Select</option>
+                                            @foreach ($products as $product)
+                                                @if (old('product_code') == $product->code)
+                                                    <option selected value="{{ $product->code }}">
+                                                        {{ $product->code . ' - ' . $product->name1 }}
+                                                    </option>
+                                                @else
+                                                    <option value="{{ $product->code }}">
+                                                        {{ $product->code . ' - ' . $product->name1 }}</option>
+                                                @endif
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="col-sm-3">
                                 <div class="form-group">
                                     <label class="control-label" for="date_added">Start Date</label>
@@ -63,30 +79,13 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-3">
-                                <div class="form-group">
-                                    <label class="control-label" for="date_modified">Item</label>
-                                    <div class="input-group date">
-                                        <select class="form-control" name="product_code" >
-                                            <option selected disabled>Select</option>
-                                            @foreach ($products as $product)
-                                                @if (old('product_code') == $product->code)
-                                                    <option selected value="{{ $product->code }}">{{ $product->code . ' - ' . $product->name1 }}
-                                                    </option>
-                                                @else
-                                                    <option value="{{ $product->code }}">{{ $product->code . ' - ' . $product->name1 }}</option>
-                                                @endif
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
+
 
                             <div class="col-sm-2">
                                 <div class="form-group">
                                     <label class="control-label" for="amount">_____________</label>
                                     <div class="input-group date">
-                                        <button class="btn btn-primary" type="submit">Search</button>
+                                        <button class="btn btn-primary" type="submit">Generate</button>
                                     </div>
 
                                 </div>
@@ -99,7 +98,7 @@
                 <div class="col-lg-12">
                     <div class="ibox float-e-margins">
                         <div class="ibox-title">
-                            <h5>List of Inventory Issue.</h5>
+                            <h5>List of Item.</h5>
                             <div class="ibox-tools">
                                 <a class="collapse-link">
                                     <i class="fa fa-chevron-up"></i>
@@ -107,7 +106,7 @@
                                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                                     <i class="fa fa-wrench"></i>
                                 </a>
-                                <ul class="dropdown-menu dropdown-user">
+                                <ul class="dropdown-menu dropdown-product">
                                     <li><a href="#">Config option 1</a>
                                     </li>
                                     <li><a href="#">Config option 2</a>
@@ -124,55 +123,66 @@
                                 <table class="table table-striped table-bordered table-hover dataTables-example">
                                     <thead>
                                         <tr>
-                                            <th>Issue No.</th>
-                                            <th>Issue Date</th>
-                                            <th>Location</th>
-                                            <th>Item</th>
+                                            <th></th>
+                                            <th></th>
+                                            <th colspan="4" style="text-align: center">Recieved</th>
+                                            <th colspan="4" style="text-align: center">Issued</th>
+                                            <th></th>
+                                            <th></th>
+                                        </tr>
+                                        <tr>
+                                            <th>Code</th>
+                                            <th>Description</th>
+                                            <th>GRN</th>
                                             <th>Qty</th>
                                             <th>Rate</th>
-                                            <th>Remarks</th>
-                                            <th>Action</th>
+                                            <th>Amount</th>
+                                            <th>Issue No.</th>
+                                            <th>Qty</th>
+                                            <th>Rate</th>
+                                            <th>Amount</th>
+                                            <th>Balance</th>
+                                            <th>Date</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($inventories as $inventory)
-                                            <tr class="gradeX" id="row-{{ $inventory->sc }}">
-                                                <td>{{ $inventory->isno }}</td>
-                                                <td>{{ date('d/m/Y', strtotime($inventory->isdt)) }}</td>
-                                                <td>{{ $inventory->dpt }}</td>
-                                                <td>{{ $inventory->product }}</td>
-                                                <td>{{ $inventory->Qty }}</td>
-                                                <td>{{ $inventory->Irate }}</td>
-                                                <td>{{ $inventory->remarks }}</td>
+                                        @foreach ($records as $record)
+                                            <tr class="gradeX" id="row-{{ $record['code'] }}">
+                                                <td>{{ $record['code'] }}</td>
+                                                <td>{{ $record['product'] }}</td>
+                                                <td>{{ $record['grn'] ?? '' }}</td>
+                                                <td>{{ $record['qtyOut'] ?? '' }}</td>
+                                                <td>{{ $record['rateOut'] ?? '' }}</td>
+                                                <td>{{ $record['valueOut'] ?? '' }}</td>
+                                                <td>{{ $record['code'] ?? '' }}</td>
+                                                <td>{{ $record['qtyIn'] ?? '' }}</td>
+                                                <td>{{ $record['rateIn'] ?? '' }}</td>
+                                                <td>{{ $record['valueIn'] ?? '' }}</td>
+                                                <td>{{ $record['balance'] }}</td>
+                                                <td>{{ date('d/m/Y', strtotime($record['date'])) }}</td>
                                                 </td>
-                                                <td class="text-center">
-                                                    <div class="btn-group">
 
-                                                        <a href="{{ route('issue-inventories.edit', $inventory) }}"
-                                                            class="btn-white btn btn-xs">Edit</a>
-                                                        <a href="{{ route('issue-inventories.voucher', $inventory->isno) }}"
-                                                            class="btn-white btn btn-xs">Voucher</a>
-                                                        <button onclick="deleteRecord({{ $inventory->sc }})"
-                                                            class="btn-white btn btn-xs">Delete</button>
-                                                    </div>
-                                                </td>
                                             </tr>
                                         @endforeach
 
                                     </tbody>
                                     <tfoot>
-                                        {{-- <tr>
+                                        <tr>
                                             <th></th>
                                             <th></th>
                                             <th></th>
+                                            <th>{{ $sum['totalQtyOut'] ?? '' }}</th>
+                                            <th></th>
+                                            <th>{{ $sum['totalValueOut'] ?? '' }}</th>
+                                            <th></th>
+                                            <th>{{ $sum['totalQtyIn'] ?? '' }}</th>
+                                            <th></th>
+                                            <th>{{ $sum['totalValueIn'] ?? '' }}</th>
                                             <th></th>
                                             <th></th>
-                                            <th>{{$sum['totalValue']}}</th>
-                                            <th></th>
-                                        </tr> --}}
+                                        </tr>
                                     </tfoot>
                                 </table>
-                                {{ $inventories->links('vendor.pagination.bootstrap-5') }}
                             </div>
 
                         </div>
@@ -195,50 +205,40 @@
     <script src="{{ asset('assets') }}/js/plugins/dataTables/datatables.min.js"></script>
 
     <script>
-        // $(document).ready(function() {
-        //     $('.dataTables-example').DataTable({
-        //         dom: '<"html5buttons"B>lTfgitp',
-        //         buttons: [
-        //             // {extend: 'copy'},
-        //             // {extend: 'csv'},
-        //             // {extend: 'excel', title: 'ExampleFile'},
-        //             // {extend: 'pdf', title: 'ExampleFile'},
+        var date = new Date().toISOString().slice(0, 10);
+        $(document).ready(function() {
+            $('.dataTables-example').DataTable({
+                dom: '<"html5buttons"B>lTfgitp',
+                buttons: [{
+                        extend: 'pdf',
+                        title: 'CONTINENTAL AIR CONTROL (PVT) LTD.\n ' + 'Item Ledger Report ( ' +
+                            date + ' )',
+                        orientation: 'landscape',
+                        filename: 'Item Ledger Report ( ' + date + ' )',
+                    },
+                    {
+                        extend: 'excel',
+                        title: 'Item Ledger Report ( ' + date + ' )',
+                        filename: 'Item Ledger Report ( ' + date + ' )',
+                    },
+                    // {extend: 'excel', title: 'ExampleFile'},
+                    // {extend: 'pdf', title: 'ExampleFile'},
 
-        //             // {extend: 'print',
-        //             //  customize: function (win){
-        //             //         $(win.document.body).addClass('white-bg');
-        //             //         $(win.document.body).css('font-size', '10px');
+                    // {extend: 'print',
+                    //  customize: function (win){
+                    //         $(win.document.body).addClass('white-bg');
+                    //         $(win.document.body).css('font-size', '10px');
 
-        //             //         $(win.document.body).find('table')
-        //             //                 .addClass('compact')
-        //             //                 .css('font-size', 'inherit');
-        //             // }
-        //             // }
-        //         ],
-        //         processing: true,
-        //         serverSide: true,
-        //         ajax: "{{ route('recieve-inventories.index') }}",
-        //         columns: [{
-        //                 data: 'sc',
-        //                 name: 'id'
-        //             },
-        //             {
-        //                 data: 'ic',
-        //                 name: 'name'
-        //             },
-        //             {
-        //                 data: 'rat',
-        //                 name: 'email'
-        //             },
-        //             {
-        //                 data: 'rat',
-        //                 name: 'email'
-        //             },
-        //         ]
+                    //         $(win.document.body).find('table')
+                    //                 .addClass('compact')
+                    //                 .css('font-size', 'inherit');
+                    // }
+                    // }
+                ]
 
-        //     });
+            });
 
-        // });
+        });
 
         function deleteRecord(id) {
             swal({
@@ -255,7 +255,7 @@
                     data: {
                         "_token": "{{ csrf_token() }}"
                     },
-                    url: "{{ route('issue-inventories.destroy', '') }}/" + id,
+                    url: "{{ route('products.destroy', '') }}/" + id,
                     success: function(response) {
                         console.log(response);
                         if (response.success) {

@@ -104,6 +104,27 @@ class IssueInventoryController extends Controller
         $products = Product::all();
         return view('pages.issue-inventories.create', compact('products', 'locations', 'currentCode'));
     }
+    public function voucher($isno)
+    {
+        $inventories = IssueInventory::
+        select(
+            'oldissue.*',
+            'icitem.name1 as product',
+        )
+        ->where('isno', $isno)
+        ->leftJoin('icitem', 'icitem.code', '=', 'oldissue.ic')
+        ->get();
+        $qty = 0;
+        $totalValue = 0;
+        foreach ($inventories as $key => $value) {
+            $qty += intval($value->Qty);
+            $totalValue += $value->Qty * $value->Irate;
+        }
+        $issueNo = $inventories[0]->isno;
+        $date = $inventories[0]->isdt;
+        return view('pages.issue-inventories.voucher-show', compact('inventories', 'date', 'issueNo', 'qty', 'totalValue'));
+    }
+
 
     /**
      * Store a newly created resource in storage.

@@ -104,6 +104,7 @@
                 <ul class="nav nav-second-level collapse">
                     <li><a href="{{ route('products.create') }}">Create</a></li>
                     <li><a href="{{ route('products.index') }}">List / Report</a></li>
+                    <li><a href="{{ route('reports.products.ledger') }}">Item Ledger Report</a></li>
                     <li><a href="{{ route('product-categories.index') }}">Categories</a></li>
 
                 </ul>
@@ -120,7 +121,7 @@
                 </ul>
             </li> --}}
 
-            <li class="@if (request()->is('grn/*')) {{ 'active' }} @else {{ '' }} @endif">
+            {{-- <li class="@if (request()->is('grn/*')) {{ 'active' }} @else {{ '' }} @endif">
                 <a href="{{ route('grn.index') }}">
                     <i class="fa fa-asterisk"></i>
                     <span class="nav-label">GRN</span>
@@ -130,7 +131,7 @@
                     <li><a href="{{ route('grn.create') }}">Change GRN</a></li>
                     <li><a href="{{ route('grn.index') }}">List / Report</a></li>
                 </ul>
-            </li>
+            </li> --}}
 
             <li class="@if (request()->is('issue-inventories*') || request()->is('reports/iss*')) {{ 'active' }} @else {{ '' }} @endif">
                 <a href="{{ route('issue-inventories.index') }}">

@@ -4412,13 +4412,19 @@ body.mini-navbar.fixed-sidebar .logo-element {
 .invoice-table tbody > tr > td:last-child,
 .invoice-table tbody > tr > td:nth-child(4),
 .invoice-table tbody > tr > td:nth-child(3),
-.invoice-table tbody > tr > td:nth-child(2) {
+.invoice-table tbody > tr > td:nth-child(3) {
   text-align: right;
 }
 .invoice-table thead > tr > th:last-child,
 .invoice-table thead > tr > th:nth-child(4),
 .invoice-table thead > tr > th:nth-child(3),
-.invoice-table thead > tr > th:nth-child(2) {
+.invoice-table thead > tr > th:nth-child(3) {
+  text-align: right;
+}
+.invoice-table tfoot > tr > th:last-child,
+.invoice-table tfoot > tr > th:nth-child(4),
+.invoice-table tfoot > tr > th:nth-child(3),
+.invoice-table tfoot > tr > th:nth-child(3) {
   text-align: right;
 }
 .invoice-total > tbody > tr > td:first-child {
