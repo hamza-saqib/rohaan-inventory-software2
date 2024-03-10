@@ -147,9 +147,9 @@
                                                 <td class="text-center">
                                                     <div class="btn-group">
 
-                                                        <a href="{{ route('issue-inventories.edit', $user) }}"
+                                                        <a href="{{ route('issue-inventories.edit', $inventory) }}"
                                                             class="btn-white btn btn-xs">Edit</a>
-                                                        <button onclick="deleteRecord({{ $user->id }})"
+                                                        <button onclick="deleteRecord({{ $inventory->sc }})"
                                                             class="btn-white btn btn-xs">Delete</button>
                                                     </div>
                                                 </td>

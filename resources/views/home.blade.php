@@ -10,108 +10,125 @@
 @endsection
 
 @section('content')
-
     <div id="page-wrapper" class="gray-bg dashbard-1">
         <div class="row border-bottom">
             @include('partials.header')
         </div>
         <div class="wrapper wrapper-content">
-            <div class="row">
+            {{-- <div class="row">
 
 
                 <div class="col-lg-3">
                     <div class="ibox float-e-margins">
                         <div class="ibox-title">
-                            {{-- <span class="label label-primary pull-right">Today</span> --}}
+                            <span class="label label-primary pull-right">Today</span>
                             <h5>Total Users</h5>
                         </div>
                         <div class="ibox-content">
-                            <a href="{{route('users.index')}}">
-                                <h1 class="no-margins">{{$totalUsers}}</h1>
-                                {{-- <div class="stat-percent font-bold text-navy">44% <i class="fa fa-level-up"></i></div> --}}
+                            <a href="{{ route('users.index') }}">
+                                <h1 class="no-margins">{{ $totalUsers }}</h1>
+                                <div class="stat-percent font-bold text-navy">44% <i class="fa fa-level-up"></i></div>
                                 <small>Total # of website users</small>
                             </a>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-3">
-                    <div class="ibox float-e-margins">
-                        <div class="ibox-title">
-                            {{-- <span class="label label-primary pull-right">Today</span> --}}
-                            <h5>Total Students</h5>
-                        </div>
-                        <div class="ibox-content">
-                            <a href="{{route('students.index')}}">
-                                <h1 class="no-margins">{{$totalStudents}}</h1>
-                                {{-- <div class="stat-percent font-bold text-navy">44% <i class="fa fa-level-up"></i></div> --}}
-                                <small>Total # of students</small>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-3">
-                    <div class="ibox float-e-margins">
-                        <div class="ibox-title">
-                            {{-- <span class="label label-primary pull-right">Today</span> --}}
-                            <h5>Total Teachers</h5>
-                        </div>
-                        <div class="ibox-content">
-                            <a href="{{route('teachers.index')}}">
-                                <h1 class="no-margins">{{$totalTeachers}}</h1>
-                                {{-- <div class="stat-percent font-bold text-navy">44% <i class="fa fa-level-up"></i></div> --}}
-                                <small>Total # of teachers</small>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-3">
-                    <div class="ibox float-e-margins">
-                        <div class="ibox-title">
-                            {{-- <span class="label label-primary pull-right">Today</span> --}}
-                            <h5>Total Classes</h5>
-                        </div>
-                        <div class="ibox-content">
-                            <a href="{{route('classes.index')}}">
-                                <h1 class="no-margins">{{$totalClasses}}</h1>
-                                {{-- <div class="stat-percent font-bold text-navy">44% <i class="fa fa-level-up"></i></div> --}}
-                                <small>Total # of classes</small>
-                            </a>
-                        </div>
-                    </div>
-                </div>
 
 
-                <a href="{{route('students.create')}}">
-                <div class="col-lg-3">
-                    <div class="widget style1 navy-bg">
-                        <div class="row">
-                            <div class="col-xs-8 text-left">
-                                <span> Create New</span>
-                                <h2 class="font-bold">Student</h2>
+            </div> --}}
+            <h1>Forms</h1>
+            <div class="row">
+                <a href="{{ route('students.create') }}">
+                    <div class="col-lg-3">
+                        <div class="widget style1 navy-bg">
+                            <div class="row">
+                                <div class="col-xs-12 text-left">
+                                    <span> Create New</span>
+                                    <h2 class="font-bold">Issue Inventory</h2>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
                 </a>
 
-                <a href="{{route('teachers.create')}}">
-                <div class="col-lg-3">
-                    <div class="widget style1 navy-bg">
-                        <div class="row">
-                            <div class="col-xs-8 text-left">
-                                <span> Create New</span>
-                                <h2 class="font-bold">Teacher</h2>
+                <a href="{{ route('teachers.create') }}">
+                    <div class="col-lg-3">
+                        <div class="widget style1 navy-bg">
+                            <div class="row">
+                                <div class="col-xs-12 text-left">
+                                    <span> Create New</span>
+                                    <h2 class="font-bold">Issue Reciept</h2>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </a>
+                <a href="{{ route('teachers.create') }}">
+                    <div class="col-lg-3">
+                        <div class="widget style1 navy-bg">
+                            <div class="row">
+                                <div class="col-xs-12 text-left">
+                                    <span> Create New</span>
+                                    <h2 class="font-bold">Suplier</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="{{ route('teachers.create') }}">
+                    <div class="col-lg-3">
+                        <div class="widget style1 navy-bg">
+                            <div class="row">
+                                <div class="col-xs-12 text-left">
+                                    <span> Create New</span>
+                                    <h2 class="font-bold">Item</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </a>
 
 
-
-
+            </div>
+            <h1>Reports</h1>
+            <div class="row">
+                <a href="{{ route('students.create') }}">
+                    <div class="col-lg-3">
+                        <div class="widget style1 red-bg">
+                            <div class="row">
+                                <div class="col-xs-12 text-left">
+                                    <span>Inventory Reciept</span>
+                                    <h2 class="font-bold">Item Monthy</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                <a href="{{ route('students.create') }}">
+                    <div class="col-lg-3">
+                        <div class="widget style1 red-bg">
+                            <div class="row">
+                                <div class="col-xs-12 text-left">
+                                    <span>Inventory Reciept</span>
+                                    <h2 class="font-bold">Suplier Monthly</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                <a href="{{ route('students.create') }}">
+                    <div class="col-lg-3">
+                        <div class="widget style1 red-bg">
+                            <div class="row">
+                                <div class="col-xs-12 text-left">
+                                    <span>Issue Inventory</span>
+                                    <h2 class="font-bold">Item Monthly</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
             </div>
             {{-- <div class="row">
                 @if ($paymentIn > $paymentOut)
@@ -640,7 +657,6 @@
 
 
     </div> --}}
-
 @endsection
 
 

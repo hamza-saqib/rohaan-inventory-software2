@@ -241,14 +241,24 @@
     <script src="{{ asset('assets') }}/js/plugins/dataTables/datatables.min.js"></script>
 
     <script>
+        var date = new Date().toISOString().slice(0,10);
         $(document).ready(function() {
             $('.dataTables-example').DataTable({
                 dom: '<"html5buttons"B>lTfgitp',
                 paging: false,
                 searching: false,
                 buttons: [
-                    {extend: 'pdf', title: @json($report) + ' Report Month Wise', orientation: 'landscape'},
-                    {extend: 'excel', title: @json($report) + ' Report Month Wise'}
+                    {
+                        extend: 'pdf',
+                        title: 'CONTINENTAL AIR CONTROL (PVT) LTD.\n ' + @json($report) + ' Monthly Report ( ' + date + ' )' ,
+                        orientation: 'landscape',
+                        filename: @json($report) + ' Monthly Report ( ' + date + ' )',
+                    },
+                    {
+                        extend: 'excel',
+                        title: @json($report) + ' Monthly Report ( ' + date + ' )',
+                        filename: @json($report) + ' Monthly Report ( ' + date + ' )',
+                    }
 
                 ]
 
