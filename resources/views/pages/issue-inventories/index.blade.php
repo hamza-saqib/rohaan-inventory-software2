@@ -82,11 +82,20 @@
                                 </div>
                             </div>
 
+                            <div class="col-sm-1">
+                                <div class="form-group">
+                                    <label class="control-label" for="amount">_____________</label>
+                                    <div class="input-group date">
+                                        <button class="btn btn-primary" type="submit" value="search" name="button">Search</button>
+                                    </div>
+
+                                </div>
+                            </div>
                             <div class="col-sm-2">
                                 <div class="form-group">
                                     <label class="control-label" for="amount">_____________</label>
                                     <div class="input-group date">
-                                        <button class="btn btn-primary" type="submit">Search</button>
+                                        <button class="btn btn-warning" type="submit" name='button' value="export">Export</button>
                                     </div>
 
                                 </div>
@@ -136,7 +145,7 @@
                                     </thead>
                                     <tbody>
                                         @foreach ($inventories as $inventory)
-                                            <tr class="gradeX" id="row-{{ $inventory->sc }}">
+                                            <tr class="gradeX" id="row-{{ $inventory->id_col }}">
                                                 <td>{{ $inventory->isno }}</td>
                                                 <td>{{ date('d/m/Y', strtotime($inventory->isdt)) }}</td>
                                                 <td>{{ $inventory->dpt }}</td>
@@ -148,7 +157,7 @@
                                                 <td class="text-center">
                                                     <div class="btn-group">
 
-                                                        <a href="{{ route('issue-inventories.edit', $inventory) }}"
+                                                        <a href="{{ route('issue-inventories.edit', $inventory->id_col) }}"
                                                             class="btn-white btn btn-xs">Edit</a>
                                                         <a href="{{ route('issue-inventories.voucher', $inventory->isno) }}"
                                                             class="btn-white btn btn-xs">Voucher</a>

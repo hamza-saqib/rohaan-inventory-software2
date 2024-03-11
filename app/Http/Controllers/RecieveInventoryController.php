@@ -8,12 +8,9 @@ use App\Models\Vendor;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Validation\Rule;
-use PHPUnit\Framework\Constraint\Count;
-use Yajra\DataTables\DataTables;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\RecieveInventoryExport;
 
-use function PHPSTORM_META\type;
 
 class RecieveInventoryController extends Controller
 {
@@ -35,6 +32,11 @@ class RecieveInventoryController extends Controller
      */
     public function index(Request $request)
     {
+        if ($request->filled('button') && ($request->input('button') == 'export')) {
+            return Excel::download(new RecieveInventoryExport([
+                'startDate' => $request->start_date, 'endDate' => $request->end_date, 'productCode' => $request->product_code, 'vendorCode' => $request->vendor_code
+            ]), 'reciept inventory data.xls', \Maatwebsite\Excel\Excel::XLS);
+        }
         $products = Product::all();
         $vendors = Vendor::all();
         $query = RecieveInventory::select('invrec.*', 'icitem.name1 as product', 'supplierrec.name1 as supplier')
@@ -71,17 +73,22 @@ class RecieveInventoryController extends Controller
     }
     public function monthlyReportProduct(Request $request)
     {
-        $date = Carbon::createFromDate(intval($request->year), 1, 1);
         $records = [];
         $years = $this->years;
         $report = 'Item';
         $dropDownData = Product::select('code', 'name1')->get();
-        // return $request->filled('year');
+
         if ($request->filled('year')) {
-            $date = Carbon::createFromDate(intval($request->year), 1, 1);
-            $records = Product::when(($request->code != 'All'), function ($query) use ($request) {
+            $fiscalStartDate = Carbon::createFromDate(intval($request->year), 1, 1)->subMonths(6)->startOfMonth();
+            $fiscalEndDate = Carbon::createFromDate(intval($request->year), 1, 1)->addMonths(5)->endOfMonth();
+            $productCodes = RecieveInventory::select('ic')
+                ->where('vd', '>=', $fiscalStartDate)->where('vd', '<=', $fiscalEndDate)
+                ->groupBy('ic')->get()->pluck('ic');
+
+            $records = Product::whereIn('code', $productCodes)->when(($request->code != 'All'), function ($query) use ($request) {
                 return $query->where('code', '=', $request->code);
             })->get();
+
             foreach ($records as $key => $record) {
                 // return $record->code;
                 $record['jul']  = RecieveInventory::where('ic', $record->code)->where('vd', '>=', Carbon::createFromDate(intval($request->year), 1, 1)->subMonths(6)->startOfMonth())->where('vd', '<=', Carbon::createFromDate(intval($request->year), 1, 1)->subMonths(6)->endOfMonth())->sum(DB::raw('nv'));
@@ -110,7 +117,12 @@ class RecieveInventoryController extends Controller
         $report = 'Supplier';
         $dropDownData = Vendor::select('code', 'name1')->get();
         if ($request->filled('year')) {
-            $records = Vendor::when(($request->code != 'All'), function ($query) use ($request) {
+            $fiscalStartDate = Carbon::createFromDate(intval($request->year), 1, 1)->subMonths(6)->startOfMonth();
+            $fiscalEndDate = Carbon::createFromDate(intval($request->year), 1, 1)->addMonths(5)->endOfMonth();
+            $supplierCodes = RecieveInventory::select('sc')
+                ->where('vd', '>=', $fiscalStartDate)->where('vd', '<=', $fiscalEndDate)
+                ->groupBy('sc')->get()->pluck('sc');
+            $records = Vendor::whereIn('code', $supplierCodes)->when(($request->code != 'All'), function ($query) use ($request) {
                 return $query->where('code', '=', $request->code);
             })->get();
             foreach ($records as $key => $record) {

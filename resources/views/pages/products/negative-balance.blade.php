@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title-meta')
-    <title>{{ config('app.name') }} | Units List</title>
+    <title>{{ config('app.name') }} | Item with Negative Qty List</title>
 
     <meta name="description" content="this is description">
 @endsection
@@ -20,21 +20,21 @@
 
         <div class="row wrapper border-bottom white-bg page-heading">
             <div class="col-sm-4">
-                <h2>Units Management</h2>
+                <h2>Item with Negative Qty</h2>
                 <ol class="breadcrumb">
                     <li>
-                        <a href="#">Unit</a>
+                        <a href="#">Item</a>
                     </li>
                     <li class="active">
                         <strong>List</strong>
                     </li>
                 </ol>
             </div>
-            <div class="col-sm-8">
+            {{-- <div class="col-sm-8">
                 <div class="title-action">
-                    <a href="{{ route('measurements.create') }}" class="btn btn-primary">+ Create New</a>
+                    <a href="{{ route('products.create') }}" class="btn btn-primary">+ Create New</a>
                 </div>
-            </div>
+            </div> --}}
         </div>
 
         <div class="wrapper wrapper-content animated fadeInRight">
@@ -42,7 +42,7 @@
                 <div class="col-lg-12">
                     <div class="ibox float-e-margins">
                         <div class="ibox-title">
-                            <h5>List of Units.</h5>
+                            <h5>List of Item.</h5>
                             <div class="ibox-tools">
                                 <a class="collapse-link">
                                     <i class="fa fa-chevron-up"></i>
@@ -50,7 +50,7 @@
                                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                                     <i class="fa fa-wrench"></i>
                                 </a>
-                                <ul class="dropdown-menu dropdown-user">
+                                <ul class="dropdown-menu dropdown-product">
                                     <li><a href="#">Config option 1</a>
                                     </li>
                                     <li><a href="#">Config option 2</a>
@@ -67,46 +67,48 @@
                                 <table class="table table-striped table-bordered table-hover dataTables-example">
                                     <thead>
                                         <tr>
-                                            <th>UOM Code</th>
-                                            <th>Factor</th>
-                                            <th>Description</th>
-                                            <th>Action</th>
+                                            <th>Code</th>
+                                            <th>Item Description</th>
+                                            <th>Qty Recieved</th>
+                                            <th>Qty Issued</th>
+                                            <th>Balance</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($unitMeasurements as $unit)
-                                            <tr class="gradeX" id="row-{{ $unit->code }}">
-                                                <td>{{ $unit->code }}</td>
-                                                <td>{{ $unit->factor }}</td>
-                                                <td>{{ $unit->descrip }}</td>
+                                        @foreach ($products as $product)
+                                            <tr class="gradeX" id="row-{{ $product->code }}">
+                                                <td>{{ $product->code }}</td>
+                                                <td>{{ $product->name1 }}</td>
+                                                <td>{{ $product->qtyIn }}</td>
+                                                <td>{{ $product->qtyOut }}</td>
+                                                {{-- <td>{{ $product->loct }}</td> --}}
+                                                <td>{{ $product->qtyOut - $product->qtyIn }}</td>
                                                 </td>
+
                                                 {{-- <td class="text-center">
-                                                    @if ($unit->is_active)
-                                                        <span class="label label-primary">Enable</span>
-                                                    @else
-                                                        <span class="label label-danger">Disabled</span>
-                                                    @endif
-                                                </td> --}}
-                                                <td class="text-center">
                                                     <div class="btn-group">
 
-                                                        <a href="{{ route('measurements.edit', $unit->code) }}"
+                                                        <a href="{{ route('products.edit', $product->code) }}"
                                                             class="btn-white btn btn-xs">Edit</a>
-                                                        <button onclick="deleteRecord({{ $unit->code }})"
+                                                        <button onclick="deleteRecord({{ $product->code }})"
                                                             class="btn-white btn btn-xs">Delete</button>
                                                     </div>
-                                                </td>
+                                                </td> --}}
                                             </tr>
                                         @endforeach
 
                                     </tbody>
                                     <tfoot>
-                                        <tr>
-                                            <th>UOM Cdde</th>
-                                            <th>Factor</th>
+                                        {{-- <tr>
+                                            <th>Cdde</th>
                                             <th>Description</th>
+                                            <th>UOM</th>
+                                            <th>Category</th>
+                                            <th>Misc. Code</th>
+                                            <th>Fax No.</th>
+                                            <th>Remarks</th>
                                             <th>Action</th>
-                                        </tr>
+                                        </tr> --}}
                                     </tfoot>
                                 </table>
                             </div>
@@ -131,20 +133,30 @@
     <script src="{{ asset('assets') }}/js/plugins/dataTables/datatables.min.js"></script>
 
     <script>
+        var date = new Date().toISOString().slice(0,10);
         $(document).ready(function() {
             $('.dataTables-example').DataTable({
                 dom: '<"html5buttons"B>lTfgitp',
                 buttons: [
-                    // {extend: 'copy'},
-                    // {extend: 'csv'},
+                    {
+                        extend: 'pdf',
+                        title: 'CONTINENTAL AIR CONTROL (PVT) LTD.\n ' + 'Item With Negative Qty Report ( ' + date + ' )' ,
+                        // orientation: 'landscape',
+                        filename: 'Item With Negative Qty Report ( ' + date + ' )',
+                    },
                     // {extend: 'excel', title: 'ExampleFile'},
                     // {extend: 'pdf', title: 'ExampleFile'},
-                    {
-                        extend: 'excel',
-                        title: 'Measurement Unit Data',
-                        filename: 'Measurement Unit Data',
-                    },
 
+                    // {extend: 'print',
+                    //  customize: function (win){
+                    //         $(win.document.body).addClass('white-bg');
+                    //         $(win.document.body).css('font-size', '10px');
+
+                    //         $(win.document.body).find('table')
+                    //                 .addClass('compact')
+                    //                 .css('font-size', 'inherit');
+                    // }
+                    // }
                 ]
 
             });
@@ -166,7 +178,7 @@
                     data: {
                         "_token": "{{ csrf_token() }}"
                     },
-                    url: "{{ route('measurements.destroy', '') }}/" + id,
+                    url: "{{ route('products.destroy', '') }}/" + id,
                     success: function(response) {
                         console.log(response);
                         if (response.success) {

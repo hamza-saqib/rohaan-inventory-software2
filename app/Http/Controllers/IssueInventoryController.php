@@ -5,10 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\IssueInventory;
 use App\Models\Location;
 use App\Models\Product;
-use App\Models\Vendor;
+use App\Exports\IssueInventoryExport;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class IssueInventoryController extends Controller
 {
@@ -31,6 +32,11 @@ class IssueInventoryController extends Controller
      */
     public function index(Request $request)
     {
+        if ($request->filled('button') && ($request->input('button') == 'export')) {
+            return Excel::download(new IssueInventoryExport([
+                'startDate' => $request->start_date, 'endDate' => $request->end_date, 'code' => $request->product_code
+            ]), 'issue inventory data.xls', \Maatwebsite\Excel\Excel::XLS);
+        }
         $products = Product::all();
         $query = IssueInventory::select('oldissue.*', 'icitem.name1 as product')
             ->when($request->filled('start_date'), function ($query) use ($request) {
@@ -58,21 +64,21 @@ class IssueInventoryController extends Controller
 
     public function monthlyReportProduct(Request $request)
     {
-        // return $request;
-        $date = Carbon::createFromDate(intval($request->year), 1, 1);
         $records = [];
         $years = $this->years;
         $report = 'Item';
         $dropDownData = Product::select('code', 'name1')->get();
 
-        // return $request->filled('year');
         if ($request->filled('year')) {
-            $date = Carbon::createFromDate(intval($request->year), 1, 1);
-            $records = Product::when(($request->code != 'All'), function ($query) use ($request) {
+            $fiscalStartDate = Carbon::createFromDate(intval($request->year), 1, 1)->subMonths(6)->startOfMonth();
+            $fiscalEndDate = Carbon::createFromDate(intval($request->year), 1, 1)->addMonths(5)->endOfMonth();
+            $productCodes = IssueInventory::select('ic')
+                ->where('isdt', '>=', $fiscalStartDate)->where('isdt', '<=', $fiscalEndDate)
+                ->groupBy('ic')->get()->pluck('ic');
+            $records = Product::whereIn('code', $productCodes)->when(($request->code != 'All'), function ($query) use ($request) {
                 return $query->where('code', '=', $request->code);
             })->get();
             foreach ($records as $key => $record) {
-                // return $record->code;
                 $record['jul']  = IssueInventory::where('ic', $record->code)->where('isdt', '>=', Carbon::createFromDate(intval($request->year), 1, 1)->subMonths(6)->startOfMonth())->where('isdt', '<=', Carbon::createFromDate(intval($request->year), 1, 1)->subMonths(6)->endOfMonth())->sum(DB::raw('Iamt'));
                 $record['aug']  = IssueInventory::where('ic', $record->code)->where('isdt', '>=', Carbon::createFromDate(intval($request->year), 1, 1)->subMonths(5)->startOfMonth())->where('isdt', '<=', Carbon::createFromDate(intval($request->year), 1, 1)->subMonths(5)->endOfMonth())->sum(DB::raw('Iamt'));
                 $record['sep']  = IssueInventory::where('ic', $record->code)->where('isdt', '>=', Carbon::createFromDate(intval($request->year), 1, 1)->subMonths(4)->startOfMonth())->where('isdt', '<=', Carbon::createFromDate(intval($request->year), 1, 1)->subMonths(4)->endOfMonth())->sum(DB::raw('Iamt'));
@@ -106,14 +112,13 @@ class IssueInventoryController extends Controller
     }
     public function voucher($isno)
     {
-        $inventories = IssueInventory::
-        select(
-            'oldissue.*',
-            'icitem.name1 as product',
-        )
-        ->where('isno', $isno)
-        ->leftJoin('icitem', 'icitem.code', '=', 'oldissue.ic')
-        ->get();
+        $inventories = IssueInventory::select(
+                'oldissue.*',
+                'icitem.name1 as product',
+            )
+            ->where('isno', $isno)
+            ->leftJoin('icitem', 'icitem.code', '=', 'oldissue.ic')
+            ->get();
         $qty = 0;
         $totalValue = 0;
         foreach ($inventories as $key => $value) {
@@ -182,11 +187,12 @@ class IssueInventoryController extends Controller
      * @param  \App\Models\Product  $inventory
      * @return \Illuminate\Http\Response
      */
-    public function edit(Product $inventory)
+    public function edit($issue_inventory)
     {
-        $units = UnitMeasurement::all();
-        $categories = ProductCategory::all();
-        return view('pages.issue-inventories.edit', compact('product', 'units', 'categories'));
+        $locations = Location::all();
+        $products = Product::all();
+        $inventory = IssueInventory::where('id_col', $issue_inventory)->get()->first();
+        return view('pages.issue-inventories.edit', compact('locations', 'products', 'inventory'));
     }
 
     /**
@@ -196,31 +202,33 @@ class IssueInventoryController extends Controller
      * @param  \App\Models\Product  $inventory
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Product $inventory)
+    public function update(Request $request, $issue_inventory)
     {
-        $this->validate($request, [
-            'code' => ['required', 'numeric', Rule::unique('supplierrec', 'code')->ignore($inventory->code, 'code')],
-            'description' => ['required', 'string'],
-            'uom' => ['required', 'string'],
-            'category' => ['required', 'string'],
-            'misc_code' => 'nullable|string|max:15',
-            'remarks' => 'nullable|string|max:100',
-        ]);
-
-        $inventory->code = $request->input('code');
-        $inventory->name1 = $request->input('description');
-        $inventory->uom = $request->input('uom');
-        $inventory->catcode = $request->input('category');
-        $inventory->misc_code = $request->input('misc_code');
-        // $inventory->faxno = $request->input('fax_no');
-        // $inventory->ntn = $request->input('ntn');
-        // $inventory->stn = $request->input('stn');
+        // $this->validate($request, [
+        //     'code' => ['required', 'numeric', Rule::unique('supplierrec', 'code')->ignore($inventory->code, 'code')],
+        //     'description' => ['required', 'string'],
+        //     'uom' => ['required', 'string'],
+        //     'category' => ['required', 'string'],
+        //     'misc_code' => 'nullable|string|max:15',
+        //     'remarks' => 'nullable|string|max:100',
+        // ]);
+        // return $request->all();
+        $inventory = IssueInventory::where('id_col', $issue_inventory)->get()->first();
+        $inventory->isdt = $request->input('issue_date');
+        if ($request->filled('product_code')) {
+            $inventory->ic = $request->input('product_code');
+        }
+        $inventory->Qty = $request->input('qty');
+        $inventory->Irate = $request->input('wgt_avg_rate');
+        $inventory->Iamt = $request->input('qty') * $request->input('wgt_avg_rate');
+        $location = Location::where('code1', $request->input('location_code'))->get()->first();
+        $inventory->dpt = $location->name1;
         $inventory->remarks = $request->input('remarks');
 
         if ($inventory->save()) {
-            return redirect()->route('products.edit', $request->input('code'))->with(['success' => 'Unit Successfully Saved.']);
+            return redirect()->route('issue-inventories.edit', $issue_inventory)->with(['success' => 'Issue Inventory Updated Successfully Saved.']);
         } else {
-            return redirect()->back()->with(['error' => 'Error while saving Location.']);
+            return redirect()->back()->with(['error' => 'Error while saving Issue Inventory.']);
         }
     }
 

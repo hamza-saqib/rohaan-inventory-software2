@@ -105,6 +105,7 @@
                     <li><a href="{{ route('products.create') }}">Create</a></li>
                     <li><a href="{{ route('products.index') }}">List / Report</a></li>
                     <li><a href="{{ route('reports.products.ledger') }}">Item Ledger Report</a></li>
+                    <li><a href="{{ route('reports.products.negative') }}">Negative Items Report</a></li>
                     <li><a href="{{ route('product-categories.index') }}">Categories</a></li>
 
                 </ul>

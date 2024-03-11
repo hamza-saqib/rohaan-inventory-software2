@@ -180,18 +180,18 @@
                                             <tr class="gradeX" id="row-{{ $record->code }}">
                                                 <td>{{ $record->code }}</td>
                                                 <td>{{ $record->name1 }}</td>
-                                                <td>{{ $record->jul }}</td>
-                                                <td>{{ $record->aug }}</td>
-                                                <td>{{ $record->sep }}</td>
-                                                <td>{{ $record->oct }}</td>
-                                                <td>{{ $record->nov }}</td>
-                                                <td>{{ $record->dec }}</td>
-                                                <td>{{ $record->jan }}</td>
-                                                <td>{{ $record->feb }}</td>
-                                                <td>{{ $record->mar }}</td>
-                                                <td>{{ $record->apr }}</td>
-                                                <td>{{ $record->may }}</td>
-                                                <td>{{ $record->jun }}</td>
+                                                <td>{{ ($record->jul > 0 ) ? $record->jul : ''}}</td>
+                                                <td>{{ ($record->aug > 0 ) ? $record->aug : ''}}</td>
+                                                <td>{{ ($record->sep > 0 ) ? $record->sep : ''}}</td>
+                                                <td>{{ ($record->oct > 0 ) ? $record->oct : ''}}</td>
+                                                <td>{{ ($record->nov > 0 ) ? $record->nov : ''}}</td>
+                                                <td>{{ ($record->dec > 0 ) ? $record->dec : ''}}</td>
+                                                <td>{{ ($record->jan > 0 ) ? $record->jan : ''}}</td>
+                                                <td>{{ ($record->feb > 0 ) ? $record->feb : ''}}</td>
+                                                <td>{{ ($record->mar > 0 ) ? $record->mar : ''}}</td>
+                                                <td>{{ ($record->apr > 0 ) ? $record->apr : ''}}</td>
+                                                <td>{{ ($record->may > 0 ) ? $record->may : ''}}</td>
+                                                <td>{{ ($record->jun > 0 ) ? $record->jun : ''}}</td>
                                                 </td>
                                             </tr>
                                         @endforeach

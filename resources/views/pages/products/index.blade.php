@@ -152,6 +152,11 @@
             $('.dataTables-example').DataTable({
                 dom: '<"html5buttons"B>lTfgitp',
                 buttons: [
+                    {
+                        extend: 'excel',
+                        title: 'Products Data',
+                        filename: 'Products Data',
+                    },
                     // {extend: 'copy'},
                     // {extend: 'csv'},
                     // {extend: 'excel', title: 'ExampleFile'},

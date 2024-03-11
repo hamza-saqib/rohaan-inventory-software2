@@ -9,6 +9,7 @@ use App\Models\RecieveInventory;
 use App\Models\UnitMeasurement;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 
@@ -23,6 +24,18 @@ class ProductController extends Controller
     {
         $products = Product::all();
         return view('pages.products.index', compact('products'));
+    }
+
+    public function negativeBalance()
+    {
+        $products = Product::select('icitem.code', 'icitem.name1',
+         DB::raw('SUM(oldissue.Qty) as qtyOut'), DB::raw('SUM(invrec.qty) as qtyIn'))
+         ->leftJoin('oldissue', 'oldissue.ic', '=', 'icitem.code')
+         ->leftJoin('invrec', 'invrec.ic', '=', 'icitem.code')
+        ->groupBy('icitem.code', 'icitem.name1')
+        ->havingRaw('SUM(oldissue.Qty) > SUM(invrec.qty)')
+        ->get();
+        return view('pages.products.negative-balance', compact('products'));
     }
 
     public function ledger(Request $request)

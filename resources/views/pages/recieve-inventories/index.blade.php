@@ -67,14 +67,16 @@
                                 <div class="form-group">
                                     <label class="control-label" for="date_modified">Item</label>
                                     <div class="input-group date">
-                                        <select class="form-control" name="product_code" >
+                                        <select class="form-control" name="product_code">
                                             <option selected disabled>Select</option>
                                             @foreach ($products as $product)
                                                 @if (old('product_code') == $product->code)
-                                                    <option selected value="{{ $product->code }}">{{ $product->code . ' - ' . $product->name1 }}
+                                                    <option selected value="{{ $product->code }}">
+                                                        {{ $product->code . ' - ' . $product->name1 }}
                                                     </option>
                                                 @else
-                                                    <option value="{{ $product->code }}">{{ $product->code . ' - ' . $product->name1 }}</option>
+                                                    <option value="{{ $product->code }}">
+                                                        {{ $product->code . ' - ' . $product->name1 }}</option>
                                                 @endif
                                             @endforeach
                                         </select>
@@ -85,14 +87,16 @@
                                 <div class="form-group">
                                     <label class="control-label" for="date_modified">Supplier</label>
                                     <div class="input-group date">
-                                        <select class="form-control" name="vendor_code" >
+                                        <select class="form-control" name="vendor_code">
                                             <option selected disabled>Select</option>
                                             @foreach ($vendors as $vendor)
                                                 @if (old('vendor_code') == $vendor->code)
-                                                    <option selected value="{{ $vendor->code }}">{{ $vendor->code . ' - '. $vendor->name1 }}
+                                                    <option selected value="{{ $vendor->code }}">
+                                                        {{ $vendor->code . ' - ' . $vendor->name1 }}
                                                     </option>
                                                 @else
-                                                    <option value="{{ $vendor->code }}">{{ $vendor->code . ' - '. $vendor->name1 }}</option>
+                                                    <option value="{{ $vendor->code }}">
+                                                        {{ $vendor->code . ' - ' . $vendor->name1 }}</option>
                                                 @endif
                                             @endforeach
                                         </select>
@@ -101,9 +105,20 @@
                             </div>
                             <div class="col-sm-2">
                                 <div class="form-group">
-                                    <label class="control-label" for="amount">_____________</label>
+                                    {{-- <label class="control-label" for="amount">_____________</label> --}}
                                     <div class="input-group date">
-                                        <button class="btn btn-primary" type="submit">Search</button>
+                                        <button class="btn btn-primary" type="submit" name='button'
+                                            value="search">Search</button>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
+                                <div class="form-group">
+                                    {{-- <label class="control-label" for="amount">_____________</label> --}}
+                                    <div class="input-group date">
+                                        <button class="btn btn-warning" type="submit" name='button'
+                                            value="export">Export</button>
                                     </div>
 
                                 </div>

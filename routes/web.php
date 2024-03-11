@@ -1,25 +1,14 @@
 <?php
 
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\SettingController;
-use App\Http\Controllers\ClassController;
-use App\Http\Controllers\SectionController;
-use App\Http\Controllers\TeacherController;
-use App\Http\Controllers\StudentController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\AcademicYearController;
-use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\GRNController;
-use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\IssueInventoryController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\ProductCategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RecieveInventoryController;
-use App\Http\Controllers\SchoolController;
 use App\Http\Controllers\UnitMeasurementController;
 use App\Http\Controllers\VendorController;
-use App\Http\Controllers\VoucherController;
 use App\Http\Middleware\EnsureUserLogedIn;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -35,13 +24,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return route('home');
+// });
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home')->middleware(EnsureUserLogedIn::class);
+Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home')->middleware(EnsureUserLogedIn::class);
 
 Route::middleware(EnsureUserLogedIn::class)->group(function() {
     Route::resource('users', UserController::class);
@@ -57,26 +46,7 @@ Route::middleware(EnsureUserLogedIn::class)->group(function() {
     Route::get('reports/issue/product', [IssueInventoryController::class, 'monthlyReportProduct'])->name('reports.issue.product');
     Route::get('reports/receipt/supplier', [RecieveInventoryController::class, 'monthlyReportSupplier'])->name('reports.supplier');
     Route::get('reports/products/ledger', [ProductController::class, 'ledger'])->name('reports.products.ledger');
+    Route::get('reports/products/negative-balance', [ProductController::class, 'negativeBalance'])->name('reports.products.negative');
     Route::get('reports/issue/voucher/{isno}', [IssueInventoryController::class, 'voucher'])->name('issue-inventories.voucher');
     Route::get('reports/issue/voucher-pdf/{isno}', [IssueInventoryController::class, 'voucherPrint'])->name('issue-inventories.voucher.print');
-});
-
-
-Route::resource('academic-years', AcademicYearController::class);
-Route::resource('classes', ClassController::class);
-Route::resource('sections', SectionController::class);
-Route::resource('schools', SchoolController::class);
-Route::resource('students', StudentController::class);
-Route::resource('profiles', ProfileController::class);
-Route::resource('vouchers', VoucherController::class);
-Route::resource('expenses', ExpenseController::class);
-Route::post('students/import', [StudentController::class, 'import'])->name('students.import');
-Route::resource('teachers', TeacherController::class);
-Route::post('teachers/import', [TeacherController::class, 'import'])->name('teachers.import');
-
-Route::controller(SettingController::class)->prefix('settings')->name('settings.')->group(function () {
-    Route::get('/', 'index')->name('index');
-    Route::get('/', 'show')->name('show');
-    Route::get('/edit', 'edit')->name('edit');
-    Route::put('/{industry}', 'update')->name('update');
 });
