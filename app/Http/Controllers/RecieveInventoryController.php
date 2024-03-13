@@ -366,8 +366,9 @@ class RecieveInventoryController extends Controller
      * @param  \App\Models\Product  $inventory
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Product $inventory)
+    public function destroy($recieve_inventory)
     {
+        $inventory = RecieveInventory::where('id_col', $recieve_inventory)->get()->first();
         try {
             $inventory->delete();
             return response()->json(['success' => 'Record deleted successfully !']);

@@ -173,6 +173,7 @@
                                             <th>Net Vale</th>
                                             <th>Remarks</th>
                                             <th>TType</th>
+                                            <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -197,9 +198,9 @@
                                                 <td class="text-center">
                                                     <div class="btn-group">
 
-                                                        <a href="{{ route('recieve-inventories.edit', $inventory) }}"
+                                                        <a href="{{ route('recieve-inventories.edit', $inventory->vn) }}"
                                                             class="btn-white btn btn-xs">Edit</a>
-                                                        <button onclick="deleteRecord({{ $inventory->sc }})"
+                                                        <button onclick="deleteRecord({{ $inventory->id_col }})"
                                                             class="btn-white btn btn-xs">Delete</button>
                                                     </div>
                                                 </td>

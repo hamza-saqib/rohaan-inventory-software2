@@ -161,7 +161,7 @@
                                                             class="btn-white btn btn-xs">Edit</a>
                                                         <a href="{{ route('issue-inventories.voucher', $inventory->isno) }}"
                                                             class="btn-white btn btn-xs">Voucher</a>
-                                                        <button onclick="deleteRecord({{ $inventory->sc }})"
+                                                        <button onclick="deleteRecord({{ $inventory->id_col }})"
                                                             class="btn-white btn btn-xs">Delete</button>
                                                     </div>
                                                 </td>

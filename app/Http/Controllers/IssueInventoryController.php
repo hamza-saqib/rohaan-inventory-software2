@@ -238,8 +238,9 @@ class IssueInventoryController extends Controller
      * @param  \App\Models\Product  $inventory
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Product $inventory)
+    public function destroy($issue_inventory)
     {
+        $inventory = IssueInventory::where('id_col', $issue_inventory)->get()->first();
         try {
             $inventory->delete();
             return response()->json(['success' => 'Record deleted successfully !']);
