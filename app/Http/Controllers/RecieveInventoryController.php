@@ -20,6 +20,8 @@ class RecieveInventoryController extends Controller
      */
     public function __construct()
     {
+        set_time_limit(3000); //3000 seconds = 50 minutes
+        ini_set('memory_limit', -1);
         $currentYear = date('Y');
         for ($year = $currentYear; $year >= 2000; $year--) {
             $this->years[] = $year;
@@ -39,7 +41,7 @@ class RecieveInventoryController extends Controller
         }
         $products = Product::all();
         $vendors = Vendor::all();
-        $query = RecieveInventory::select('invrec.*', 'icitem.name1 as product', 'supplierrec.name1 as supplier')
+        $inventories = RecieveInventory::select('invrec.*', 'icitem.name1 as product', 'supplierrec.name1 as supplier')
             ->when($request->filled('start_date'), function ($query) use ($request) {
                 return $query->where('vd', '>=', $request->start_date);
             })
@@ -47,29 +49,31 @@ class RecieveInventoryController extends Controller
                 return $query->where('vd', '<=', $request->end_date);
             })->when($request->filled('start_date'), function ($query) use ($request) {
                 return $query->where('vd', '>=', $request->start_date);
-            })->when($request->filled('product_code'), function ($query) use ($request) {
+            })->when($request->filled('product_code') && ($request->product_code != 'All'), function ($query) use ($request) {
                 return $query->where('ic', '=', $request->product_code);
             })
-            ->when($request->filled('vendor_code'), function ($query) use ($request) {
+            ->when($request->filled('vendor_code') && ($request->vendor_code != 'All'), function ($query) use ($request) {
                 return $query->where('sc', '=', $request->vendor_code);
-            });
+            })->when($request->filled('saerch_keyword'), function ($query) use ($request) {
+                return $query->where('supplierrec.name1', 'like', '%' . $request->saerch_keyword . '%')
+                ->orWhere('icitem.name1', 'like', '%' . $request->saerch_keyword . '%')
+                ->orWhere('remarks', 'like', '%' . $request->saerch_keyword . '%');
+            })->leftJoin('icitem', 'icitem.code', '=', 'invrec.ic')
+                ->leftJoin('supplierrec', 'supplierrec.code', '=', 'invrec.sc')
+                ->paginate(50);
+        // $sum = [
+        //     'rate' => $query->sum(DB::raw('rat * qty')),
+        //     'sed' => $query->sum('sed'),
+        //     'fed' => $query->sum('fed'),
+        //     'deduction' => $query->sum('od'),
+        //     'net_value' => $query->sum('nv'),
+        //     'sales_tax' => $query->sum('st')
+        // ];
 
-        $sum = [
-            'rate' => $query->sum(DB::raw('rat * qty')),
-            'sed' => $query->sum('sed'),
-            'fed' => $query->sum('fed'),
-            'deduction' => $query->sum('od'),
-            'net_value' => $query->sum('nv'),
-            'sales_tax' => $query->sum('st')
-        ];
-
-        $inventories = $query->leftJoin('icitem', 'icitem.code', '=', 'invrec.ic')
-            ->leftJoin('supplierrec', 'supplierrec.code', '=', 'invrec.sc')
-            ->paginate(50);
 
         $request->flash();
 
-        return view('pages.recieve-inventories.index', compact('inventories', 'products', 'vendors', 'sum'));
+        return view('pages.recieve-inventories.index', compact('inventories', 'products', 'vendors'));
     }
     public function monthlyReportProduct(Request $request)
     {

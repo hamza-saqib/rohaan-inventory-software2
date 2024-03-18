@@ -32,7 +32,10 @@ class IssueInventoryController extends Controller
      */
     public function index(Request $request)
     {
+        // return $request->all();
         if ($request->filled('button') && ($request->input('button') == 'export')) {
+            set_time_limit(3000); //3000 seconds = 50 minutes
+            ini_set('memory_limit', -1);
             return Excel::download(new IssueInventoryExport([
                 'startDate' => $request->start_date, 'endDate' => $request->end_date, 'code' => $request->product_code
             ]), 'issue inventory data.xls', \Maatwebsite\Excel\Excel::XLS);
@@ -46,10 +49,10 @@ class IssueInventoryController extends Controller
                 return $query->where('isdt', '<=', $request->end_date);
             })->when($request->filled('start_date'), function ($query) use ($request) {
                 return $query->where('isdt', '>=', $request->start_date);
-            })->when(($request->product_code != 'All'), function ($query) use ($request) {
+            })->when($request->filled('product_code') && ($request->product_code != 'All'), function ($query) use ($request) {
                 return $query->where('ic', '=', $request->product_code);
             })->when($request->filled('saerch_keyword'), function ($query) use ($request) {
-                return $query->where('icitem.name1', 'like', '%' . $request->product_code . '%');
+                return $query->where('icitem.name1', 'like', '%' . $request->saerch_keyword . '%');
             })->leftJoin('icitem', 'icitem.code', '=', 'oldissue.ic')
             // ->leftJoin('supplierrec', 'supplierrec.code', '=', 'oldissue.sc')
             ->paginate(50);
