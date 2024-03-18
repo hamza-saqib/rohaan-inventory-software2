@@ -164,7 +164,7 @@ class IssueInventoryController extends Controller
         }
 
         if (true) {
-            return redirect()->back()->with(['success' => 'Inventory Successfully Issued.']);
+            return redirect()->route('issue-inventories.index')->with(['success' => 'Inventory Successfully Issued.']);
         } else {
             return redirect()->back()->with(['error' => 'Error while saving Location.']);
         }
@@ -226,7 +226,7 @@ class IssueInventoryController extends Controller
         $inventory->remarks = $request->input('remarks');
 
         if ($inventory->save()) {
-            return redirect()->route('issue-inventories.edit', $issue_inventory)->with(['success' => 'Issue Inventory Updated Successfully Saved.']);
+            return redirect()->route('issue-inventories.index')->with(['success' => 'Issue Inventory Updated Successfully Saved.']);
         } else {
             return redirect()->back()->with(['error' => 'Error while saving Issue Inventory.']);
         }

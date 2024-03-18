@@ -218,7 +218,7 @@ class ProductController extends Controller
         $product->remarks = $request->input('remarks');
 
         if ($product->save()) {
-            return redirect()->route('products.edit', $request->input('code'))->with(['success' => 'Unit Successfully Saved.']);
+            return redirect()->route('products.index')->with(['success' => 'Unit Successfully Saved.']);
         } else {
             return redirect()->back()->with(['error' => 'Error while saving Location.']);
         }

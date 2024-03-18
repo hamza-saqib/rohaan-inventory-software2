@@ -125,7 +125,7 @@ class VendorController extends Controller
         $vendor->remarks = $request->input('remarks');
 
         if ($vendor->save()) {
-            return redirect()->route('vendors.edit', $request->input('code'))->with(['success' => 'Unit Successfully Saved.']);
+            return redirect()->route('vendors.index')->with(['success' => 'Unit Successfully Saved.']);
         } else {
             return redirect()->back()->with(['error' => 'Error while saving Location.']);
         }

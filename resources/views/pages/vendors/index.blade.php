@@ -108,7 +108,7 @@
                                     </tbody>
                                     <tfoot>
                                         <tr>
-                                            <th>Cdde</th>
+                                            <th>Code</th>
                                             <th>Name</th>
                                             <th>Adress</th>
                                             <th>Phone 1</th>
@@ -151,6 +151,9 @@
                         extend: 'excel',
                         title: 'Suppliers Data',
                         filename: 'Suppliers Data',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3,4,5,6,7, 8]
+                        }
                     },
                     // {extend: 'copy'},
                     // {extend: 'csv'},

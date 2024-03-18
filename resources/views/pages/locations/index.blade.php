@@ -139,8 +139,11 @@
                         extend: 'excel',
                         title: 'Locations Data',
                         filename: 'Locations Data',
+                        exportOptions: {
+                            columns: [0, 1, 2]
+                        }
                     },
-                    
+
 
                 ]
 

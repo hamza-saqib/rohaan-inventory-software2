@@ -143,6 +143,20 @@
                         title: 'CONTINENTAL AIR CONTROL (PVT) LTD.\n ' + 'Item With Negative Qty Report ( ' + date + ' )' ,
                         // orientation: 'landscape',
                         filename: 'Item With Negative Qty Report ( ' + date + ' )',
+                        customize: function(doc) {
+                            var colCount = new Array();
+                            $('.dataTables-example').find('tbody tr:first-child td').each(
+                            function() {
+                                if ($(this).attr('colspan')) {
+                                    for (var i = 1; i <= $(this).attr('colspan'); $i++) {
+                                        colCount.push('*');
+                                    }
+                                } else {
+                                    colCount.push('*');
+                                }
+                            });
+                            doc.content[1].table.widths = colCount;
+                        }
                     },
                     // {extend: 'excel', title: 'ExampleFile'},
                     // {extend: 'pdf', title: 'ExampleFile'},

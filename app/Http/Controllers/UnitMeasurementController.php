@@ -41,7 +41,7 @@ class UnitMeasurementController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'code' => ['required', 'numeric', 'unique:uomind'],
+            'code' => ['required', 'unique:uomind'],
             'description' => ['required', 'string'],
             'factor' => ['required', 'numeric']
         ]);
@@ -76,8 +76,9 @@ class UnitMeasurementController extends Controller
      * @param  \App\Models\UnitMeasurement  $measurement
      * @return \Illuminate\Http\Response
      */
-    public function edit(UnitMeasurement $measurement)
+    public function edit($measurement)
     {
+        $measurement = UnitMeasurement::where('code', $measurement)->get()->first();
         return view('pages.measurements.edit', compact('measurement'));
     }
 
@@ -88,10 +89,11 @@ class UnitMeasurementController extends Controller
      * @param  \App\Models\UnitMeasurement  $measurement
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, UnitMeasurement $measurement)
+    public function update(Request $request, $measurement)
     {
+        $measurement = UnitMeasurement::where('code', $measurement)->get()->first();
         $this->validate($request, [
-            'code' => ['required', 'numeric', Rule::unique('uomind')->ignore($measurement->code, 'code')],
+            'code' => ['required', Rule::unique('uomind')->ignore($measurement->code, 'code')],
             'description' => ['required', 'string'],
             'factor' => ['required', 'numeric']
         ]);
@@ -101,7 +103,7 @@ class UnitMeasurementController extends Controller
         $measurement->factor = $request->input('factor');
 
         if ($measurement->save()) {
-            return redirect()->route('measurements.edit', $request->input('code'))->with(['success' => 'Unit Successfully Saved.']);
+            return redirect()->route('measurements.index')->with(['success' => 'Unit Successfully Saved.']);
         } else {
             return redirect()->back()->with(['error' => 'Error while saving Unit.']);
         }
@@ -113,8 +115,9 @@ class UnitMeasurementController extends Controller
      * @param  \App\Models\UnitMeasurement  $measurement
      * @return \Illuminate\Http\Response
      */
-    public function destroy(UnitMeasurement $measurement)
+    public function destroy($measurement)
     {
+        $measurement = UnitMeasurement::where('code', $measurement)->get()->first();
         try {
             $measurement->delete();
             return response()->json(['success' => 'Record deleted successfully !']);

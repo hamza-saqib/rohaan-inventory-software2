@@ -10,7 +10,13 @@ class UnitMeasurement extends Model
     use HasFactory;
 
     protected  $table = "uomind";
-    // protected $primaryKey = 'code';
+    protected $primaryKey = 'code';
     public $timestamps = false;
+    public $incrementing = false;
 
+    protected $fillable = [
+        'code',
+        'descrip',
+        'factor',
+    ];
 }

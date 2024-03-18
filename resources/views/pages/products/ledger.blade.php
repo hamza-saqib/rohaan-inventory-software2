@@ -134,11 +134,11 @@
                                             <th>Code</th>
                                             <th>Description</th>
                                             <th>GRN</th>
-                                            <th>Qty</th>
+                                            <th>Qty In</th>
                                             <th>Rate</th>
                                             <th>Amount</th>
                                             <th>Issue No.</th>
-                                            <th>Qty</th>
+                                            <th>Qty Out</th>
                                             <th>Rate</th>
                                             <th>Amount</th>
                                             <th>Balance</th>
@@ -215,6 +215,20 @@
                             date + ' )',
                         orientation: 'landscape',
                         filename: 'Item Ledger Report ( ' + date + ' )',
+                        customize: function(doc) {
+                            var colCount = new Array();
+                            $('.dataTables-example').find('tbody tr:first-child td').each(
+                            function() {
+                                if ($(this).attr('colspan')) {
+                                    for (var i = 1; i <= $(this).attr('colspan'); $i++) {
+                                        colCount.push('*');
+                                    }
+                                } else {
+                                    colCount.push('*');
+                                }
+                            });
+                            doc.content[1].table.widths = colCount;
+                        }
                     },
                     {
                         extend: 'excel',

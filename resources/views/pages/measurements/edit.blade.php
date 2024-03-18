@@ -64,7 +64,7 @@
 
                         <div class="ibox-content">
                             <form method="post" class="form-horizontal"
-                                action="{{ route('measurements.update', $measurement) }}" enctype="multipart/form-data">
+                                action="{{ route('measurements.update', $measurement->code) }}" enctype="multipart/form-data">
                                 @csrf
                                 @method('put')
 
@@ -72,7 +72,7 @@
                                     <label class="col-sm-2 control-label">UOM Code</label>
 
                                     <div class="col-sm-4">
-                                        <input type="number" class="form-control @error('code') is-invalid @enderror "
+                                        <input type="text" class="form-control @error('code') is-invalid @enderror "
                                             name="code" value="{{ $measurement->code }}" required>
                                         @error('code')
                                             <span class="invalid-feedback text-danger" role="alert">

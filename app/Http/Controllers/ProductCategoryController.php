@@ -104,7 +104,8 @@ class ProductCategoryController extends Controller
         $product_category->factor = $request->input('factor');
 
         if ($product_category->save()) {
-            return redirect()->route('product-categories.edit', $request->input('code'))->with(['success' => 'Unit Successfully Saved.']);
+            // return redirect()->route('product-categories.edit', $request->input('code'))->with(['success' => 'Unit Successfully Saved.']);
+            return redirect()->route('product-categories.index')->with(['success' => 'Unit Successfully Saved.']);
         } else {
             return redirect()->back()->with(['error' => 'Error while saving ProductCategory.']);
         }

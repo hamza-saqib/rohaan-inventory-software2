@@ -92,7 +92,7 @@
 
                                                         <a href="{{ route('measurements.edit', $unit->code) }}"
                                                             class="btn-white btn btn-xs">Edit</a>
-                                                        <button onclick="deleteRecord({{ $unit->code }})"
+                                                        <button onclick="deleteRecord('{{ $unit->code }}')"
                                                             class="btn-white btn btn-xs">Delete</button>
                                                     </div>
                                                 </td>
@@ -102,7 +102,7 @@
                                     </tbody>
                                     <tfoot>
                                         <tr>
-                                            <th>UOM Cdde</th>
+                                            <th>UOM Code</th>
                                             <th>Factor</th>
                                             <th>Description</th>
                                             <th>Action</th>
@@ -143,6 +143,9 @@
                         extend: 'excel',
                         title: 'Measurement Unit Data',
                         filename: 'Measurement Unit Data',
+                        exportOptions: {
+                            columns: [0, 1, 2]
+                        }
                     },
 
                 ]
@@ -171,7 +174,9 @@
                         console.log(response);
                         if (response.success) {
                             swal("Deleted!", "Your record has been deleted.", "success");
-                            $("#row-" + id).remove();
+                            // console.log("#row-" + id);
+                            // $("#row-" + id).remove();
+                            location.reload();
                         } else if (response.error) {
                             swal("Error !", response.error, "error");
                         } else {

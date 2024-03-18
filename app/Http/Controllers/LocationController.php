@@ -101,7 +101,7 @@ class LocationController extends Controller
         $location->remarks = $request->input('remarks');
 
         if ($location->save()) {
-            return redirect()->route('locations.edit', $request->input('code'))->with(['success' => 'Unit Successfully Saved.']);
+            return redirect()->route('locations.index')->with(['success' => 'Unit Successfully Saved.']);
         } else {
             return redirect()->back()->with(['error' => 'Error while saving Location.']);
         }

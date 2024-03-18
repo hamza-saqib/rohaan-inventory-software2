@@ -354,7 +354,7 @@ class RecieveInventoryController extends Controller
         $inventory->remarks = $request->input('remarks');
 
         if ($inventory->save()) {
-            return redirect()->route('products.edit', $request->input('code'))->with(['success' => 'Unit Successfully Saved.']);
+            return redirect()->route('recieve-inventories.index')->with(['success' => 'Unit Successfully Saved.']);
         } else {
             return redirect()->back()->with(['error' => 'Error while saving Location.']);
         }

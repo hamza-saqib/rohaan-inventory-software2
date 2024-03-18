@@ -71,7 +71,7 @@
                                     <label class="col-sm-2 control-label">UOM Code</label>
 
                                     <div class="col-sm-4">
-                                        <input type="number" class="form-control @error('code') is-invalid @enderror "
+                                        <input type="text" class="form-control @error('code') is-invalid @enderror "
                                             name="code" value="{{ old('code') }}" required>
                                         @error('code')
                                             <span class="invalid-feedback text-danger" role="alert">

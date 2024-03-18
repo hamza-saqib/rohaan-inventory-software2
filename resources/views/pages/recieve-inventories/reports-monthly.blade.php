@@ -210,7 +210,7 @@
                                                 <td>{{ ($record->apr > 0 ) ? $record->apr : ''}}</td>
                                                 <td>{{ ($record->may > 0 ) ? $record->may : ''}}</td>
                                                 <td>{{ ($record->jun > 0 ) ? $record->jun : ''}}</td>
-                                                
+
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -272,6 +272,20 @@
                         title: 'CONTINENTAL AIR CONTROL (PVT) LTD.\n ' + @json($report) + ' Monthly Report ( ' + date + ' )' ,
                         orientation: 'landscape',
                         filename: @json($report) + ' Monthly Report ( ' + date + ' )',
+                        customize: function(doc) {
+                            var colCount = new Array();
+                            $('.dataTables-example').find('tbody tr:first-child td').each(
+                            function() {
+                                if ($(this).attr('colspan')) {
+                                    for (var i = 1; i <= $(this).attr('colspan'); $i++) {
+                                        colCount.push('*');
+                                    }
+                                } else {
+                                    colCount.push('*');
+                                }
+                            });
+                            doc.content[1].table.widths = colCount;
+                        }
                     },
                     {
                         extend: 'excel',
