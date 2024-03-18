@@ -45,6 +45,15 @@
                             @csrf
                             <div class="col-sm-3">
                                 <div class="form-group">
+                                    <label class="control-label" for="saerch_keyword">_</label>
+                                    <input
+                                        name="saerch_keyword" id="saerch_keyword" type="text" class="form-control"
+                                        value="{{ old('saerch_keyword') ?? '' }}">
+                                    
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-group">
                                     <label class="control-label" for="date_added">Start Date</label>
                                     <div class="input-group date">
                                         <span class="input-group-addon"><i class="fa fa-calendar"></i></span><input
@@ -68,7 +77,7 @@
                                     <label class="control-label" for="date_modified">Item</label>
                                     <div class="input-group date">
                                         <select class="form-control" name="product_code" >
-                                            <option selected disabled>Select</option>
+                                            <option selected >All</option>
                                             @foreach ($products as $product)
                                                 @if (old('product_code') == $product->code)
                                                     <option selected value="{{ $product->code }}">{{ $product->code . ' - ' . $product->name1 }}

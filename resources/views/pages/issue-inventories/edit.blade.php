@@ -42,7 +42,8 @@
                     <div class="ibox float-e-margins">
 
                         <div class="ibox-content">
-                            <form method="post" class="form-horizontal" action="{{ route('issue-inventories.update', $inventory->id_col) }}"
+                            <form method="post" class="form-horizontal"
+                                action="{{ route('issue-inventories.update', $inventory->id_col) }}"
                                 enctype="multipart/form-data">
                                 @csrf
                                 @method('put')
@@ -112,12 +113,14 @@
                                     <label class="col-sm-1 control-label">Qty</label>
 
                                     <div class="col-sm-2">
-                                        <input id="qty" class="form-control" type="number" name="qty" value="{{$inventory->Qty}}">
+                                        <input id="qty" class="form-control" type="number" name="qty"
+                                            value="{{ $inventory->Qty }}">
                                     </div>
                                     <label class="col-sm-1 control-label">Wgt Avg. Rate</label>
 
                                     <div class="col-sm-2">
-                                        <input id="wgt_avg_rate" class="form-control" type="text" name="wgt_avg_rate" value="{{$inventory->Irate}}">
+                                        <input id="wgt_avg_rate" class="form-control" type="text" name="wgt_avg_rate"
+                                            value="{{ $inventory->Irate }}">
                                     </div>
 
                                     <label class="col-sm-1 control-label">Value</label>
@@ -127,7 +130,8 @@
                                     </div>
                                     <label class="col-sm-1 control-label">Remarks</label>
                                     <div class="col-sm-2">
-                                        <input id="remarks" class="form-control" type="text" name="remarks" value="{{$inventory->remarks}}">
+                                        <input id="remarks" class="form-control" type="text" name="remarks"
+                                            value="{{ $inventory->remarks }}">
                                     </div>
 
                                 </div>
@@ -142,12 +146,11 @@
                                                 <option value="">Select Location</option>
                                                 @foreach ($locations as $location)
                                                     @if (preg_replace('/\s+/', ' ', $location->name1) == preg_replace('/\s+/', ' ', $inventory->dpt))
-                                                    <option selected value="{{ $location->code1 }}">
-                                                        {{ $location->code1 . ' -  ' . $location->name1 }}</option>
+                                                        <option selected value="{{ $location->code1 }}">
+                                                            {{ $location->code1 . ' -  ' . $location->name1 }}</option>
                                                     @else
-
-                                                    <option value="{{ $location->code1 }}">
-                                                        {{ $location->code1 . ' - ' . $location->name1 }}</option>
+                                                        <option value="{{ $location->code1 }}">
+                                                            {{ $location->code1 . ' - ' . $location->name1 }}</option>
                                                     @endif
                                                 @endforeach
                                             </select>
@@ -186,7 +189,8 @@
                                 <div class="hr-line-dashed"></div>
 
 
-                                <button class="btn btn-primary" type="submit" name="button" value="Save">Update</button>
+                                <button class="btn btn-primary" type="submit" name="button"
+                                    value="Save">Update</button>
 
                             </form>
                         </div>
@@ -207,6 +211,19 @@
     <script>
         $("#locationSelect").select2();
         $("#productSelect").select2();
+        $(document).ready(function() {
+
+            function calculateValue() {
+                // Get values from other input fields
+                var value1 = $('#qty').val();
+                var value2 = $('#wgt_avg_rate').val();
+
+                // Set value to another input field
+                $('#wgt_value').val(value1 * value2);
+            }
+            $('#qty').on('input', calculateValue);
+            $('#wgt_avg_rate').on('input', calculateValue);
+        });
     </script>
     <script>
         var products = @json($products);

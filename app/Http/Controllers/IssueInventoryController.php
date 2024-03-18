@@ -38,7 +38,7 @@ class IssueInventoryController extends Controller
             ]), 'issue inventory data.xls', \Maatwebsite\Excel\Excel::XLS);
         }
         $products = Product::all();
-        $query = IssueInventory::select('oldissue.*', 'icitem.name1 as product')
+        $inventories = IssueInventory::select('oldissue.*', 'icitem.name1 as product')
             ->when($request->filled('start_date'), function ($query) use ($request) {
                 return $query->where('isdt', '>=', $request->start_date);
             })
@@ -46,20 +46,16 @@ class IssueInventoryController extends Controller
                 return $query->where('isdt', '<=', $request->end_date);
             })->when($request->filled('start_date'), function ($query) use ($request) {
                 return $query->where('isdt', '>=', $request->start_date);
-            })->when($request->filled('product_code'), function ($query) use ($request) {
+            })->when(($request->product_code != 'All'), function ($query) use ($request) {
                 return $query->where('ic', '=', $request->product_code);
-            });
-
-        $sum = [
-            'totalValue' => $query->sum(DB::raw('Irate * Qty'))
-        ];
-
-        $inventories = $query->leftJoin('icitem', 'icitem.code', '=', 'oldissue.ic')
+            })->when($request->filled('saerch_keyword'), function ($query) use ($request) {
+                return $query->where('icitem.name1', 'like', '%' . $request->product_code . '%');
+            })->leftJoin('icitem', 'icitem.code', '=', 'oldissue.ic')
             // ->leftJoin('supplierrec', 'supplierrec.code', '=', 'oldissue.sc')
             ->paginate(50);
 
         $request->flash();
-        return view('pages.issue-inventories.index', compact('inventories', 'products', 'sum'));
+        return view('pages.issue-inventories.index', compact('inventories', 'products'));
     }
 
     public function monthlyReportProduct(Request $request)

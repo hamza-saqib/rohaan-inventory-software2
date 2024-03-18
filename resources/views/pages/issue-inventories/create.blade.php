@@ -93,11 +93,11 @@
                                     <div class="col-sm-2">
                                         <input id="onhand" class="form-control" type="number" name="onhand">
                                     </div>
-                                    <label class="col-sm-1 control-label">Value</label>
+                                    {{-- <label class="col-sm-1 control-label">Value</label>
 
                                     <div class="col-sm-2">
                                         <input id="value" class="form-control" type="number" name="value">
-                                    </div>
+                                    </div> --}}
 
 
                                 </div>
@@ -135,14 +135,14 @@
                                                 id="locationSelect" name="location_code">
                                                 <option value="">Select Location</option>
                                                 @foreach ($locations as $location)
-                                                    <option value="{{ $location->code1 }}">{{ $location->code1 . ' - ' . $location->name1 }}</option>
+                                                    <option value="{{ $location->code1 }}">
+                                                        {{ $location->code1 . ' - ' . $location->name1 }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
                                     </div>
                                     <div class="col-sm-5 " style="text-align: right">
-                                        <button onclick="addProduct()" class="btn btn-primary"
-                                            type="button">Add</button>
+                                        <button onclick="addProduct()" class="btn btn-primary" type="button">Add</button>
                                     </div>
                                 </div>
 
@@ -195,6 +195,20 @@
     <script>
         $("#locationSelect").select2();
         $("#productSelect").select2();
+
+        $(document).ready(function() {
+
+            function calculateValue() {
+                // Get values from other input fields
+                var value1 = $('#qty').val();
+                var value2 = $('#wgt_avg_rate').val();
+
+                // Set value to another input field
+                $('#wgt_value').val(value1 * value2);
+            }
+            $('#qty').on('input', calculateValue);
+            $('#wgt_avg_rate').on('input', calculateValue);
+        });
     </script>
     <script>
         var products = @json($products);
