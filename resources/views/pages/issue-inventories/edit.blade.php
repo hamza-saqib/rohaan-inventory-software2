@@ -51,7 +51,7 @@
                                     <label class="col-sm-1 control-label">Issue No.</label>
 
                                     <div class="col-sm-2">
-                                        <input type="number" class="form-control @error('issue_no') is-invalid @enderror "
+                                        <input type="text" class="form-control @error('issue_no') is-invalid @enderror "
                                             name="issue_no" value="{{ $inventory->isno }}" required>
                                         @error('issue_no')
                                             <span class="invalid-feedback text-danger" role="alert">
