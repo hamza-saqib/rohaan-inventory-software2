@@ -167,23 +167,23 @@
                                     <label class="col-sm-1 control-label">Sale Tax</label>
 
                                     <div class="col-sm-2">
-                                        <input id="sale_tax" class="form-control" type="text" name="sale_tax">
+                                        <input id="sale_tax" class="form-control" type="text" name="sale_tax" value="0">
                                     </div>
                                     <label class="col-sm-1 control-label">Excl. Stax</label>
 
                                     <div class="col-sm-2">
                                         <input id="value_excle_tax" class="form-control" type="text"
-                                            name="value_excle_tax">
+                                            name="value_excle_tax" value="0">
                                     </div>
                                     <label class="col-sm-1 control-label">SED</label>
 
                                     <div class="col-sm-2">
-                                        <input id="sed" class="form-control" type="text" name="sed">
+                                        <input id="sed" class="form-control" type="text" name="sed" value="0">
                                     </div>
                                     <label class="col-sm-1 control-label">FED</label>
 
                                     <div class="col-sm-2">
-                                        <input id="fed" class="form-control" type="text" name="fed">
+                                        <input id="fed" class="form-control" type="text" name="fed" value="0">
                                     </div>
 
 
@@ -194,11 +194,11 @@
                                     <label class="col-sm-1 control-label">Other Deduction</label>
                                     <div class="col-sm-2">
                                         <input id="other_deduction" class="form-control" type="text"
-                                            name="other_deduction">
+                                            name="other_deduction" value="0">
                                     </div>
                                     <label class="col-sm-1 control-label">Net Value</label>
                                     <div class="col-sm-2">
-                                        <input id="net_value" class="form-control" type="text" name="net_value">
+                                        <input id="net_value" class="form-control" type="text" name="net_value" value="0">
                                     </div>
                                     <label class="col-sm-1 control-label">Remark</label>
                                     <div class="col-sm-2">
@@ -278,6 +278,28 @@
     <script>
         $("#vendorSelect").select2();
         $("#productSelect").select2();
+        $(document).ready(function() {
+            function calculateValue() {
+                // Get values from other input fields
+                var qty = $('#qty').val();
+                var l_rate = $('#l_rate').val();
+                var sale_tax = $('#sale_tax').val();
+                var value_excle_tax = $('#value_excle_tax').val();
+                var sed = $('#sed').val();
+                var fed = $('#fed').val();
+                var other_deduction = $('#other_deduction').val();
+
+                // Set value to another input field
+                $('#net_value').val((qty * l_rate) + parseFloat(sale_tax) + parseFloat(value_excle_tax) + parseFloat(sed) + parseFloat(fed) + parseFloat(other_deduction));
+            }
+            $('#qty').on('input', calculateValue);
+            $('#l_rate').on('input', calculateValue);
+            $('#sale_tax').on('input', calculateValue);
+            $('#value_excle_tax').on('input', calculateValue);
+            $('#sed').on('input', calculateValue);
+            $('#fed').on('input', calculateValue);
+            $('#other_deduction').on('input', calculateValue);
+        });
     </script>
     <script>
         var products = @json($products);

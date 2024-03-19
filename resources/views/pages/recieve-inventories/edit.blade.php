@@ -137,6 +137,30 @@
 
 @section('custom-script')
     <script>
+        $("#vendorSelect").select2();
+        $("#productSelect").select2();
+        $(document).ready(function() {
+            function calculateValue() {
+                // Get values from other input fields
+                var qty = $('#qty').val();
+                var l_rate = $('#l_rate').val();
+                var sale_tax = $('#sale_tax').val();
+                var value_excle_tax = $('#value_excle_tax').val();
+                var sed = $('#sed').val();
+                var fed = $('#fed').val();
+                var other_deduction = $('#other_deduction').val();
+
+                // Set value to another input field
+                $('#net_value').val((qty * l_rate) + parseFloat(sale_tax) + parseFloat(value_excle_tax) + parseFloat(sed) + parseFloat(fed) + parseFloat(other_deduction));
+            }
+            $('#qty').on('input', calculateValue);
+            $('#l_rate').on('input', calculateValue);
+            $('#sale_tax').on('input', calculateValue);
+            $('#value_excle_tax').on('input', calculateValue);
+            $('#sed').on('input', calculateValue);
+            $('#fed').on('input', calculateValue);
+            $('#other_deduction').on('input', calculateValue);
+        });
         var Success = `{{ \Session::has('success') }}`;
         var Error = `{{ \Session::has('error') }}`;
 
