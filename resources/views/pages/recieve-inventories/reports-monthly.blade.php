@@ -180,17 +180,17 @@
                                             <th>Code</th>
                                             <th>{{$report}} Description</th>
                                             <th>July</th>
-                                            <th>Aug</th>
-                                            <th>Sep</th>
-                                            <th>Oct</th>
-                                            <th>Nov</th>
-                                            <th>Dec</th>
-                                            <th>Jan</th>
-                                            <th>Feb</th>
-                                            <th>Mar</th>
-                                            <th>Apr</th>
+                                            <th>August</th>
+                                            <th>September</th>
+                                            <th>October</th>
+                                            <th>November</th>
+                                            <th>December</th>
+                                            <th>January</th>
+                                            <th>Febraury</th>
+                                            <th>March</th>
+                                            <th>April</th>
                                             <th>May</th>
-                                            <th>Jun</th>
+                                            <th>June</th>
                                         </tr>
                                     </thead>
                                     <tbody>
