@@ -139,6 +139,7 @@ class IssueInventoryController extends Controller
      */
     public function store(Request $request)
     {
+        return $request->all();
         $this->validate($request, [
             'issue_no' => ['required', 'numeric'],
             'issue_date' => ['required', 'string'],
@@ -148,13 +149,13 @@ class IssueInventoryController extends Controller
         // $currentIDCol = IssueInventory::orderBy('id_col', 'DESC')->get()->first()->id_col;
         foreach ($products['code'] as $key => $product) {
             $inventory = new IssueInventory();
-
+            $location = Location::where('code1', $products['locationCode'][$key])->get()->first();
             $inventory->isno = $request->input('issue_no');
             $inventory->isdt = date('Y-m-d', strtotime($request->input('issue_date')));
             $inventory->ic = $products['code'][$key];
             $inventory->Qty = $products['qty'][$key];
             $inventory->Irate = $products['wgt_avg_rate'][$key];
-            $inventory->dpt = $products['location'][$key];
+            $inventory->dpt = $location->name1; //$products['location'][$key];
             $inventory->Iamt = $products['issue_value'][$key];
             $inventory->remarks = $products['remarks'][$key];
             // $inventory->id_col = $currentIDCol++;
