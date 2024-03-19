@@ -67,7 +67,7 @@
                                 <table class="table table-striped table-bordered table-hover dataTables-example">
                                     <thead>
                                         <tr>
-                                            <th>Cdde</th>
+                                            <th>Code</th>
                                             <th>Description</th>
                                             <th>Remarks</th>
                                             <th>Action</th>
