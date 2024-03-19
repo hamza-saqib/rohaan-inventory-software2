@@ -139,7 +139,6 @@ class IssueInventoryController extends Controller
      */
     public function store(Request $request)
     {
-        return $request->all();
         $this->validate($request, [
             'issue_no' => ['required', 'numeric'],
             'issue_date' => ['required', 'string'],
