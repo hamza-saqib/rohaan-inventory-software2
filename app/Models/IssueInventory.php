@@ -10,6 +10,7 @@ class IssueInventory extends Model
     use HasFactory;
 
     protected  $table = "oldissue";
-    protected $primaryKey = 'isno';
+    // protected $primaryKey = 'isno';
+    protected $primaryKey = 'id_col';
     public $timestamps = false;
 }

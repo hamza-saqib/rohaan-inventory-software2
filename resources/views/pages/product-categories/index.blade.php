@@ -138,7 +138,14 @@
             $('.dataTables-example').DataTable({
                 dom: '<"html5buttons"B>lTfgitp',
                 buttons: [
-                    // {extend: 'copy'},
+                    {
+                        extend: 'excel',
+                        title: 'Item Category',
+                        filename: 'Item Category Data',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3]
+                        }
+                    }
                     // {extend: 'csv'},
                     // {extend: 'excel', title: 'ExampleFile'},
                     // {extend: 'pdf', title: 'ExampleFile'},

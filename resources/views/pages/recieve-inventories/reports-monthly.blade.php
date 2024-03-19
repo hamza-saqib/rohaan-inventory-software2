@@ -268,9 +268,10 @@
                 searching: false,
                 buttons: [
                     {
-                        extend: 'pdf',
-                        title: 'CONTINENTAL AIR CONTROL (PVT) LTD.\n ' + @json($report) + ' Monthly Report ( ' + date + ' )' ,
+                        extend: 'pdfHtml5',
                         orientation: 'landscape',
+                        pageSize: 'LEGAL',
+                        title: 'CONTINENTAL AIR CONTROL (PVT) LTD.\n ' + @json($report) + ' Monthly Report ( ' + date + ' )' ,
                         filename: @json($report) + ' Monthly Report ( ' + date + ' )',
                         customize: function(doc) {
                             var colCount = new Array();

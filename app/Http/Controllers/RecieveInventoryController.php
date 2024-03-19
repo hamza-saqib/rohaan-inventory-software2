@@ -36,7 +36,8 @@ class RecieveInventoryController extends Controller
     {
         if ($request->filled('button') && ($request->input('button') == 'export')) {
             return Excel::download(new RecieveInventoryExport([
-                'startDate' => $request->start_date, 'endDate' => $request->end_date, 'productCode' => $request->product_code, 'vendorCode' => $request->vendor_code
+                'startDate' => $request->start_date, 'endDate' => $request->end_date, 'productCode' => $request->product_code, 'vendorCode' => $request->vendor_code,
+                'saerch_keyword'=>$request->saerch_keyword
             ]), 'reciept inventory data.xls', \Maatwebsite\Excel\Excel::XLS);
         }
         $products = Product::all();

@@ -37,7 +37,8 @@ class IssueInventoryController extends Controller
             set_time_limit(3000); //3000 seconds = 50 minutes
             ini_set('memory_limit', -1);
             return Excel::download(new IssueInventoryExport([
-                'startDate' => $request->start_date, 'endDate' => $request->end_date, 'code' => $request->product_code
+                'startDate' => $request->start_date, 'endDate' => $request->end_date, 'code' => $request->product_code,
+                'saerch_keyword'=>$request->saerch_keyword
             ]), 'issue inventory data.xls', \Maatwebsite\Excel\Excel::XLS);
         }
         $products = Product::all();

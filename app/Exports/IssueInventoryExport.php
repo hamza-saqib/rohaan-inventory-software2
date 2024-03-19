@@ -20,13 +20,16 @@ class IssueInventoryExport implements FromCollection
     public function collection()
     {
         $data = $this->data;
-        return IssueInventory::when(isset($data['startDate']), function ($query) use ($data) {
+        return IssueInventory::select('oldissue.*')
+        ->when(isset($data['startDate']), function ($query) use ($data) {
             return $query->where('isdt', '>=', $data['startDate']);
-        })
-        ->when(isset($data['endDate']), function ($query) use ($data) {
+        })->when(isset($data['endDate']), function ($query) use ($data) {
             return $query->where('isdt', '<=', $data['endDate']);
-        })->when(isset($data['code']), function ($query) use ($data) {
+        })->when(isset($data['code']) && ($data['code'] != 'All'), function ($query) use ($data) {
             return $query->where('ic', '=', $data['code']);
-        })->get();
+        })->when(isset($data['saerch_keyword']), function ($query) use ($data) {
+            return $query->where('icitem.name1', 'like', '%' . $data['saerch_keyword'] . '%');
+        })->leftJoin('icitem', 'icitem.code', '=', 'oldissue.ic')
+        ->get();
     }
 }

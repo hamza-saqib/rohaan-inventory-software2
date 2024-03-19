@@ -180,18 +180,18 @@
                                             <tr class="gradeX" id="row-{{ $record->code }}">
                                                 <td>{{ $record->code }}</td>
                                                 <td>{{ $record->name1 }}</td>
-                                                <td>{{ ($record->jul > 0 ) ? $record->jul : ''}}</td>
-                                                <td>{{ ($record->aug > 0 ) ? $record->aug : ''}}</td>
-                                                <td>{{ ($record->sep > 0 ) ? $record->sep : ''}}</td>
-                                                <td>{{ ($record->oct > 0 ) ? $record->oct : ''}}</td>
-                                                <td>{{ ($record->nov > 0 ) ? $record->nov : ''}}</td>
-                                                <td>{{ ($record->dec > 0 ) ? $record->dec : ''}}</td>
-                                                <td>{{ ($record->jan > 0 ) ? $record->jan : ''}}</td>
-                                                <td>{{ ($record->feb > 0 ) ? $record->feb : ''}}</td>
-                                                <td>{{ ($record->mar > 0 ) ? $record->mar : ''}}</td>
-                                                <td>{{ ($record->apr > 0 ) ? $record->apr : ''}}</td>
-                                                <td>{{ ($record->may > 0 ) ? $record->may : ''}}</td>
-                                                <td>{{ ($record->jun > 0 ) ? $record->jun : ''}}</td>
+                                                <td>{{ ($record->jul > 0 ) ? round($record->jul, 0) : ''}}</td>
+                                                <td>{{ ($record->aug > 0 ) ? round($record->aug, 0) : ''}}</td>
+                                                <td>{{ ($record->sep > 0 ) ? round($record->sep, 0) : ''}}</td>
+                                                <td>{{ ($record->oct > 0 ) ? round($record->oct, 0) : ''}}</td>
+                                                <td>{{ ($record->nov > 0 ) ? round($record->nov, 0) : ''}}</td>
+                                                <td>{{ ($record->dec > 0 ) ? round($record->dec, 0) : ''}}</td>
+                                                <td>{{ ($record->jan > 0 ) ? round($record->jan, 0) : ''}}</td>
+                                                <td>{{ ($record->feb > 0 ) ? round($record->feb, 0) : ''}}</td>
+                                                <td>{{ ($record->mar > 0 ) ? round($record->mar, 0) : ''}}</td>
+                                                <td>{{ ($record->apr > 0 ) ? round($record->apr, 0) : ''}}</td>
+                                                <td>{{ ($record->may > 0 ) ? round($record->may, 0) : ''}}</td>
+                                                <td>{{ ($record->jun > 0 ) ? round($record->jun, 0) : ''}}</td>
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -249,9 +249,10 @@
                 searching: false,
                 buttons: [
                     {
-                        extend: 'pdf',
-                        title: 'CONTINENTAL AIR CONTROL (PVT) LTD.\n ' + @json($report) + ' Monthly Report ( ' + date + ' )' ,
+                        extend: 'pdfHtml5',
                         orientation: 'landscape',
+                        pageSize: 'LEGAL',
+                        title: 'CONTINENTAL AIR CONTROL (PVT) LTD.\n ' + @json($report) + ' Monthly Report ( ' + date + ' )' ,
                         filename: @json($report) + ' Monthly Report ( ' + date + ' )',
                         customize: function(doc) {
                             var colCount = new Array();

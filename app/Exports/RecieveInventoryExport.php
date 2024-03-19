@@ -19,15 +19,21 @@ class RecieveInventoryExport implements FromCollection
     public function collection()
     {
         $data = $this->data;
-        return RecieveInventory::when(isset($data['startDate']), function ($query) use ($data) {
+        return RecieveInventory::select('invrec.*')
+        ->when(isset($data['startDate']), function ($query) use ($data) {
             return $query->where('vd', '>=', $data['startDate']);
         })
         ->when(isset($data['endDate']), function ($query) use ($data) {
             return $query->where('vd', '<=', $data['endDate']);
-        })->when(isset($data['productCode']), function ($query) use ($data) {
+        })->when(isset($data['productCode']) && ($data['productCode'] != 'All'), function ($query) use ($data) {
             return $query->where('ic', '=', $data['productCode']);
-        })->when(isset($data['vendorCode']), function ($query) use ($data) {
+        })->when(isset($data['vendorCode']) && ($data['vendorCode'] != 'All'), function ($query) use ($data) {
             return $query->where('sc', '=', $data['vendorCode']);
-        })->get();
+        })->when(isset($data['saerch_keyword']), function ($query) use ($data) {
+            return $query->where('supplierrec.name1', 'like', '%' . $data['saerch_keyword'] . '%')
+                ->orWhere('icitem.name1', 'like', '%' . $data['saerch_keyword'] . '%')
+                ->orWhere('remarks', 'like', '%' . $data['saerch_keyword'] . '%');
+        })->leftJoin('icitem', 'icitem.code', '=', 'invrec.ic')
+        ->leftJoin('supplierrec', 'supplierrec.code', '=', 'invrec.sc')->get();
     }
 }
