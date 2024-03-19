@@ -252,7 +252,7 @@
                         extend: 'pdfHtml5',
                         orientation: 'landscape',
                         pageSize: 'LEGAL',
-                        title: 'CONTINENTAL AIR CONTROL (PVT) LTD.\n ' + @json($report) + ' Monthly Report ( ' + date + ' )' ,
+                        title: 'CONTINENTAL AIR CONTROL (PVT) LTD.\n Inventory Issue '+ @json($report) + ' Monthly Report ( ' + date + ' )' ,
                         filename: @json($report) + ' Monthly Report ( ' + date + ' )',
                     },
                     {

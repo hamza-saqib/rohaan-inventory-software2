@@ -18,7 +18,7 @@
 
         <div class="row wrapper border-bottom white-bg page-heading">
             <div class="col-sm-4">
-                <h2>User Management</h2>
+                <h2>Unit Of Measurements</h2>
                 <ol class="breadcrumb">
                     <li>
                         <a href="{{ route('locations.index') }}">User</a>
@@ -42,7 +42,7 @@
                     <div class="ibox float-e-margins">
 
                         <div class="ibox-title">
-                            <h5>Fill out this form to create a new Location.</h5>
+                            <h5>Fill out this form to create a new measurement.</h5>
                             {{-- <div class="ibox-tools">
                                 <a class="collapse-link">
                                     <i class="fa fa-chevron-up"></i>
