@@ -40,14 +40,13 @@
         <div class="wrapper wrapper-content animated fadeInRight">
             <div class="row">
                 <div class="ibox-content m-b-sm border-bottom">
-                    <div class="row">
-                        <form action="{{ route('recieve-inventories.index') }}" method="GET">
-                            @csrf
+                    <form action="{{ route('recieve-inventories.index') }}" method="GET">
+                        @csrf
+                        <div class="row">
                             <div class="col-sm-3">
                                 <div class="form-group">
                                     <label class="control-label" for="saerch_keyword">_</label>
-                                    <input
-                                        name="saerch_keyword" id="saerch_keyword" type="text" class="form-control"
+                                    <input name="saerch_keyword" id="saerch_keyword" type="text" class="form-control"
                                         value="{{ old('saerch_keyword') ?? '' }}">
 
                                 </div>
@@ -76,7 +75,8 @@
                                 <div class="form-group">
                                     <label class="control-label" for="date_modified">Item</label>
                                     <div class="input-group date">
-                                        <select class="form-control" name="product_code">
+                                        <select data-placeholder="Select Item" class="chosen-select" tabindex="2"
+                                            id="productSelect" name="product_code">
                                             <option selected>All</option>
                                             @foreach ($products as $product)
                                                 @if (old('product_code') == $product->code)
@@ -92,12 +92,15 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-3">
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-5">
                                 <div class="form-group">
                                     <label class="control-label" for="date_modified">Supplier</label>
                                     <div class="input-group date">
-                                        <select class="form-control" name="vendor_code">
-                                            <option selected >All</option>
+                                        <select data-placeholder="Select Suplier" class="chosen-select" tabindex="2"
+                                            id="vendorSelect" name="vendor_code">
+                                            <option selected>All</option>
                                             @foreach ($vendors as $vendor)
                                                 @if (old('vendor_code') == $vendor->code)
                                                     <option selected value="{{ $vendor->code }}">
@@ -132,9 +135,9 @@
 
                                 </div>
                             </div>
+                        </div>
+                    </form>
 
-                        </form>
-                    </div>
 
                 </div>
                 <div class="col-lg-12">
@@ -263,6 +266,8 @@
     <script src="{{ asset('assets') }}/js/plugins/dataTables/datatables.min.js"></script>
 
     <script>
+        $("#vendorSelect").select2();
+        $("#productSelect").select2();
         // $(document).ready(function() {
         //     $('.dataTables-example').DataTable({
         //         dom: '<"html5buttons"B>lTfgitp',

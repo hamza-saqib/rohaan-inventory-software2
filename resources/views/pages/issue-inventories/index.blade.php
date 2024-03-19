@@ -49,7 +49,7 @@
                                     <input
                                         name="saerch_keyword" id="saerch_keyword" type="text" class="form-control"
                                         value="{{ old('saerch_keyword') ?? '' }}">
-                                    
+
                                 </div>
                             </div>
                             <div class="col-sm-3">
@@ -76,7 +76,8 @@
                                 <div class="form-group">
                                     <label class="control-label" for="date_modified">Item</label>
                                     <div class="input-group date">
-                                        <select class="form-control" name="product_code" >
+                                        <select data-placeholder="Select Item" class="chosen-select" tabindex="2"
+                                        id="productSelect" name="product_code" >
                                             <option selected >All</option>
                                             @foreach ($products as $product)
                                                 @if (old('product_code') == $product->code)
@@ -213,6 +214,8 @@
     <script src="{{ asset('assets') }}/js/plugins/dataTables/datatables.min.js"></script>
 
     <script>
+        $("#vendorSelect").select2();
+        $("#productSelect").select2();
         // $(document).ready(function() {
         //     $('.dataTables-example').DataTable({
         //         dom: '<"html5buttons"B>lTfgitp',
