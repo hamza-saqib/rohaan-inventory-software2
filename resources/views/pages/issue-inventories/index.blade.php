@@ -45,7 +45,7 @@
                             @csrf
                             <div class="col-sm-3">
                                 <div class="form-group">
-                                    <label class="control-label" for="saerch_keyword">_</label>
+                                    <label class="control-label" for="saerch_keyword">Search</label>
                                     <input
                                         name="saerch_keyword" id="saerch_keyword" type="text" class="form-control"
                                         value="{{ old('saerch_keyword') ?? '' }}">
