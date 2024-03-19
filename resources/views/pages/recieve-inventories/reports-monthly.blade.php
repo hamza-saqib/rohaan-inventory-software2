@@ -198,18 +198,18 @@
                                             <tr class="gradeX" id="row-{{ $record->code }}">
                                                 <td>{{ $record->code }}</td>
                                                 <td>{{ $record->name1 }}</td>
-                                                <td>{{ ($record->jul > 0 ) ? $record->jul : ''}}</td>
-                                                <td>{{ ($record->aug > 0 ) ? $record->aug : ''}}</td>
-                                                <td>{{ ($record->sep > 0 ) ? $record->sep : ''}}</td>
-                                                <td>{{ ($record->oct > 0 ) ? $record->oct : ''}}</td>
-                                                <td>{{ ($record->nov > 0 ) ? $record->nov : ''}}</td>
-                                                <td>{{ ($record->dec > 0 ) ? $record->dec : ''}}</td>
-                                                <td>{{ ($record->jan > 0 ) ? $record->jan : ''}}</td>
-                                                <td>{{ ($record->feb > 0 ) ? $record->feb : ''}}</td>
-                                                <td>{{ ($record->mar > 0 ) ? $record->mar : ''}}</td>
-                                                <td>{{ ($record->apr > 0 ) ? $record->apr : ''}}</td>
-                                                <td>{{ ($record->may > 0 ) ? $record->may : ''}}</td>
-                                                <td>{{ ($record->jun > 0 ) ? $record->jun : ''}}</td>
+                                                <td>{{ ($record->jul > 0 ) ? round($record->jul, 2) : ''}}</td>
+                                                <td>{{ ($record->aug > 0 ) ? round($record->aug, 2) : ''}}</td>
+                                                <td>{{ ($record->sep > 0 ) ? round($record->sep, 2) : ''}}</td>
+                                                <td>{{ ($record->oct > 0 ) ? round($record->oct, 2) : ''}}</td>
+                                                <td>{{ ($record->nov > 0 ) ? round($record->nov, 2) : ''}}</td>
+                                                <td>{{ ($record->dec > 0 ) ? round($record->dec, 2) : ''}}</td>
+                                                <td>{{ ($record->jan > 0 ) ? round($record->jan, 2) : ''}}</td>
+                                                <td>{{ ($record->feb > 0 ) ? round($record->feb, 2) : ''}}</td>
+                                                <td>{{ ($record->mar > 0 ) ? round($record->mar, 2) : ''}}</td>
+                                                <td>{{ ($record->apr > 0 ) ? round($record->apr, 2) : ''}}</td>
+                                                <td>{{ ($record->may > 0 ) ? round($record->may, 2) : ''}}</td>
+                                                <td>{{ ($record->jun > 0 ) ? round($record->jun, 2) : ''}}</td>
 
                                                 </td>
                                             </tr>
