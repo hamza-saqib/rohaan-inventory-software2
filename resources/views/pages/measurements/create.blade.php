@@ -72,7 +72,7 @@
 
                                     <div class="col-sm-4">
                                         <input type="text" class="form-control @error('code') is-invalid @enderror "
-                                            name="code" value="{{ old('code') }}" required>
+                                            name="code" value="{{ old('code') }}" required maxlength="10">
                                         @error('code')
                                             <span class="invalid-feedback text-danger" role="alert">
                                                 <strong>{{ $message }}</strong>
