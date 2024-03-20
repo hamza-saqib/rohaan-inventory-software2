@@ -85,7 +85,8 @@
                                 <div class="form-group">
                                     <label class="control-label" for="date_modified">Item</label>
                                     <div class="input-group date">
-                                        <select class="form-control" name="code" >
+                                        <select data-placeholder="Select Item" class="chosen-select" tabindex="2"
+                                        id="productSelect" name="code" >
                                             <option selected >All</option>
                                             @foreach ($dropDownData as $value)
                                                 @if (old('code') == $value->code)
@@ -241,6 +242,7 @@
     <script src="{{ asset('assets') }}/js/plugins/dataTables/datatables.min.js"></script>
 
     <script>
+        $("#productSelect").select2();
         var date = new Date().toISOString().slice(0,10);
         $(document).ready(function() {
             $('.dataTables-example').DataTable({
