@@ -322,11 +322,12 @@ class RecieveInventoryController extends Controller
      * @param  \App\Models\Product  $inventory
      * @return \Illuminate\Http\Response
      */
-    public function edit(Product $inventory)
+    public function edit($recieve_inventory)
     {
-        $units = UnitMeasurement::all();
-        $categories = ProductCategory::all();
-        return view('pages.recieve-inventories.edit', compact('product', 'units', 'categories'));
+        $vendors = Vendor::all();
+        $products = Product::all();
+        return $inventory = RecieveInventory::where('id_col', $recieve_inventory)->get()->first();
+        return view('pages.recieve-inventories.edit', compact('vendors', 'products', 'inventory'));
     }
 
     /**

@@ -190,7 +190,7 @@
                                     </thead>
                                     <tbody>
                                         @foreach ($inventories as $inventory)
-                                            <tr class="gradeX" id="row-{{ $inventory->sc }}">
+                                            <tr class="gradeX" id="row-{{ $inventory->id_col }}">
                                                 <td>{{ $inventory->product }}</td>
                                                 <td>{{ $inventory->supplier }}</td>
                                                 <td>{{ $inventory->sin }}</td>
@@ -210,7 +210,7 @@
                                                 <td class="text-center">
                                                     <div class="btn-group">
 
-                                                        <a href="{{ route('recieve-inventories.edit', $inventory->vn) }}"
+                                                        <a href="{{ route('recieve-inventories.edit', $inventory->id_col) }}"
                                                             class="btn-white btn btn-xs">Edit</a>
                                                         <button onclick="deleteRecord({{ $inventory->id_col }})"
                                                             class="btn-white btn btn-xs">Delete</button>

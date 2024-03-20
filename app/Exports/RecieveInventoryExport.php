@@ -4,8 +4,9 @@ namespace App\Exports;
 
 use App\Models\RecieveInventory;
 use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\WithHeadings;
 
-class RecieveInventoryExport implements FromCollection
+class RecieveInventoryExport implements FromCollection, WithHeadings
 {
     private $data;
 
@@ -19,7 +20,9 @@ class RecieveInventoryExport implements FromCollection
     public function collection()
     {
         $data = $this->data;
-        return RecieveInventory::select('invrec.*')
+        return RecieveInventory::select('icitem.name1', 'supplierrec.name1', 'invrec.sin', 'invrec.gn', 'invrec.gd',
+        'invrec.vn', 'invrec.vd', 'invrec.qty', 'invrec.rat', 'invrec.sed', 'invrec.fed', 'invrec.od',
+         'invrec.st', 'invrec.nv', 'invrec.remarks')
         ->when(isset($data['startDate']), function ($query) use ($data) {
             return $query->where('vd', '>=', $data['startDate']);
         })
@@ -35,5 +38,11 @@ class RecieveInventoryExport implements FromCollection
                 ->orWhere('remarks', 'like', '%' . $data['saerch_keyword'] . '%');
         })->leftJoin('icitem', 'icitem.code', '=', 'invrec.ic')
         ->leftJoin('supplierrec', 'supplierrec.code', '=', 'invrec.sc')->get();
+    }
+
+    public function headings(): array
+    {
+        return ["Item Description", "Supllier", "Supllier Inv.", "GRN", "GRN Date", "Voucher No.", "Voucher Date",
+        "Qty", "Rate", "SED", "FED", "Deduction", "Sales Tax", "Net Value", "Remarks"];
     }
 }

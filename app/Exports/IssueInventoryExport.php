@@ -4,8 +4,9 @@ namespace App\Exports;
 
 use App\Models\IssueInventory;
 use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\WithHeadings;
 
-class IssueInventoryExport implements FromCollection
+class IssueInventoryExport implements FromCollection, WithHeadings
 {
     private $data;
 
@@ -20,7 +21,8 @@ class IssueInventoryExport implements FromCollection
     public function collection()
     {
         $data = $this->data;
-        return IssueInventory::select('oldissue.*')
+        return IssueInventory::select('oldissue.isno', 'oldissue.isdt', 'oldissue.dpt',
+        'icitem.name1', 'oldissue.Qty', 'oldissue.Irate', 'oldissue.Iamt', 'oldissue.remarks')
         ->when(isset($data['startDate']), function ($query) use ($data) {
             return $query->where('isdt', '>=', $data['startDate']);
         })->when(isset($data['endDate']), function ($query) use ($data) {
@@ -31,5 +33,10 @@ class IssueInventoryExport implements FromCollection
             return $query->where('icitem.name1', 'like', '%' . $data['saerch_keyword'] . '%');
         })->leftJoin('icitem', 'icitem.code', '=', 'oldissue.ic')
         ->get();
+    }
+
+    public function headings(): array
+    {
+        return ["Issue No", "Issue Date", "Location", "Item", "Qty", "Rate", "Value", "Remarks"];
     }
 }
