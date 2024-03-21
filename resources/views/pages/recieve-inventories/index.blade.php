@@ -43,14 +43,14 @@
                     <form action="{{ route('recieve-inventories.index') }}" method="GET">
                         @csrf
                         <div class="row">
-                            <div class="col-sm-2">
+                            <!-- <div class="col-sm-2">
                                 <div class="form-group">
                                     <label class="control-label" for="saerch_keyword">Search</label>
                                     <input name="saerch_keyword" id="saerch_keyword" type="text" class="form-control"
                                         value="{{ old('saerch_keyword') ?? '' }}">
 
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="col-sm-3">
                                 <div class="form-group">
                                     <label class="control-label" for="date_added">Start Date</label>
@@ -115,7 +115,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-2">
+                            <div class="col-sm-4"></div>
+                            <div class="col-sm-1">
                                 <div class="form-group">
                                     <label class="control-label" for="amount">_____________</label>
                                     <div class="input-group date">
@@ -125,7 +126,7 @@
 
                                 </div>
                             </div>
-                            <div class="col-sm-2">
+                            <div class="col-sm-1">
                                 <div class="form-group">
                                     <label class="control-label" for="amount">_____________</label>
                                     <div class="input-group date">

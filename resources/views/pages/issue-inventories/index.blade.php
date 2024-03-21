@@ -94,7 +94,7 @@
 
                             <div class="col-sm-1">
                                 <div class="form-group">
-                                    <label class="control-label" for="amount">_____________</label>
+                                    <!-- <label class="control-label" for="amount">_____________</label> -->
                                     <div class="input-group date">
                                         <button class="btn btn-primary" type="submit" value="search" name="button">Search</button>
                                     </div>
@@ -103,7 +103,7 @@
                             </div>
                             <div class="col-sm-2">
                                 <div class="form-group">
-                                    <label class="control-label" for="amount">_____________</label>
+                                    <!-- <label class="control-label" for="amount">_____________</label> -->
                                     <div class="input-group date">
                                         <button class="btn btn-warning" type="submit" name='button' value="export">Export</button>
                                     </div>
