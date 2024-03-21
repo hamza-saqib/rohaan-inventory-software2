@@ -126,7 +126,8 @@
                                     <label class="col-sm-1 control-label">Value</label>
 
                                     <div class="col-sm-2">
-                                        <input id="wgt_value" class="form-control" type="text" name="wgt_value" value="{{ $inventory->Irate * $inventory->Qty }}">
+                                        <input id="wgt_value" class="form-control" type="text" name="wgt_value"
+                                            value="{{ $inventory->Irate * $inventory->Qty }}">
                                     </div>
                                     <label class="col-sm-1 control-label">Remarks</label>
                                     <div class="col-sm-2">
