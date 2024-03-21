@@ -156,7 +156,7 @@
                         extend: 'excel',
                         title: 'Products Data',
                         filename: 'Products Data',
-                         : {
+                        exportOptions: {
                             columns: [0, 1, 2, 3,4,5,6]
                         }
                     },
