@@ -326,7 +326,7 @@ class RecieveInventoryController extends Controller
     {
         $vendors = Vendor::all();
         $products = Product::all();
-        return $inventory = RecieveInventory::where('id_col', $recieve_inventory)->get()->first();
+        $inventory = RecieveInventory::where('id_col', $recieve_inventory)->get()->first();
         return view('pages.recieve-inventories.edit', compact('vendors', 'products', 'inventory'));
     }
 
@@ -337,7 +337,7 @@ class RecieveInventoryController extends Controller
      * @param  \App\Models\Product  $inventory
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Product $inventory)
+    public function update(Request $request, $recieve_inventory)
     {
         $this->validate($request, [
             'grn' => ['required', 'numeric'],
@@ -349,20 +349,31 @@ class RecieveInventoryController extends Controller
             'vendor_inv_date' => 'required|string',
         ]);
 
-        $inventory->code = $request->input('code');
-        $inventory->name1 = $request->input('description');
-        $inventory->uom = $request->input('uom');
-        $inventory->catcode = $request->input('category');
-        $inventory->misc_code = $request->input('misc_code');
-        // $inventory->faxno = $request->input('fax_no');
-        // $inventory->ntn = $request->input('ntn');
-        // $inventory->stn = $request->input('stn');
+        $inventory = RecieveInventory::where('id_col', $recieve_inventory)->get()->first();
+
+        $inventory->vn = $request->input('voucher_no');
+        $inventory->vd = date('Y-m-d', strtotime($request->input('voucher_date')));
+        $inventory->gn = $request->input('grn');
+        $inventory->gd = $request->input('grn_date');
+        $inventory->sc = $request->input('vendor_code');
+        $inventory->sin = $request->input('vendor_inv');
+        $inventory->sid = $request->input('vendor_inv_date');
+        $inventory->ic = $request->input('product_code');
+        $inventory->qty = $request->input('qty');
+        $inventory->rat = $request->input('l_rate');
+        $inventory->ved = $request->input('value_excle_tax');
+        $inventory->st = $request->input('sale_tax');
+        $inventory->sed = $request->input('sed');
+        $inventory->fed = $request->input('fed');
+        $inventory->od = $request->input('other_deduction');
+        $inventory->nv = $request->input('net_value');
+        $inventory->ttype = $request->input('ttype');
         $inventory->remarks = $request->input('remarks');
 
         if ($inventory->save()) {
-            return redirect()->route('recieve-inventories.index')->with(['success' => 'Unit Successfully Saved.']);
+            return redirect()->route('recieve-inventories.index')->with(['success' => 'Issue Reciept Successfully Saved.']);
         } else {
-            return redirect()->back()->with(['error' => 'Error while saving Location.']);
+            return redirect()->back()->with(['error' => 'Error while saving Issue Reciept.']);
         }
     }
 

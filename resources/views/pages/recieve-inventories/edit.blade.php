@@ -42,9 +42,10 @@
                     <div class="ibox float-e-margins">
 
                         <div class="ibox-content">
-                            <form method="post" class="form-horizontal" action="{{ route('recieve-inventories.store') }}"
+                            <form method="post" class="form-horizontal" action="{{ route('recieve-inventories.update', $inventory->id_col) }}"
                                 enctype="multipart/form-data">
                                 @csrf
+                                @method('put')
                                 <div class="form-group">
                                     <label class="col-sm-1 control-label">GRN</label>
 
@@ -104,9 +105,15 @@
                                                 tabindex="2" id="vendorSelect" name="vendor_code">
                                                 <option value="">Select Suplier</option>
                                                 @foreach ($vendors as $vendor)
+                                                @if ($vendor->code == $inventory->sc)
+                                                    <option selected value="{{ $vendor->code }}">
+                                                        {{ $vendor->code . ' - ' . $vendor->name1 }}</option>
+                                                @else
                                                     <option value="{{ $vendor->code }}">
                                                         {{ $vendor->code . ' - ' . $vendor->name1 }}</option>
+                                                @endif
                                                 @endforeach
+
                                             </select>
                                         </div>
                                     </div>
