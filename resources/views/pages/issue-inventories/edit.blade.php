@@ -98,7 +98,7 @@
                                     <label class="col-sm-1 control-label">Onhand</label>
 
                                     <div class="col-sm-2">
-                                        <input id="onhand" class="form-control" type="number" name="onhand">
+                                        <input id="onhand" class="form-control" type="text" name="onhand">
                                     </div>
                                     {{-- <label class="col-sm-1 control-label">Value</label>
 
@@ -213,6 +213,7 @@
         $("#locationSelect").select2();
         $("#productSelect").select2();
         $(document).ready(function() {
+            var products = @json($products);
 
             function calculateValue() {
                 // Get values from other input fields
@@ -224,6 +225,11 @@
             }
             $('#qty').on('input', calculateValue);
             $('#wgt_avg_rate').on('input', calculateValue);
+
+            $('#productSelect').on('change', function(e) {
+                var product = products[$(this).prop('selectedIndex')];
+                $('#onhand').val(parseFloat(product.qtyIn) - parseFloat(product.qtyOut));
+            });
         });
     </script>
     <script>

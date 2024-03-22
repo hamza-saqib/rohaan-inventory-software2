@@ -107,7 +107,12 @@ class IssueInventoryController extends Controller
     {
         $currentCode = IssueInventory::orderBy('isno', 'DESC')->get()->first()->isno + 1;
         $locations = Location::all();
-        $products = Product::all();
+        $products = Product::select('icitem.code', 'icitem.name1',
+            DB::raw('SUM(oldissue.Qty) as qtyOut'), DB::raw('SUM(invrec.qty) as qtyIn'))
+            ->leftJoin('oldissue', 'oldissue.ic', '=', 'icitem.code')
+            ->leftJoin('invrec', 'invrec.ic', '=', 'icitem.code')
+            ->groupBy('icitem.code', 'icitem.name1')
+            ->get();
         return view('pages.issue-inventories.create', compact('products', 'locations', 'currentCode'));
     }
     public function voucher($isno)
@@ -190,7 +195,12 @@ class IssueInventoryController extends Controller
     public function edit($issue_inventory)
     {
         $locations = Location::all();
-        $products = Product::all();
+        $products = Product::select('icitem.code', 'icitem.name1',
+        DB::raw('SUM(oldissue.Qty) as qtyOut'), DB::raw('SUM(invrec.qty) as qtyIn'))
+        ->leftJoin('oldissue', 'oldissue.ic', '=', 'icitem.code')
+        ->leftJoin('invrec', 'invrec.ic', '=', 'icitem.code')
+        ->groupBy('icitem.code', 'icitem.name1')
+        ->get();
         $inventory = IssueInventory::where('id_col', $issue_inventory)->get()->first();
         return view('pages.issue-inventories.edit', compact('locations', 'products', 'inventory'));
     }

@@ -43,7 +43,8 @@
                                 <div class="form-group">
                                     <label class="control-label" for="date_modified">Item</label>
                                     <div class="input-group date">
-                                        <select class="form-control" name="product_code" required>
+                                        <select data-placeholder="Select Item" class="chosen-select" tabindex="2"
+                                        id="productSelect" name="product_code" required>
                                             <option selected disabled>Select</option>
                                             @foreach ($products as $product)
                                                 @if (old('product_code') == $product->code)
@@ -141,7 +142,8 @@
                                             <th>Qty Out</th>
                                             <th>Rate</th>
                                             <th>Amount</th>
-                                            <th>Balance</th>
+                                            <th>Balance Qty</th>
+                                            {{-- <th>Amount</th> --}}
                                             <th>Date</th>
                                         </tr>
                                     </thead>
@@ -205,6 +207,7 @@
     <script src="{{ asset('assets') }}/js/plugins/dataTables/datatables.min.js"></script>
 
     <script>
+        $("#productSelect").select2();
         var date = new Date().toISOString().slice(0, 10);
         $(document).ready(function() {
             $('.dataTables-example').DataTable({

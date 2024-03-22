@@ -82,8 +82,8 @@
                                                 <td>{{ $product->qtyIn }}</td>
                                                 <td>{{ $product->qtyOut }}</td>
                                                 {{-- <td>{{ $product->loct }}</td> --}}
-                                                <td>{{ $product->qtyOut - $product->qtyIn }}</td>
-                                                </td>
+                                                <td style="color: red">-{{ $product->qtyOut - $product->qtyIn }}</td>
+
 
                                                 {{-- <td class="text-center">
                                                     <div class="btn-group">
