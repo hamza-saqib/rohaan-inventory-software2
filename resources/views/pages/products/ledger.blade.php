@@ -39,7 +39,7 @@
                     <div class="row">
                         <form action="{{ route('reports.products.ledger') }}" method="GET">
                             @csrf
-                            <div class="col-sm-3">
+                            <div class="col-sm-4">
                                 <div class="form-group">
                                     <label class="control-label" for="date_modified">Item</label>
                                     <div class="input-group date">
