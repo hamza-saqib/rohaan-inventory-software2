@@ -292,7 +292,7 @@ class RecieveInventoryController extends Controller
             $inventory->fed = $products['fed'][$key];
             $inventory->od = $products['other_deduction'][$key];
             $inventory->nv = $products['net_value'][$key];
-            $inventory->trnln = $products['ttype'][$key];
+            $inventory->ttype = $products['ttype'][$key];
             $inventory->remarks = $products['remarks'][$key];
 
             $inventory->save();
