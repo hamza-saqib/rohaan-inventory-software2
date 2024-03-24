@@ -144,6 +144,19 @@
                     </div>
                 </a>
                 
+            <a href="{{ route('reports.products.negative') }}">
+                    <div class="col-lg-3">
+                        <div class="widget style1 red-bg">
+                            <div class="row">
+                                <div class="col-xs-12 text-left">
+                                    <span>By Product</span>
+                                    <h2>Negative Items Report</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                
                 <a href="{{ route('reports.issue.product') }}">
                     <div class="col-lg-3">
                         <div class="widget style1 red-bg">
