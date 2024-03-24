@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title-meta')
-    <title>{{ config('app.name') }} | Inventory Receipt List</title>
+    <title>{{ config('app.name') }} | Inventory Receipt Reports</title>
 
     <meta name="description" content="this is description">
 @endsection
@@ -136,6 +136,7 @@
                                     </div>
                                 </div>
                             </div> --}}
+                            <div class="col-sm-2"></div>
                             <div class="col-sm-2">
                                 <div class="form-group">
                                     <label class="control-label" for="amount">_____________</label>
@@ -199,18 +200,18 @@
                                             <tr class="gradeX" id="row-{{ $record->code }}">
                                                 <td>{{ $record->code }}</td>
                                                 <td>{{ $record->name1 }}</td>
-                                                <td>{{ ($record->jul > 0 ) ? round($record->jul, 2) : '----'}}</td>
-                                                <td>{{ ($record->aug > 0 ) ? round($record->aug, 2) : '----'}}</td>
-                                                <td>{{ ($record->sep > 0 ) ? round($record->sep, 2) : '----'}}</td>
-                                                <td>{{ ($record->oct > 0 ) ? round($record->oct, 2) : '----'}}</td>
-                                                <td>{{ ($record->nov > 0 ) ? round($record->nov, 2) : '----'}}</td>
-                                                <td>{{ ($record->dec > 0 ) ? round($record->dec, 2) : '----'}}</td>
-                                                <td>{{ ($record->jan > 0 ) ? round($record->jan, 2) : '----'}}</td>
-                                                <td>{{ ($record->feb > 0 ) ? round($record->feb, 2) : '----'}}</td>
-                                                <td>{{ ($record->mar > 0 ) ? round($record->mar, 2) : '----'}}</td>
-                                                <td>{{ ($record->apr > 0 ) ? round($record->apr, 2) : '----'}}</td>
-                                                <td>{{ ($record->may > 0 ) ? round($record->may, 2) : '----'}}</td>
-                                                <td>{{ ($record->jun > 0 ) ? round($record->jun, 2) : '----'}}</td>
+                                                <td>{{ ($record->jul > 0 ) ? round($record->jul, 2) : '----  -- --  ----'}}</td>
+                                                <td>{{ ($record->aug > 0 ) ? round($record->aug, 2) : '----  -- --  ----'}}</td>
+                                                <td>{{ ($record->sep > 0 ) ? round($record->sep, 2) : '----  -- --  ----'}}</td>
+                                                <td>{{ ($record->oct > 0 ) ? round($record->oct, 2) : '----  -- --  ----'}}</td>
+                                                <td>{{ ($record->nov > 0 ) ? round($record->nov, 2) : '----  -- --  ----'}}</td>
+                                                <td>{{ ($record->dec > 0 ) ? round($record->dec, 2) : '----  -- --  ----'}}</td>
+                                                <td>{{ ($record->jan > 0 ) ? round($record->jan, 2) : '----  -- --  ----'}}</td>
+                                                <td>{{ ($record->feb > 0 ) ? round($record->feb, 2) : '----  -- --  ----'}}</td>
+                                                <td>{{ ($record->mar > 0 ) ? round($record->mar, 2) : '----  -- --  ----'}}</td>
+                                                <td>{{ ($record->apr > 0 ) ? round($record->apr, 2) : '----  -- --  ----'}}</td>
+                                                <td>{{ ($record->may > 0 ) ? round($record->may, 2) : '----  -- --  ----'}}</td>
+                                                <td>{{ ($record->jun > 0 ) ? round($record->jun, 2) : '----  -- --  ----'}}</td>
 
                                                 </td>
                                             </tr>
