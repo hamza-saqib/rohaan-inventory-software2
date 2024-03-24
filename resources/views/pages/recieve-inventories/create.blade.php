@@ -21,10 +21,10 @@
                 <h2>Inventory Receipt Management</h2>
                 <ol class="breadcrumb">
                     <li>
-                        <a href="{{ route('issue-inventories.index') }}">Inventory</a>
+                        <a href="{{ route('recieve-inventories.index') }}">Inventory Receipt</a>
                     </li>
                     <li class="active">
-                        <strong>Receipt</strong>
+                        <strong>Create</strong>
                     </li>
                 </ol>
             </div>

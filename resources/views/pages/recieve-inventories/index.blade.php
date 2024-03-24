@@ -23,7 +23,7 @@
                 <h2>Inventory Receipt Management</h2>
                 <ol class="breadcrumb">
                     <li>
-                        <a href="#">Receipt Inventory</a>
+                        <a href="#">Inventory Receipt</a>
                     </li>
                     <li class="active">
                         <strong>List</strong>

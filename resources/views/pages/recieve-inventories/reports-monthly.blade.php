@@ -23,10 +23,10 @@
                 <h2>Inventory Receipt Reports</h2>
                 <ol class="breadcrumb">
                     <li>
-                        <a href="#">{{$report}}</a>
+                        <a href="{{ route('recieve-inventories.index') }}">Inventory Receipt</a>
                     </li>
                     <li class="active">
-                        <strong>List</strong>
+                        <strong>Reports</strong>
                     </li>
                 </ol>
             </div>

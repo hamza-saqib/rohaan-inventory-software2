@@ -21,7 +21,7 @@
                 <h2>Unit Of Measurements</h2>
                 <ol class="breadcrumb">
                     <li>
-                        <a href="{{ route('locations.index') }}">User</a>
+                        <a href="{{ route('locations.index') }}">UOM</a>
                     </li>
                     <li class="active">
                         <strong>Create</strong>

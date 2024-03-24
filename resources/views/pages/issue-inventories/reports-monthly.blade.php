@@ -23,10 +23,10 @@
                 <h2>Issue Inventory / Item Monthly Report</h2>
                 <ol class="breadcrumb">
                     <li>
-                        <a href="#">{{$report}}</a>
+                        <a href="{{ route('issue-inventories.index') }}">Issue Location</a>
                     </li>
                     <li class="active">
-                        <strong>List</strong>
+                        <strong>Report</strong>
                     </li>
                 </ol>
             </div>

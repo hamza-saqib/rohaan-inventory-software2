@@ -23,7 +23,7 @@
                 <h2>Inventory Issue Management</h2>
                 <ol class="breadcrumb">
                     <li>
-                        <a href="#">Issue Inventory</a>
+                        <a href="{{ route('issue-inventories.index') }}">Issue Inventory</a>
                     </li>
                     <li class="active">
                         <strong>List</strong>
