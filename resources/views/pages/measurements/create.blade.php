@@ -30,7 +30,7 @@
             </div>
             <div class="col-sm-8">
                 <div class="title-action">
-                    <a href="{{ route('users.index') }}" class="btn btn-primary">Show List</a>
+                    <a href="{{ route('measurements.index') }}" class="btn btn-primary">Show List</a>
                 </div>
             </div>
         </div>
