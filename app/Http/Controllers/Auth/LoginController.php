@@ -61,6 +61,8 @@ class LoginController extends Controller
             Auth::login($user);
             session()->put('isUserLogedIn', true);
             return redirect()->route('home');
+        } else {
+            return redirect()->back()->withErrors(['password' => 'Invalid Username or Password!']);
         }
     }
 

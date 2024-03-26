@@ -78,6 +78,11 @@
                                                 @endif
                                             @endforeach
                                         </select>
+                                        @error('year')
+                                            <span class="invalid-feedback text-danger" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
                                     </div>
                                 </div>
                             </div>

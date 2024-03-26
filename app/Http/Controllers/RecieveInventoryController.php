@@ -78,6 +78,10 @@ class RecieveInventoryController extends Controller
     }
     public function monthlyReportProduct(Request $request)
     {
+        $this->validate($request, [
+            'year' => ['required']
+        ]);
+        
         $records = [];
         $years = $this->years;
         $report = 'Item';
