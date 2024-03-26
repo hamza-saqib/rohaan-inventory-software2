@@ -160,7 +160,7 @@
                                 <label class="col-sm-1 control-label">Value</label>
 
                                 <div class="col-sm-2">
-                                    <input id="sale_tax" class="form-control" type="text" name="sale_tax" value="0">
+                                    <input id="value" class="form-control" type="text" name="value" value="0">
                                 </div>
 
                                 <label class="col-sm-1 control-label">Sale Tax</label>
@@ -179,7 +179,7 @@
                                     <input id="sed" class="form-control" type="text" name="sed" value="0">
                                 </div>
                                 <!-- <label class="col-sm-1 control-label">FED</label>
-                                    
+
                                     <div class="col-sm-2">
                                         <input id="fed" class="form-control" type="text" name="fed" value="0">
                                     </div> -->
@@ -211,7 +211,7 @@
                                     <input id="ttype" class="form-control" type="text" placeholder="E/S" name="ttype">
                                 </div>
                                 <div class="col-sm-9"></div>
-                                
+
                                 <div class="col-sm-1 " style="text-align: right">
                                     <button onclick="addProduct()" class="btn btn-primary" type="button">Add</button>
                                 </div>
@@ -294,6 +294,15 @@
             // Set value to another input field
             $('#net_value').val((qty * l_rate) + parseFloat(sale_tax) + parseFloat(value_excle_tax) + parseFloat(sed) + parseFloat(fed) + parseFloat(other_deduction));
         }
+        function calculateRate() {
+            // Get values from other input fields
+            var qty = $('#qty').val();
+            var value = $('#value').val();
+
+            // Set value to another input field
+            $('#l_rate').val(parseFloat(parseFloat(value) / qty).toFixed(2));
+            calculateValue();
+        }
         $('#qty').on('input', calculateValue);
         $('#l_rate').on('input', calculateValue);
         $('#sale_tax').on('input', calculateValue);
@@ -301,6 +310,7 @@
         $('#sed').on('input', calculateValue);
         $('#fed').on('input', calculateValue);
         $('#other_deduction').on('input', calculateValue);
+        $('#value').on('input', calculateRate);
     });
 </script>
 <script>
