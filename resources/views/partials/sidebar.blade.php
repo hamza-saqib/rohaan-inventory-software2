@@ -144,6 +144,7 @@
                     <li><a href="{{ route('issue-inventories.create') }}">Create</a></li>
                     <li><a href="{{ route('issue-inventories.index') }}">List / Report</a></li>
                     <li><a href="{{ route('reports.issue.product') }}">Item Monthly Report</a></li>
+                    <li><a href="{{ route('reports.issue-inventories.category') }}">Category Wise Report</a></li>
                 </ul>
             </li>
             <li class="@if (request()->is('recieve-inventories*') || request()->is('reports/rec*')) {{ 'active' }} @else {{ '' }} @endif">
@@ -157,6 +158,8 @@
                     <li><a href="{{ route('recieve-inventories.index') }}">List / Report</a></li>
                     <li><a href="{{ route('reports.product') }}">Item Monthly Report</a></li>
                     <li><a href="{{ route('reports.supplier') }}">Supplier Monthly Report</a></li>
+                    <li><a href="{{ route('reports.recieve-inventories.category') }}">Category Wise Report</a></li>
+                    <li><a href="{{ route('reports.recieve-inventories.supplier') }}">Category Wise Report</a></li>
                 </ul>
             </li>
 

@@ -6,6 +6,7 @@ use App\Models\IssueInventory;
 use App\Models\Location;
 use App\Models\Product;
 use App\Exports\IssueInventoryExport;
+use App\Models\ProductCategory;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -38,7 +39,7 @@ class IssueInventoryController extends Controller
             ini_set('memory_limit', -1);
             return Excel::download(new IssueInventoryExport([
                 'startDate' => $request->start_date, 'endDate' => $request->end_date, 'code' => $request->product_code,
-                'saerch_keyword'=>$request->saerch_keyword
+                'saerch_keyword' => $request->saerch_keyword
             ]), 'issue inventory data.xls', \Maatwebsite\Excel\Excel::XLS);
         }
         $products = Product::all();
@@ -103,6 +104,32 @@ class IssueInventoryController extends Controller
         return view('pages.issue-inventories.reports-monthly', compact('records', 'years', 'report', 'dropDownData'));
     }
 
+    public function categoryWiseReprt(Request $request)
+    {
+
+        $categories = ProductCategory::all();
+        $records = [];
+        // return $request->all();
+        if ($request->filled('category_code')) {
+            $records = IssueInventory::select('oldissue.*', 'icitem.name1 as product')
+                ->when($request->filled('start_date'), function ($query) use ($request) {
+                    return $query->where('isdt', '>=', $request->start_date);
+                })
+                ->when($request->filled('end_date'), function ($query) use ($request) {
+                    return $query->where('isdt', '<=', $request->end_date);
+                })->when($request->filled('start_date'), function ($query) use ($request) {
+                    return $query->where('isdt', '>=', $request->start_date);
+                })->when($request->filled('category_code') && ($request->category_code != 'All'), function ($query) use ($request) {
+                    return $query->where('icitem.catcode', '=', $request->category_code);
+                })->when($request->filled('saerch_keyword'), function ($query) use ($request) {
+                    return $query->where('icitem.name1', 'like', '%' . $request->saerch_keyword . '%');
+                })->leftJoin('icitem', 'icitem.code', '=', 'oldissue.ic')
+                ->get();
+            $request->flash();
+        }
+        return view('pages.issue-inventories.category-wise-report', compact('categories', 'records'));
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -112,8 +139,12 @@ class IssueInventoryController extends Controller
     {
         $currentCode = IssueInventory::orderBy('isno', 'DESC')->get()->first()->isno + 1;
         $locations = Location::all();
-        $products = Product::select('icitem.code', 'icitem.name1',
-            DB::raw('SUM(oldissue.Qty) as qtyOut'), DB::raw('SUM(invrec.qty) as qtyIn'))
+        $products = Product::select(
+            'icitem.code',
+            'icitem.name1',
+            DB::raw('SUM(oldissue.Qty) as qtyOut'),
+            DB::raw('SUM(invrec.qty) as qtyIn')
+        )
             ->leftJoin('oldissue', 'oldissue.ic', '=', 'icitem.code')
             ->leftJoin('invrec', 'invrec.ic', '=', 'icitem.code')
             ->groupBy('icitem.code', 'icitem.name1')
@@ -123,9 +154,9 @@ class IssueInventoryController extends Controller
     public function voucher($isno)
     {
         $inventories = IssueInventory::select(
-                'oldissue.*',
-                'icitem.name1 as product',
-            )
+            'oldissue.*',
+            'icitem.name1 as product',
+        )
             ->where('isno', $isno)
             ->leftJoin('icitem', 'icitem.code', '=', 'oldissue.ic')
             ->get();
@@ -200,12 +231,16 @@ class IssueInventoryController extends Controller
     public function edit($issue_inventory)
     {
         $locations = Location::all();
-        $products = Product::select('icitem.code', 'icitem.name1',
-        DB::raw('SUM(oldissue.Qty) as qtyOut'), DB::raw('SUM(invrec.qty) as qtyIn'))
-        ->leftJoin('oldissue', 'oldissue.ic', '=', 'icitem.code')
-        ->leftJoin('invrec', 'invrec.ic', '=', 'icitem.code')
-        ->groupBy('icitem.code', 'icitem.name1')
-        ->get();
+        $products = Product::select(
+            'icitem.code',
+            'icitem.name1',
+            DB::raw('SUM(oldissue.Qty) as qtyOut'),
+            DB::raw('SUM(invrec.qty) as qtyIn')
+        )
+            ->leftJoin('oldissue', 'oldissue.ic', '=', 'icitem.code')
+            ->leftJoin('invrec', 'invrec.ic', '=', 'icitem.code')
+            ->groupBy('icitem.code', 'icitem.name1')
+            ->get();
         $inventory = IssueInventory::where('id_col', $issue_inventory)->get()->first();
         return view('pages.issue-inventories.edit', compact('locations', 'products', 'inventory'));
     }

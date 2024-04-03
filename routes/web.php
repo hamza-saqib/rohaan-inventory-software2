@@ -49,4 +49,7 @@ Route::middleware(EnsureUserLogedIn::class)->group(function() {
     Route::get('reports/products/negative-balance', [ProductController::class, 'negativeBalance'])->name('reports.products.negative');
     Route::get('reports/issue/voucher/{isno}', [IssueInventoryController::class, 'voucher'])->name('issue-inventories.voucher');
     Route::get('reports/issue/voucher-pdf/{isno}', [IssueInventoryController::class, 'voucherPrint'])->name('issue-inventories.voucher.print');
+    Route::get('reports/issue/category', [IssueInventoryController::class, 'categoryWiseReprt'])->name('reports.issue-inventories.category');
+    Route::get('reports/receipt/category', [RecieveInventoryController::class, 'categoryWiseReprt'])->name('reports.recieve-inventories.category');
+    Route::get('reports/receipt/supplier', [RecieveInventoryController::class, 'supplierWiseReprt'])->name('reports.recieve-inventories.supplier');
 });
