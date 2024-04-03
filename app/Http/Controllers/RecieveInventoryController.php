@@ -266,11 +266,11 @@ class RecieveInventoryController extends Controller
     }
 
     public function supplierWiseReprt(Request $request) {
-
         $vendors = Vendor::all();
         $records = [];
         // return $request->all();
         if ($request->filled('vendor_code')) {
+            // return 1;
             $records = RecieveInventory::select('invrec.*', 'icitem.name1 as product')
                 ->when($request->filled('start_date'), function ($query) use ($request) {
                     return $query->where('vd', '>=', $request->start_date);
@@ -280,7 +280,7 @@ class RecieveInventoryController extends Controller
                 })->when($request->filled('start_date'), function ($query) use ($request) {
                     return $query->where('vd', '>=', $request->start_date);
                 })->when($request->filled('vendor_code') && ($request->vendor_code != 'All'), function ($query) use ($request) {
-                    return $query->where('icitem.catcode', '=', $request->vendor_code);
+                    return $query->where('sc', '=', $request->vendor_code);
                 })->when($request->filled('saerch_keyword'), function ($query) use ($request) {
                     return $query->where('icitem.name1', 'like', '%' . $request->saerch_keyword . '%');
                 })->leftJoin('icitem', 'icitem.code', '=', 'invrec.ic')

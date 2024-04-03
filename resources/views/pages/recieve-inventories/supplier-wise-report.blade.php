@@ -141,7 +141,7 @@
                                                 <td>{{ $record->product }}</td>
                                                 <td>{{ $record->qty }}</td>
                                                 <td>{{ $record->rat }}</td>
-                                                <td>{{ $record->rat * $record->qty }}</td>
+                                                {{-- <td>{{ $record->rat * $record->qty }}</td> --}}
                                                 <td>{{ $record->ved }}</td>
                                                 <td>{{ $record->st }}</td>
                                                 <td>{{ $record->sed }}</td>
