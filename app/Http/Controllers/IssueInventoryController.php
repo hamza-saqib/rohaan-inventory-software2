@@ -63,72 +63,256 @@ class IssueInventoryController extends Controller
         return view('pages.issue-inventories.index', compact('inventories', 'products'));
     }
 
-    public function monthlyReportProduct(Request $request)
-    {
-        if ($request->has('_token')) {
-            $this->validate($request, [
-                'year' => ['required']
-            ]);
-        }
-        $records = [];
-        $years = $this->years;
-        $report = 'Item';
-        $dropDownData = Product::select('code', 'name1')->get();
+    // public function monthlyReportProduct(Request $request)
+    // {
+    //     if ($request->has('_token')) {
+    //         $this->validate($request, [
+    //             'year' => ['required']
+    //         ]);
+    //     }
+    //     $records = [];
+    //     $years = $this->years;
+    //     $report = 'Item';
+    //     $dropDownData = Product::select('code', 'name1')->get();
 
-        if ($request->filled('year')) {
-            $fiscalStartDate = Carbon::createFromDate(intval($request->year), 1, 1)->subMonths(6)->startOfMonth();
-            $fiscalEndDate = Carbon::createFromDate(intval($request->year), 1, 1)->addMonths(5)->endOfMonth();
-            $productCodes = IssueInventory::select('ic')
-                ->where('isdt', '>=', $fiscalStartDate)->where('isdt', '<=', $fiscalEndDate)
-                ->groupBy('ic')->get()->pluck('ic');
-            $records = Product::whereIn('code', $productCodes)->when(($request->code != 'All'), function ($query) use ($request) {
+    //     if ($request->filled('year')) {
+    //         $fiscalStartDate = Carbon::createFromDate(intval($request->year), 1, 1)->subMonths(6)->startOfMonth();
+    //         $fiscalEndDate = Carbon::createFromDate(intval($request->year), 1, 1)->addMonths(5)->endOfMonth();
+    //         $productCodes = IssueInventory::select('ic')
+    //             ->where('isdt', '>=', $fiscalStartDate)->where('isdt', '<=', $fiscalEndDate)
+    //             ->groupBy('ic')->get()->pluck('ic');
+    //         $records = Product::whereIn('code', $productCodes)->when(($request->code != 'All'), function ($query) use ($request) {
+    //             return $query->where('code', '=', $request->code);
+    //         })->get();
+    //         foreach ($records as $key => $record) {
+    //             $record['jul']  = IssueInventory::where('ic', $record->code)->where('isdt', '>=', Carbon::createFromDate(intval($request->year), 1, 1)->subMonths(6)->startOfMonth())->where('isdt', '<=', Carbon::createFromDate(intval($request->year), 1, 1)->subMonths(6)->endOfMonth())->sum(DB::raw('Iamt'));
+    //             $record['aug']  = IssueInventory::where('ic', $record->code)->where('isdt', '>=', Carbon::createFromDate(intval($request->year), 1, 1)->subMonths(5)->startOfMonth())->where('isdt', '<=', Carbon::createFromDate(intval($request->year), 1, 1)->subMonths(5)->endOfMonth())->sum(DB::raw('Iamt'));
+    //             $record['sep']  = IssueInventory::where('ic', $record->code)->where('isdt', '>=', Carbon::createFromDate(intval($request->year), 1, 1)->subMonths(4)->startOfMonth())->where('isdt', '<=', Carbon::createFromDate(intval($request->year), 1, 1)->subMonths(4)->endOfMonth())->sum(DB::raw('Iamt'));
+    //             $record['oct']  = IssueInventory::where('ic', $record->code)->where('isdt', '>=', Carbon::createFromDate(intval($request->year), 1, 1)->subMonths(3)->startOfMonth())->where('isdt', '<=', Carbon::createFromDate(intval($request->year), 1, 1)->subMonths(3)->endOfMonth())->sum(DB::raw('Iamt'));
+    //             $record['nov']  = IssueInventory::where('ic', $record->code)->where('isdt', '>=', Carbon::createFromDate(intval($request->year), 1, 1)->subMonths(2)->startOfMonth())->where('isdt', '<=', Carbon::createFromDate(intval($request->year), 1, 1)->subMonths(2)->endOfMonth())->sum(DB::raw('Iamt'));
+    //             $record['dec']  = IssueInventory::where('ic', $record->code)->where('isdt', '>=', Carbon::createFromDate(intval($request->year), 1, 1)->subMonths(1)->startOfMonth())->where('isdt', '<=', Carbon::createFromDate(intval($request->year), 1, 1)->subMonths(1)->endOfMonth())->sum(DB::raw('Iamt'));
+    //             $record['jan']  = IssueInventory::where('ic', $record->code)->where('isdt', '>=', Carbon::createFromDate(intval($request->year), 1, 1)->startOfMonth())->where('isdt', '<=', Carbon::createFromDate(intval($request->year), 1, 1)->endOfMonth())->sum(DB::raw('Iamt'));
+    //             $record['feb']  = IssueInventory::where('ic', $record->code)->where('isdt', '>=', Carbon::createFromDate(intval($request->year), 1, 1)->addMonths(1)->startOfMonth())->where('isdt', '<=', Carbon::createFromDate(intval($request->year), 1, 1)->addMonths(1)->endOfMonth())->sum(DB::raw('Iamt'));
+    //             $record['mar']  = IssueInventory::where('ic', $record->code)->where('isdt', '>=', Carbon::createFromDate(intval($request->year), 1, 1)->addMonths(2)->startOfMonth())->where('isdt', '<=', Carbon::createFromDate(intval($request->year), 1, 1)->addMonths(2)->endOfMonth())->sum(DB::raw('Iamt'));
+    //             $record['apr']  = IssueInventory::where('ic', $record->code)->where('isdt', '>=', Carbon::createFromDate(intval($request->year), 1, 1)->addMonths(3)->startOfMonth())->where('isdt', '<=', Carbon::createFromDate(intval($request->year), 1, 1)->addMonths(3)->endOfMonth())->sum(DB::raw('Iamt'));
+    //             $record['may']  = IssueInventory::where('ic', $record->code)->where('isdt', '>=', Carbon::createFromDate(intval($request->year), 1, 1)->addMonths(4)->startOfMonth())->where('isdt', '<=', Carbon::createFromDate(intval($request->year), 1, 1)->addMonths(4)->endOfMonth())->sum(DB::raw('Iamt'));
+    //             $record['jun']  = IssueInventory::where('ic', $record->code)->where('isdt', '>=', Carbon::createFromDate(intval($request->year), 1, 1)->addMonths(5)->startOfMonth())->where('isdt', '<=', Carbon::createFromDate(intval($request->year), 1, 1)->addMonths(5)->endOfMonth())->sum(DB::raw('Iamt'));
+    //         }
+    //     }
+    //     $request->flash();
+    //     $startYear = $request->year - 1;
+    //     $endYear = $request->year ;
+    //     // return $records;
+    //     return view('pages.issue-inventories.reports-monthly', compact('records', 'years', 'report', 'dropDownData', 'startYear', 'endYear'));
+    // }
+
+    public function monthlyReportProduct(Request $request)
+{
+    if ($request->has('_token')) {
+        $this->validate($request, [
+            'year' => ['required']
+        ]);
+    }
+
+    $records = [];
+    $years = $this->years;
+    $report = 'Item';
+    $dropDownData = Product::select('code', 'name1')->get();
+
+    if ($request->filled('year')) {
+        $fiscalStartDate = Carbon::createFromDate(intval($request->year), 1, 1)->subMonths(6)->startOfMonth();
+        $fiscalEndDate = Carbon::createFromDate(intval($request->year), 1, 1)->addMonths(5)->endOfMonth();
+        $productCodes = IssueInventory::select('ic')
+            ->where('isdt', '>=', $fiscalStartDate)
+            ->where('isdt', '<=', $fiscalEndDate)
+            ->groupBy('ic')->get()->pluck('ic');
+        $records = Product::whereIn('code', $productCodes)
+            ->when(($request->code != 'All'), function ($query) use ($request) {
                 return $query->where('code', '=', $request->code);
             })->get();
-            foreach ($records as $key => $record) {
-                $record['jul']  = IssueInventory::where('ic', $record->code)->where('isdt', '>=', Carbon::createFromDate(intval($request->year), 1, 1)->subMonths(6)->startOfMonth())->where('isdt', '<=', Carbon::createFromDate(intval($request->year), 1, 1)->subMonths(6)->endOfMonth())->sum(DB::raw('Iamt'));
-                $record['aug']  = IssueInventory::where('ic', $record->code)->where('isdt', '>=', Carbon::createFromDate(intval($request->year), 1, 1)->subMonths(5)->startOfMonth())->where('isdt', '<=', Carbon::createFromDate(intval($request->year), 1, 1)->subMonths(5)->endOfMonth())->sum(DB::raw('Iamt'));
-                $record['sep']  = IssueInventory::where('ic', $record->code)->where('isdt', '>=', Carbon::createFromDate(intval($request->year), 1, 1)->subMonths(4)->startOfMonth())->where('isdt', '<=', Carbon::createFromDate(intval($request->year), 1, 1)->subMonths(4)->endOfMonth())->sum(DB::raw('Iamt'));
-                $record['oct']  = IssueInventory::where('ic', $record->code)->where('isdt', '>=', Carbon::createFromDate(intval($request->year), 1, 1)->subMonths(3)->startOfMonth())->where('isdt', '<=', Carbon::createFromDate(intval($request->year), 1, 1)->subMonths(3)->endOfMonth())->sum(DB::raw('Iamt'));
-                $record['nov']  = IssueInventory::where('ic', $record->code)->where('isdt', '>=', Carbon::createFromDate(intval($request->year), 1, 1)->subMonths(2)->startOfMonth())->where('isdt', '<=', Carbon::createFromDate(intval($request->year), 1, 1)->subMonths(2)->endOfMonth())->sum(DB::raw('Iamt'));
-                $record['dec']  = IssueInventory::where('ic', $record->code)->where('isdt', '>=', Carbon::createFromDate(intval($request->year), 1, 1)->subMonths(1)->startOfMonth())->where('isdt', '<=', Carbon::createFromDate(intval($request->year), 1, 1)->subMonths(1)->endOfMonth())->sum(DB::raw('Iamt'));
-                $record['jan']  = IssueInventory::where('ic', $record->code)->where('isdt', '>=', Carbon::createFromDate(intval($request->year), 1, 1)->startOfMonth())->where('isdt', '<=', Carbon::createFromDate(intval($request->year), 1, 1)->endOfMonth())->sum(DB::raw('Iamt'));
-                $record['feb']  = IssueInventory::where('ic', $record->code)->where('isdt', '>=', Carbon::createFromDate(intval($request->year), 1, 1)->addMonths(1)->startOfMonth())->where('isdt', '<=', Carbon::createFromDate(intval($request->year), 1, 1)->addMonths(1)->endOfMonth())->sum(DB::raw('Iamt'));
-                $record['mar']  = IssueInventory::where('ic', $record->code)->where('isdt', '>=', Carbon::createFromDate(intval($request->year), 1, 1)->addMonths(2)->startOfMonth())->where('isdt', '<=', Carbon::createFromDate(intval($request->year), 1, 1)->addMonths(2)->endOfMonth())->sum(DB::raw('Iamt'));
-                $record['apr']  = IssueInventory::where('ic', $record->code)->where('isdt', '>=', Carbon::createFromDate(intval($request->year), 1, 1)->addMonths(3)->startOfMonth())->where('isdt', '<=', Carbon::createFromDate(intval($request->year), 1, 1)->addMonths(3)->endOfMonth())->sum(DB::raw('Iamt'));
-                $record['may']  = IssueInventory::where('ic', $record->code)->where('isdt', '>=', Carbon::createFromDate(intval($request->year), 1, 1)->addMonths(4)->startOfMonth())->where('isdt', '<=', Carbon::createFromDate(intval($request->year), 1, 1)->addMonths(4)->endOfMonth())->sum(DB::raw('Iamt'));
-                $record['jun']  = IssueInventory::where('ic', $record->code)->where('isdt', '>=', Carbon::createFromDate(intval($request->year), 1, 1)->addMonths(5)->startOfMonth())->where('isdt', '<=', Carbon::createFromDate(intval($request->year), 1, 1)->addMonths(5)->endOfMonth())->sum(DB::raw('Iamt'));
-            }
+        foreach ($records as $key => $record) {
+            $record['jul'] = IssueInventory::where('ic', $record->code)
+                ->where('isdt', '>=', Carbon::createFromDate(intval($request->year), 1, 1)->subMonths(6)->startOfMonth())
+                ->where('isdt', '<=', Carbon::createFromDate(intval($request->year), 1, 1)->subMonths(6)->endOfMonth())
+                ->sum('Iamt');
+            $record['jul_qty'] = IssueInventory::where('ic', $record->code)
+                ->where('isdt', '>=', Carbon::createFromDate(intval($request->year), 1, 1)->subMonths(6)->startOfMonth())
+                ->where('isdt', '<=', Carbon::createFromDate(intval($request->year), 1, 1)->subMonths(6)->endOfMonth())
+                ->sum('Qty');
+            $record['aug'] = IssueInventory::where('ic', $record->code)
+                ->where('isdt', '>=', Carbon::createFromDate(intval($request->year), 2, 1)->subMonths(6)->startOfMonth())
+                ->where('isdt', '<=', Carbon::createFromDate(intval($request->year), 2, 1)->subMonths(6)->endOfMonth())
+                ->sum('Iamt');
+            $record['aug_qty'] = IssueInventory::where('ic', $record->code)
+                ->where('isdt', '>=', Carbon::createFromDate(intval($request->year), 2, 1)->subMonths(6)->startOfMonth())
+                ->where('isdt', '<=', Carbon::createFromDate(intval($request->year), 2, 1)->subMonths(6)->endOfMonth())
+                ->sum('Qty');
+            $record['sep'] = IssueInventory::where('ic', $record->code)
+                ->where('isdt', '>=', Carbon::createFromDate(intval($request->year), 3, 1)->subMonths(6)->startOfMonth())
+                ->where('isdt', '<=', Carbon::createFromDate(intval($request->year), 3, 1)->subMonths(6)->endOfMonth())
+                ->sum('Iamt');
+            $record['sep_qty'] = IssueInventory::where('ic', $record->code)
+                ->where('isdt', '>=', Carbon::createFromDate(intval($request->year), 3, 1)->subMonths(6)->startOfMonth())
+                ->where('isdt', '<=', Carbon::createFromDate(intval($request->year), 3, 1)->subMonths(6)->endOfMonth())
+                ->sum('Qty');
+            
+            $record['oct'] = IssueInventory::where('ic', $record->code)
+                ->where('isdt', '>=', Carbon::createFromDate(intval($request->year), 4, 1)->subMonths(6)->startOfMonth())
+                ->where('isdt', '<=', Carbon::createFromDate(intval($request->year), 4, 1)->subMonths(6)->endOfMonth())
+                ->sum('Iamt');
+            $record['oct_qty'] = IssueInventory::where('ic', $record->code)
+                ->where('isdt', '>=', Carbon::createFromDate(intval($request->year), 4, 1)->subMonths(6)->startOfMonth())
+                ->where('isdt', '<=', Carbon::createFromDate(intval($request->year), 4, 1)->subMonths(6)->endOfMonth())
+                ->sum('Qty');
+            
+            $record['nov'] = IssueInventory::where('ic', $record->code)
+                ->where('isdt', '>=', Carbon::createFromDate(intval($request->year), 5, 1)->subMonths(6)->startOfMonth())
+                ->where('isdt', '<=', Carbon::createFromDate(intval($request->year), 5, 1)->subMonths(6)->endOfMonth())
+                ->sum('Iamt');
+            $record['nov_qty'] = IssueInventory::where('ic', $record->code)
+                ->where('isdt', '>=', Carbon::createFromDate(intval($request->year), 5, 1)->subMonths(6)->startOfMonth())
+                ->where('isdt', '<=', Carbon::createFromDate(intval($request->year), 5, 1)->subMonths(6)->endOfMonth())
+                ->sum('Qty');
+            
+            $record['dec'] = IssueInventory::where('ic', $record->code)
+                ->where('isdt', '>=', Carbon::createFromDate(intval($request->year), 6, 1)->subMonths(6)->startOfMonth())
+                ->where('isdt', '<=', Carbon::createFromDate(intval($request->year), 6, 1)->subMonths(6)->endOfMonth())
+                ->sum('Iamt');
+            $record['dec_qty'] = IssueInventory::where('ic', $record->code)
+                ->where('isdt', '>=', Carbon::createFromDate(intval($request->year), 6, 1)->subMonths(6)->startOfMonth())
+                ->where('isdt', '<=', Carbon::createFromDate(intval($request->year), 6, 1)->subMonths(6)->endOfMonth())
+                ->sum('Qty');
+            
+            $record['jan'] = IssueInventory::where('ic', $record->code)
+                ->where('isdt', '>=', Carbon::createFromDate(intval($request->year), 7, 1)->subMonths(6)->startOfMonth())
+                ->where('isdt', '<=', Carbon::createFromDate(intval($request->year), 7, 1)->subMonths(6)->endOfMonth())
+                ->sum('Iamt');
+            $record['jan_qty'] = IssueInventory::where('ic', $record->code)
+                ->where('isdt', '>=', Carbon::createFromDate(intval($request->year), 7, 1)->subMonths(6)->startOfMonth())
+                ->where('isdt', '<=', Carbon::createFromDate(intval($request->year), 7, 1)->subMonths(6)->endOfMonth())
+                ->sum('Qty');
+            
+            $record['feb'] = IssueInventory::where('ic', $record->code)
+                ->where('isdt', '>=', Carbon::createFromDate(intval($request->year), 8, 1)->subMonths(6)->startOfMonth())
+                ->where('isdt', '<=', Carbon::createFromDate(intval($request->year), 8, 1)->subMonths(6)->endOfMonth())
+                ->sum('Iamt');
+            $record['feb_qty'] = IssueInventory::where('ic', $record->code)
+                ->where('isdt', '>=', Carbon::createFromDate(intval($request->year), 8, 1)->subMonths(6)->startOfMonth())
+                ->where('isdt', '<=', Carbon::createFromDate(intval($request->year), 8, 1)->subMonths(6)->endOfMonth())
+                ->sum('Qty');
+            
+            $record['mar'] = IssueInventory::where('ic', $record->code)
+                ->where('isdt', '>=', Carbon::createFromDate(intval($request->year), 9, 1)->subMonths(6)->startOfMonth())
+                ->where('isdt', '<=', Carbon::createFromDate(intval($request->year), 9, 1)->subMonths(6)->endOfMonth())
+                ->sum('Iamt');
+            $record['mar_qty'] = IssueInventory::where('ic', $record->code)
+                ->where('isdt', '>=', Carbon::createFromDate(intval($request->year), 9, 1)->subMonths(6)->startOfMonth())
+                ->where('isdt', '<=', Carbon::createFromDate(intval($request->year), 9, 1)->subMonths(6)->endOfMonth())
+                ->sum('Qty');
+            
+            $record['apr'] = IssueInventory::where('ic', $record->code)
+                ->where('isdt', '>=', Carbon::createFromDate(intval($request->year), 10, 1)->subMonths(6)->startOfMonth())
+                ->where('isdt', '<=', Carbon::createFromDate(intval($request->year), 10, 1)->subMonths(6)->endOfMonth())
+                ->sum('Iamt');
+            $record['apr_qty'] = IssueInventory::where('ic', $record->code)
+                ->where('isdt', '>=', Carbon::createFromDate(intval($request->year), 10, 1)->subMonths(6)->startOfMonth())
+                ->where('isdt', '<=', Carbon::createFromDate(intval($request->year), 10, 1)->subMonths(6)->endOfMonth())
+                ->sum('Qty');
+            
+            $record['may'] = IssueInventory::where('ic', $record->code)
+                ->where('isdt', '>=', Carbon::createFromDate(intval($request->year), 11, 1)->subMonths(6)->startOfMonth())
+                ->where('isdt', '<=', Carbon::createFromDate(intval($request->year), 11, 1)->subMonths(6)->endOfMonth())
+                ->sum('Iamt');
+            $record['may_qty'] = IssueInventory::where('ic', $record->code)
+                ->where('isdt', '>=', Carbon::createFromDate(intval($request->year), 11, 1)->subMonths(6)->startOfMonth())
+                ->where('isdt', '<=', Carbon::createFromDate(intval($request->year), 11, 1)->subMonths(6)->endOfMonth())
+                ->sum('Qty');
+            
+            $record['jun'] = IssueInventory::where('ic', $record->code)
+                ->where('isdt', '>=', Carbon::createFromDate(intval($request->year), 12, 1)->subMonths(6)->startOfMonth())
+                ->where('isdt', '<=', Carbon::createFromDate(intval($request->year), 12, 1)->subMonths(6)->endOfMonth())
+                ->sum('Iamt');
+            $record['jun_qty'] = IssueInventory::where('ic', $record->code)
+                ->where('isdt', '>=', Carbon::createFromDate(intval($request->year), 12, 1)->subMonths(6)->startOfMonth())
+                ->where('isdt', '<=', Carbon::createFromDate(intval($request->year), 12, 1)->subMonths(6)->endOfMonth())
+                ->sum('Qty');
+            
+
+            // Calculate total
+            $record['total'] = $record->jul + $record->aug + $record->sep + $record->oct + $record->nov + $record->dec + $record->jan + $record->feb + $record->mar + $record->apr + $record->may + $record->jun;
         }
-        $request->flash();
-        // return $records;
-        return view('pages.issue-inventories.reports-monthly', compact('records', 'years', 'report', 'dropDownData'));
     }
+
+    $request->flash();
+    $startYear = $request->year - 1;
+    $endYear = $request->year;
+
+    return view('pages.issue-inventories.reports-monthly', compact('records', 'years', 'report', 'dropDownData', 'startYear', 'endYear'));
+}
+
+
+
+    // public function categoryWiseReprt(Request $request)
+    // {
+    //     $categories = ProductCategory::all();
+    //     $totalValue = 0; // Initialize total value variable
+    //     // Fetch records
+    //     $records = [];
+    //     if ($request->filled('category_code')) {
+    //         $records = IssueInventory::select('oldissue.*', 'icitem.name1 as product')
+    //             ->when($request->filled('start_date'), function ($query) use ($request) {
+    //                 return $query->where('isdt', '>=', $request->start_date);
+    //             })
+    //             ->when($request->filled('end_date'), function ($query) use ($request) {
+    //                 return $query->where('isdt', '<=', $request->end_date);
+    //             })->when($request->filled('start_date'), function ($query) use ($request) {
+    //                 return $query->where('isdt', '>=', $request->start_date);
+    //             })->when($request->filled('category_code') && ($request->category_code != 'All'), function ($query) use ($request) {
+    //                 return $query->where('icitem.catcode', '=', $request->category_code);
+    //             })->when($request->filled('saerch_keyword'), function ($query) use ($request) {
+    //                 return $query->where('icitem.name1', 'like', '%' . $request->saerch_keyword . '%');
+    //             })->leftJoin('icitem', 'icitem.code', '=', 'oldissue.ic')
+    //             ->get();
+
+    //         // Calculate total value
+    //         foreach ($records as $record) {
+    //             $totalValue += $record->Irate * $record->Qty;
+    //         }
+    //     }
+    //     return view('pages.issue-inventories.category-wise-report', compact('categories', 'records', 'totalValue'));
+    // }
+
 
     public function categoryWiseReprt(Request $request)
-    {
+{
+    $categories = ProductCategory::all();
+    $totalValue = 0; // Initialize total value variable
+    // Fetch records
+    $records = [];
+    if ($request->filled('category_code')) {
+        $records = IssueInventory::select('oldissue.*', 'icitem.name1 as product')
+            ->when($request->filled('start_date'), function ($query) use ($request) {
+                return $query->where('isdt', '>=', $request->start_date);
+            })
+            ->when($request->filled('end_date'), function ($query) use ($request) {
+                return $query->where('isdt', '<=', $request->end_date);
+            })->when($request->filled('start_date'), function ($query) use ($request) {
+                return $query->where('isdt', '>=', $request->start_date);
+            })->when($request->filled('category_code') && ($request->category_code != 'All'), function ($query) use ($request) {
+                return $query->where('icitem.catcode', '=', $request->category_code);
+            })->when($request->filled('saerch_keyword'), function ($query) use ($request) {
+                return $query->where('icitem.name1', 'like', '%' . $request->saerch_keyword . '%');
+            })->leftJoin('icitem', 'icitem.code', '=', 'oldissue.ic')
+            ->get();
 
-        $categories = ProductCategory::all();
-        $records = [];
-        // return $request->all();
-        if ($request->filled('category_code')) {
-            $records = IssueInventory::select('oldissue.*', 'icitem.name1 as product')
-                ->when($request->filled('start_date'), function ($query) use ($request) {
-                    return $query->where('isdt', '>=', $request->start_date);
-                })
-                ->when($request->filled('end_date'), function ($query) use ($request) {
-                    return $query->where('isdt', '<=', $request->end_date);
-                })->when($request->filled('start_date'), function ($query) use ($request) {
-                    return $query->where('isdt', '>=', $request->start_date);
-                })->when($request->filled('category_code') && ($request->category_code != 'All'), function ($query) use ($request) {
-                    return $query->where('icitem.catcode', '=', $request->category_code);
-                })->when($request->filled('saerch_keyword'), function ($query) use ($request) {
-                    return $query->where('icitem.name1', 'like', '%' . $request->saerch_keyword . '%');
-                })->leftJoin('icitem', 'icitem.code', '=', 'oldissue.ic')
-                ->get();
-            $request->flash();
+        // Calculate total value
+        foreach ($records as $record) {
+            $totalValue += $record->Irate * $record->Qty;
         }
-        return view('pages.issue-inventories.category-wise-report', compact('categories', 'records'));
     }
+    return view('pages.issue-inventories.category-wise-report', compact('categories', 'records', 'totalValue'));
+}
+
 
     /**
      * Show the form for creating a new resource.

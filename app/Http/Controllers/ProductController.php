@@ -29,12 +29,13 @@ class ProductController extends Controller
     public function negativeBalance()
     {
         $products = Product::select('icitem.code', 'icitem.name1',
-         DB::raw('SUM(oldissue.Qty) as qtyOut'), DB::raw('SUM(invrec.qty) as qtyIn'))
+         DB::raw('SUM(oldissue.Qty) as qtyOut'),DB::raw('SUM(oldissue.Iamt) as totOut'),DB::raw('SUM(invrec.nv) as totIn'), DB::raw('SUM(invrec.qty) as qtyIn'))
          ->leftJoin('oldissue', 'oldissue.ic', '=', 'icitem.code')
          ->leftJoin('invrec', 'invrec.ic', '=', 'icitem.code')
         ->groupBy('icitem.code', 'icitem.name1')
         ->havingRaw('SUM(oldissue.Qty) > SUM(invrec.qty)')
         ->get();
+        
         return view('pages.products.negative-balance', compact('products'));
     }
 
@@ -106,8 +107,8 @@ class ProductController extends Controller
                     $value['rateOut'] = floatval($value['rateOut']);
                     $balance -= $value['qtyOut'];
                     $value['valueOut'] = $value['qtyOut'] * $value['rateOut'];
-                    $sum['totalQtyOut'] += $value['qtyOut'];
-                    $sum['totalValueOut'] += $value['valueOut'];
+                    $sum['totalQtyOut'] -= $value['qtyOut'];
+                    $sum['totalValueOut'] -= $value['valueOut'];
                 }
                 $value['balance'] = $balance;
             }

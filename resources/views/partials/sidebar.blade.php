@@ -158,7 +158,7 @@
                     <li><a href="{{ route('recieve-inventories.index') }}">List / Report</a></li>
                     <li><a href="{{ route('reports.product') }}">Item Monthly Report</a></li>
                     <li><a href="{{ route('reports.supplier') }}">Supplier Monthly Report</a></li>
-                    <li><a href="{{ route('reports.recieve-inventories.category') }}">Category Wise Report</a></li>
+                    <li><a href="{{ route('reports.recieve-inventories.category') }}">Category Wise Purchase Summary</a></li>
                     <li><a href="{{ route('reports.recieve-inventories.supplier') }}">Supplier Sales Tax</a></li>
                 </ul>
             </li>

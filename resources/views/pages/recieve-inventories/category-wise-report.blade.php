@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title-meta')
-    <title>{{ config('app.name') }} | Item Ledger Report</title>
+    <title>{{ config('app.name') }} | Category Wise Purchase Summary</title>
 
     <meta name="description" content="this is description">
 @endsection
@@ -20,7 +20,7 @@
 
         <div class="row wrapper border-bottom white-bg page-heading">
             <div class="col-sm-4">
-                <h2>Item Ledger Report</h2>
+                <h2>Category Wise Purchase Summary</h2>
                 <ol class="breadcrumb">
                     <li>
                         <a href="#">Item</a>
