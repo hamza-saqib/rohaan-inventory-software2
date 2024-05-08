@@ -290,7 +290,10 @@
             var sed = $('#sed').val();
             var fed = $('#fed').val();
             var other_deduction = $('#other_deduction').val();
+            var value = $('#value').val();
 
+
+            $('#value').val(parseFloat(l_rate * qty));
             // Set value to another input field
             $('#net_value').val((qty * l_rate) + parseFloat(sale_tax) + parseFloat(value_excle_tax) + parseFloat(sed) + parseFloat(fed) + parseFloat(other_deduction));
         }
