@@ -59,27 +59,6 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- <div class="col-sm-3">
-                                <div class="form-group">
-                                    <label class="control-label" for="date_added">Start Date</label>
-                                    <div class="input-group date">
-                                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span><input
-                                            name="start_date" id="date_added" type="date" class="form-control"
-                                            value="{{ old('start_date') ?? '' }}">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-3">
-                                <div class="form-group">
-                                    <label class="control-label" for="date_modified">End Date</label>
-                                    <div class="input-group date">
-                                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span><input
-                                            name="end_date" id="date_modified" type="date" class="form-control"
-                                            value="{{ old('end_date') ?? '' }}">
-                                    </div>
-                                </div>
-                            </div> -->
-
                         <div class="col-sm-3">
                             <div class="form-group">
                                 <label class="control-label" for="date_added">Start Date</label>
@@ -96,7 +75,6 @@
                                 </div>
                             </div>
                         </div>
-
 
                         <div class="col-sm-2">
                             <div class="form-group">
@@ -140,8 +118,8 @@
                             <table class="table table-striped table-bordered table-hover dataTables-example">
                                 <thead>
                                     <tr>
-                                        <!-- <th></th>
-                                        <th></th> -->
+                                        <!-- <th></th> -->
+                                        <!-- <th></th> -->
                                         <th colspan="4" style="text-align: center">Recieved</th>
                                         <th colspan="4" style="text-align: center">Issued</th>
                                         <th></th>
@@ -172,13 +150,9 @@
                                     @endphp
                                     @foreach ($records as $record)
                                     <tr class="gradeX" id="row-{{ $record['code'] }}">
-
-                                        <!-- <td>{{ date('d/m/Y', strtotime($record['date'])) }}</td> -->
-                                        <td>{{ substr($record['date'], 0, 10) }}</td>
+                                        <td>{{ date('m/d/Y', strtotime($record['date'])) }}</td>
                                         <!-- <td>{{ $record['code'] }}</td>
                                         <td>{{ $record['product'] }}</td> -->
-
-
                                         <!-- <td>{{ $record['grn'] ?? '' }}</td>
                                         <td>{{ $record['qtyOut'] ?? '' }}</td>
                                         <td>{{ $record['rateOut'] ?? '' }}</td>
@@ -186,7 +160,7 @@
                                         <td>{{ $record['code'] ?? '' }}</td>
                                         <td>{{ $record['qtyIn'] ?? '' }}</td>
                                         <td>{{ $record['rateIn'] ?? '' }}</td>
-                                        <td>{{ $record['valueIn'] ?? '' }}</td>-->
+                                        <td>{{ $record['valueIn'] ?? '' }}</td> -->
 
                                         <td>{{ isset($record['grn']) ? number_format($record['grn'], 2) : '' }}</td>
                                         <td>{{ isset($record['qtyOut']) ? number_format($record['qtyOut'], 2) : '' }}</td>
@@ -199,44 +173,39 @@
 
                                         @php
                                         // Check if key exists before accessing its value
-                                        $qtyOut = isset($record['qtyOut']) ? (int)$record['qtyOut'] : 0;
-                                        $qtyIn = isset($record['qtyIn']) ? (int)$record['qtyIn'] : 0;
+                                        $qtyOut = isset($record['qtyOut']) ? $record['qtyOut'] : 0;
+                                        $qtyIn = isset($record['qtyIn']) ? $record['qtyIn'] : 0;
                                         $valueOut = isset($record['valueOut']) ? $record['valueOut'] : 0;
                                         $valueIn = isset($record['valueIn']) ? $record['valueIn'] : 0;
 
-                                        if($qtyOut > 0){
-
-                                        $balanceQty = $balanceQty + $qtyOut;
-                                        $balanceAmount += $valueOut;
-                                        }elseif($qtyIn > 0){
-                                        $balanceQty -= $qtyIn;
-                                        $balanceAmount -= $valueIn;
-                                        }
+                                        $balanceQty += $qtyIn - $qtyOut;
+                                        $balanceAmount += $valueIn - $valueOut;
                                         @endphp
-                                        <!-- <td>{{ $balanceQty }}</td>
-                                        <td>{{ $balanceAmount }}</td> -->
                                         <td>{{ number_format($balanceQty, 2) }}</td>
                                         <td>{{ number_format($balanceAmount, 2) }}</td>
+
+                                        <!-- <td>{{ $balanceQty }}</td>
+                                        <td>{{ $balanceAmount }}</td> -->
                                     </tr>
                                     @endforeach
                                 </tbody>
-                                <!-- <tfoot>
-                                        <tr>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th>{{ $sum['totalQtyOut'] ?? '' }}</th>
-                                            <th></th>
-                                            <th>{{ $sum['totalValueOut'] ?? '' }}</th>
-                                            <th></th>
-                                            <th>{{ $sum['totalQtyIn'] ?? '' }}</th>
-                                            <th></th>
-                                            <th>{{ $sum['totalValueIn'] ?? '' }}</th>
-                                            <th>{{ $balanceQty }}</th>
-                                            <th>{{ $balanceAmount }}</th>
-                                        </tr>
-                                    </tfoot> -->
+                                <tfoot>
+                                    <tr>
+                                        <th></th>
+                                        <!-- <th></th>
+                                        <th></th> -->
+                                        <th></th>
+                                        <th>{{ $sum['totalQtyOut'] ?? '' }}</th>
+                                        <th></th>
+                                        <th>{{ $sum['totalValueOut'] ?? '' }}</th>
+                                        <th></th>
+                                        <th>{{ $sum['totalQtyIn'] ?? '' }}</th>
+                                        <th></th>
+                                        <th>{{ $sum['totalValueIn'] ?? '' }}</th>
+                                        <th>{{ $balanceQty }}</th>
+                                        <th>{{ $balanceAmount }}</th>
+                                    </tr>
+                                </tfoot>
                             </table>
                         </div>
 
@@ -252,7 +221,6 @@
 </div>
 @endsection
 
-
 @section('custom-script')
 <!-- Sweet alert -->
 <script src="{{ asset('assets') }}/js/plugins/sweetalert/sweetalert.min.js"></script>
@@ -262,19 +230,18 @@
 <script>
     $("#productSelect").select2();
     var date = new Date().toISOString().slice(0, 10);
-    var sDate = $('#date_added').val();
-    var eDate = $('#date_modified').val();
     var code = "{{ $record['code'] }}";
     var product = "{{ $record['product'] }}";
+    var sDate = $('#date_added').val();
+    var eDate = $('#date_modified').val();
     $(document).ready(function() {
         $('.dataTables-example').DataTable({
             dom: '<"html5buttons"B>lTfgitp',
             buttons: [{
                     extend: 'pdf',
-                    // title: 'CONTINENTAL AIR CONTROL (PVT) LTD.\n ' + 'Item Ledger Report ( ' + 'From: ' + sDate + ' To: ' + eDate + ' )',
-                    title: 'CONTINENTAL AIR CONTROL (PVT) LTD.\n ' + 'Item Ledger Report of: ' + code + product + ' \n( ' + 'From: ' + sDate + ' To: ' + eDate + ' )',
+                    title: 'CONTINENTAL AIR CONTROL (PVT) LTD.\n ' + 'Item Ledger Report of :' + code + ' ' + product + '\n ( ' + sDate + ' to ' + eDate + ' )',
                     orientation: 'landscape',
-                    filename: 'Item Ledger Report ( From: ' + sDate + ' To: ' + eDate + ' )',
+                    filename: 'Item Ledger Report of :' + code + ' ' + product + ' ( ' + sDate + ' to ' + eDate + ' )',
                     customize: function(doc) {
                         var colCount = new Array();
                         $('.dataTables-example').find('tbody tr:first-child td').each(
@@ -313,7 +280,6 @@
         });
 
     });
-
 
     function deleteRecord(id) {
         swal({
