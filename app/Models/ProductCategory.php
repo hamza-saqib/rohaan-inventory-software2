@@ -12,4 +12,5 @@ class ProductCategory extends Model
     protected  $table = "itemcat";
     protected $primaryKey = 'code';
     public $timestamps = false;
+    
 }

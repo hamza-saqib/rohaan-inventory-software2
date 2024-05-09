@@ -52,4 +52,6 @@ Route::middleware(EnsureUserLogedIn::class)->group(function() {
     Route::get('reports/issue/category', [IssueInventoryController::class, 'categoryWiseReprt'])->name('reports.issue-inventories.category');
     Route::get('reports/receipt/category', [RecieveInventoryController::class, 'categoryWiseReprt'])->name('reports.recieve-inventories.category');
     Route::get('reports/receipt/supplierwise', [RecieveInventoryController::class, 'supplierWiseReprt'])->name('reports.recieve-inventories.supplier');
+    Route::get('reports/receipt/purchase-register', [RecieveInventoryController::class, 'purchaseregister'])->name('reports.recieve-inventories.purchaseregister');
+    Route::get('reports/receipt/category-wise', [RecieveInventoryController::class, 'categorywise'])->name('reports.recieve-inventories.categorywise');
 });

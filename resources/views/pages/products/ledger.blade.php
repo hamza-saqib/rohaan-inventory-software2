@@ -226,22 +226,31 @@
 <script src="{{ asset('assets') }}/js/plugins/sweetalert/sweetalert.min.js"></script>
 <!-- datatables -->
 <script src="{{ asset('assets') }}/js/plugins/dataTables/datatables.min.js"></script>
-
+@if(isset($record) && !is_null($record))
+    <script>
+        var code = "{{ $record['code'] }}";
+        var product = "{{ $record['product'] }}";
+    </script>
+@endif
 <script>
     $("#productSelect").select2();
     var date = new Date().toISOString().slice(0, 10);
-    var code = "{{ $record['code'] }}";
-    var product = "{{ $record['product'] }}";
     var sDate = $('#date_added').val();
     var eDate = $('#date_modified').val();
+    
+
+
+
     $(document).ready(function() {
         $('.dataTables-example').DataTable({
             dom: '<"html5buttons"B>lTfgitp',
             buttons: [{
                     extend: 'pdf',
-                    title: 'CONTINENTAL AIR CONTROL (PVT) LTD.\n ' + 'Item Ledger Report of :' + code + ' ' + product + '\n ( ' + sDate + ' to ' + eDate + ' )',
+                    // title: 'CONTINENTAL AIR CONTROL (PVT) LTD.\n ' + 'Item Ledger Report of :' + '\n ( ' + sDate + ' to ' + eDate + ' )',
+                    title: 'CONTINENTAL AIR CONTROL (PVT) LTD.\n ' + 'Item Ledger Report of: ' + code + ' ' + product  + '( From: ' + sDate + ' To: ' + eDate + ' )',
                     orientation: 'landscape',
-                    filename: 'Item Ledger Report of :' + code + ' ' + product + ' ( ' + sDate + ' to ' + eDate + ' )',
+                    filename: 'Item Ledger Report of: ' + code + ' ' + product  + '( From: ' + sDate + ' To: ' + eDate + ' )',
+
                     customize: function(doc) {
                         var colCount = new Array();
                         $('.dataTables-example').find('tbody tr:first-child td').each(
@@ -280,6 +289,7 @@
         });
 
     });
+
 
     function deleteRecord(id) {
         swal({

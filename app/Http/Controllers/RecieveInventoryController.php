@@ -290,6 +290,136 @@ class RecieveInventoryController extends Controller
         return view('pages.recieve-inventories.supplier-wise-report', compact('vendors', 'records'));
     }
 
+    public function purchaseregister(Request $request) {
+        $dropDownData = Product::select('code', 'name1')->get();
+        $vendors = Vendor::all();
+        $records = [];
+        // return $request->all();
+        if ($request->filled('code')) {
+            // return 1;
+            $productCode = $request->input('code');
+
+            
+            $query = RecieveInventory::select('invrec.*', 'icitem.name1 as product', 'supplierrec.*')
+            ->where('ic', $productCode)
+            ->leftJoin('icitem', 'icitem.code', '=', 'invrec.ic')
+            ->leftJoin('supplierrec', 'supplierrec.code', '=', 'invrec.sc');
+        
+        if ($request->filled('start_date')) {
+            $query->where('vd', '>=', $request->start_date);
+        }
+
+        if ($request->filled('end_date')) {
+            $query->where('vd', '<=', $request->end_date);
+        }
+
+        if ($request->filled('reportType')) {
+            if ($request->reportType === 'Taxable Parties') {
+                // Filter records where supplier has stn value greater than 0
+                $query->whereNotNull('supplierrec.stn')
+                ->where('supplierrec.stn', '<>', '0')
+                ->whereRaw('TRIM(supplierrec.stn) <> \'\'');
+            } else if($request->reportType === 'Non Taxable Parties'){
+                $query->where(function($q) {
+                    $q->whereNull('supplierrec.stn')
+                      ->orWhereRaw('TRIM(supplierrec.stn) = \'\'');
+                });
+            }
+        }
+        
+        $records = $query->get();
+            $request->flash();
+        }
+        return view('pages.recieve-inventories.Purchase-register-sales-tax-report', compact('vendors', 'records','dropDownData'));
+    }
+    public function categorywise(Request $request) {
+        // Retrieve all item categories
+        $startDate = $request->input('start_date');
+    $endDate = $request->input('end_date');
+        $itemCategories = ProductCategory::all();
+    
+        // Initialize array to store category totals
+        $categoryTotals = [];
+    
+        // Iterate over each item category
+        foreach ($itemCategories as $itemCategory) {
+            // Calculate the total sum of st and sed for the current category
+            $categoryTotalSt = DB::table('icitem')
+                ->join('invrec', 'icitem.code', '=', 'invrec.ic')
+                ->where('icitem.catcode', $itemCategory->code)
+                ->when($startDate, function ($query) use ($startDate) {
+                    return $query->where('invrec.vd', '>=', $startDate);
+                })
+                ->when($endDate, function ($query) use ($endDate) {
+                    return $query->where('invrec.vd', '<=', $endDate);
+                })
+                ->sum('invrec.st');
+    
+            $categoryTotalSed = DB::table('icitem')
+                ->join('invrec', 'icitem.code', '=', 'invrec.ic')
+                ->where('icitem.catcode', $itemCategory->code)
+                ->when($startDate, function ($query) use ($startDate) {
+                    return $query->where('invrec.vd', '>=', $startDate);
+                })
+                ->when($endDate, function ($query) use ($endDate) {
+                    return $query->where('invrec.vd', '<=', $endDate);
+                })
+                ->sum('invrec.sed');
+
+            $categoryTotalFed = DB::table('icitem')
+            ->join('invrec', 'icitem.code', '=', 'invrec.ic')
+            ->where('icitem.catcode', $itemCategory->code)
+            ->when($startDate, function ($query) use ($startDate) {
+                return $query->where('invrec.vd', '>=', $startDate);
+            })
+            ->when($endDate, function ($query) use ($endDate) {
+                return $query->where('invrec.vd', '<=', $endDate);
+            })
+            ->sum('invrec.fed');
+
+            $categoryTotalod = DB::table('icitem')
+                ->join('invrec', 'icitem.code', '=', 'invrec.ic')
+                ->where('icitem.catcode', $itemCategory->code)
+                ->when($startDate, function ($query) use ($startDate) {
+                    return $query->where('invrec.vd', '>=', $startDate);
+                })
+                ->when($endDate, function ($query) use ($endDate) {
+                    return $query->where('invrec.vd', '<=', $endDate);
+                })
+                ->sum('invrec.od');
+                $categoryTotalved= DB::table('icitem')
+                ->join('invrec', 'icitem.code', '=', 'invrec.ic')
+                ->where('icitem.catcode', $itemCategory->code)
+                ->when($startDate, function ($query) use ($startDate) {
+                    return $query->where('invrec.vd', '>=', $startDate);
+                })
+                ->when($endDate, function ($query) use ($endDate) {
+                    return $query->where('invrec.vd', '<=', $endDate);
+                })
+                ->sum('invrec.ved');
+                $categoryTotalnv= DB::table('icitem')
+                ->join('invrec', 'icitem.code', '=', 'invrec.ic')
+                ->where('icitem.catcode', $itemCategory->code)
+                ->when($startDate, function ($query) use ($startDate) {
+                    return $query->where('invrec.vd', '>=', $startDate);
+                })
+                ->when($endDate, function ($query) use ($endDate) {
+                    return $query->where('invrec.vd', '<=', $endDate);
+                })
+                ->sum('invrec.nv');
+    
+            $itemCategory->total_st = $categoryTotalSt;
+            $itemCategory->total_sed = $categoryTotalSed;
+            $itemCategory->total_fed = $categoryTotalFed;
+            $itemCategory->total_od = $categoryTotalod;
+            $itemCategory->total_ved = $categoryTotalved;
+            $itemCategory->total_nv = $categoryTotalnv;
+        }
+    
+        return view('pages.recieve-inventories.Category-wise-summary-stax-register-report', compact('itemCategories'));
+    }
+    
+
     /**
      * Show the form for creating a new resource.
      *

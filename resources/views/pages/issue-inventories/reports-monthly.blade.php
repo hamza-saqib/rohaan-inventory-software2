@@ -221,8 +221,8 @@
                     },
                     {
                         extend: 'excel',
-                        title: 'Monthly Report ({{$year}})',
-                        filename: 'Monthly Report ({{$year}})',
+                        title: 'Monthly Report July  ({{$startYear}}) - June({{$endYear}})',
+                        filename: 'Monthly Report July  ({{$startYear}}) - June({{$endYear}})',
                     }
 
                 ]
