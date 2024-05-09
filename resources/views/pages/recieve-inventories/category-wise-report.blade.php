@@ -171,15 +171,19 @@
 <script>
     $("#productSelect").select2();
     var date = new Date().toISOString().slice(0, 10);
+    var sDate = $('#date_added').val();
+    var eDate = $('#date_modified').val();
+    var selectedCategory = $('#productSelect option:selected').text();
+
     $(document).ready(function() {
         $('.dataTables-example').DataTable({
             dom: '<"html5buttons"B>lTfgitp',
             buttons: [{
                     extend: 'pdf',
-                    title: 'CONTINENTAL AIR CONTROL (PVT) LTD.\n ' + 'Category Wise Reciept Report ( ' +
-                        date + ' )',
+                    // title: 'CONTINENTAL AIR CONTROL (PVT) LTD.\n ' + 'Category Wise Reciept Report of Category: ( From ' + sDate + ' To ' + eDate + ' )',
+                    title: 'CONTINENTAL AIR CONTROL (PVT) LTD.\n ' + 'Category Wise Reciept Report of Category: ' + selectedCategory + ' \n( From ' + sDate + ' To ' + eDate + ' )',
                     // orientation: 'landscape',
-                    filename: 'Category Wise Reciept Report ( ' + date + ' )',
+                    filename: 'Category Wise Reciept Report of Category: ' + selectedCategory + ' ( From ' + sDate + ' To ' + eDate + ' )',
                     customize: function(doc) {
                         var colCount = new Array();
                         $('.dataTables-example').find('tbody tr:first-child td').each(
