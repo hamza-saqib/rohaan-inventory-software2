@@ -178,8 +178,8 @@
                                         $valueOut = isset($record['valueOut']) ? $record['valueOut'] : 0;
                                         $valueIn = isset($record['valueIn']) ? $record['valueIn'] : 0;
 
-                                        $balanceQty += $qtyIn - $qtyOut;
-                                        $balanceAmount += $valueIn - $valueOut;
+                                        $balanceQty -= $qtyIn - $qtyOut;
+                                        $balanceAmount -= $valueIn - $valueOut;
                                         @endphp
                                         <td>{{ number_format($balanceQty, 2) }}</td>
                                         <td>{{ number_format($balanceAmount, 2) }}</td>
