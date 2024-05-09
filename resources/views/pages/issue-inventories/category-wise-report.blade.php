@@ -280,8 +280,7 @@
         }, 1300);
     }
 
-    <
-    script >
+    <script >
         $(document).ready(function() {
             // Calculate and display total value
             calculateTotalValue();

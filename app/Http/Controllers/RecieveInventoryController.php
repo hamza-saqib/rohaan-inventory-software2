@@ -240,11 +240,37 @@ class RecieveInventoryController extends Controller
         return view('pages.recieve-inventories.reports-monthly', compact('records', 'years', 'report', 'dropDownData'));
     }
 
-    public function categoryWiseReprt(Request $request) {
+    // public function categoryWiseReprt(Request $request) {
 
+    //     $categories = ProductCategory::all();
+    //     $records = [];
+    //     // return $request->all();
+    //     if ($request->filled('category_code')) {
+    //         $records = RecieveInventory::select('invrec.*', 'icitem.name1 as product')
+    //             ->when($request->filled('start_date'), function ($query) use ($request) {
+    //                 return $query->where('vd', '>=', $request->start_date);
+    //             })
+    //             ->when($request->filled('end_date'), function ($query) use ($request) {
+    //                 return $query->where('vd', '<=', $request->end_date);
+    //             })->when($request->filled('start_date'), function ($query) use ($request) {
+    //                 return $query->where('vd', '>=', $request->start_date);
+    //             })->when($request->filled('category_code') && ($request->category_code != 'All'), function ($query) use ($request) {
+    //                 return $query->where('icitem.catcode', '=', $request->category_code);
+    //             })->when($request->filled('saerch_keyword'), function ($query) use ($request) {
+    //                 return $query->where('icitem.name1', 'like', '%' . $request->saerch_keyword . '%');
+    //             })->leftJoin('icitem', 'icitem.code', '=', 'invrec.ic')
+    //             ->get();
+    //         $request->flash();
+    //     }
+    //     return view('pages.recieve-inventories.category-wise-report', compact('categories', 'records'));
+    // }
+
+    public function categoryWiseReprt(Request $request) {
         $categories = ProductCategory::all();
         $records = [];
-        // return $request->all();
+        $totalQty = 0;
+        $totalValue = 0;
+    
         if ($request->filled('category_code')) {
             $records = RecieveInventory::select('invrec.*', 'icitem.name1 as product')
                 ->when($request->filled('start_date'), function ($query) use ($request) {
@@ -260,10 +286,19 @@ class RecieveInventoryController extends Controller
                     return $query->where('icitem.name1', 'like', '%' . $request->saerch_keyword . '%');
                 })->leftJoin('icitem', 'icitem.code', '=', 'invrec.ic')
                 ->get();
+    
+            // Calculate total Qty and total Value
+            foreach ($records as $record) {
+                $totalQty += $record->qty;
+                $totalValue += ($record->qty * $record->rat);
+            }
+    
             $request->flash();
         }
-        return view('pages.recieve-inventories.category-wise-report', compact('categories', 'records'));
+    
+        return view('pages.recieve-inventories.category-wise-report', compact('categories', 'records', 'totalQty', 'totalValue'));
     }
+    
 
     public function supplierWiseReprt(Request $request) {
         $vendors = Vendor::all();

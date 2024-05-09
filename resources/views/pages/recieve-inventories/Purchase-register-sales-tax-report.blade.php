@@ -80,6 +80,8 @@
                                 <label for="taxableParties">Taxable Parties</label><br>
                                 <input type="radio" id="nonTaxableParties" name="reportType" value="Non Taxable Parties">
                                 <label for="nonTaxableParties">Non Taxable Parties</label><br>
+                                <input type="hidden" id="reportType" value="{{ $reportType }}">
+
                             </div>
                         </div>
 
@@ -211,13 +213,16 @@
     var date = new Date().toISOString().slice(0, 10);
     var sDate = $('#date_added').val();
     var eDate = $('#date_modified').val();
+    var reportType = $('#reportType').val();
+
+
     $(document).ready(function() {
     $('.dataTables-example').DataTable({
         dom: '<"html5buttons"B>lTfgitp',
         buttons: [
             {
                 extend: 'pdf',
-                title: 'CONTINENTAL AIR CONTROL (PVT) LTD.\nPurchase Register Of: '  + code + ' ' + product + '( From: ' + sDate + ' To: ' + eDate + ' )',
+                title: 'CONTINENTAL AIR CONTROL (PVT) LTD.\nPurchase Register '+ reportType +' Of: '  + code + ' ' + product + '\n( From: ' + sDate + ' To: ' + eDate + ' )',
                 orientation: 'landscape',
                 filename: 'Purchase Register Of: '  + code + ' ' + product + '( From: ' + sDate + ' To: ' + eDate + ' )',
                 customize: function(doc) {
