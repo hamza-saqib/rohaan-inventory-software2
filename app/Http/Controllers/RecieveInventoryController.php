@@ -37,7 +37,7 @@ class RecieveInventoryController extends Controller
         if ($request->filled('button') && ($request->input('button') == 'export')) {
             return Excel::download(new RecieveInventoryExport([
                 'startDate' => $request->start_date, 'endDate' => $request->end_date, 'productCode' => $request->product_code, 'vendorCode' => $request->vendor_code,
-                'saerch_keyword'=>$request->saerch_keyword
+                'saerch_keyword' => $request->saerch_keyword
             ]), 'reciept inventory data.xls', \Maatwebsite\Excel\Excel::XLS);
         }
         $products = Product::all();
@@ -57,11 +57,11 @@ class RecieveInventoryController extends Controller
                 return $query->where('sc', '=', $request->vendor_code);
             })->when($request->filled('saerch_keyword'), function ($query) use ($request) {
                 return $query->where('supplierrec.name1', 'like', '%' . $request->saerch_keyword . '%')
-                ->orWhere('icitem.name1', 'like', '%' . $request->saerch_keyword . '%')
-                ->orWhere('remarks', 'like', '%' . $request->saerch_keyword . '%');
+                    ->orWhere('icitem.name1', 'like', '%' . $request->saerch_keyword . '%')
+                    ->orWhere('remarks', 'like', '%' . $request->saerch_keyword . '%');
             })->leftJoin('icitem', 'icitem.code', '=', 'invrec.ic')
-                ->leftJoin('supplierrec', 'supplierrec.code', '=', 'invrec.sc')
-                ->paginate(50);
+            ->leftJoin('supplierrec', 'supplierrec.code', '=', 'invrec.sc')
+            ->paginate(50);
         // $sum = [
         //     'rate' => $query->sum(DB::raw('rat * qty')),
         //     'sed' => $query->sum('sed'),
@@ -117,12 +117,21 @@ class RecieveInventoryController extends Controller
             }
         }
         $request->flash();
-        // return $records;
-        return view('pages.recieve-inventories.reports-monthly', compact('records', 'years', 'report', 'dropDownData'));
+        $startYear = $request->year - 1;
+        $endYear = $request->year;
+        return view('pages.recieve-inventories.reports-monthly', compact('records', 'years', 'report', 'dropDownData', 'startYear', 'endYear'));
     }
 
     public function monthlyReportSupplier(Request $request)
     {
+        //Abhi dala
+        if ($request->has('_token')) {
+            $this->validate($request, [
+                'year' => ['required']
+            ]);
+        }
+
+
         $records = [];
         $years = $this->years;
         $report = 'Supplier';
@@ -187,7 +196,7 @@ class RecieveInventoryController extends Controller
                                 $record['jun'] = $value->net_value;
                                 break;
                         }
-                    } else if ($value->year == ($request->year-1)){
+                    } else if ($value->year == ($request->year - 1)) {
                         switch ($value->month) {
                             case 'jul':
                                 $record['jul'] = $value->net_value;
@@ -215,29 +224,16 @@ class RecieveInventoryController extends Controller
                 }
             }
         }
-        // return $request->filled('year');
-        // if ($request->filled('year')) {
-        //     $date = Carbon::createFromDate(intval($request->year), 1, 1);
-        //     $records = Vendor::all();
-        //     foreach ($records as $key => $record) {
-        //         Log::info($key);
-        //         $record['jul']  = RecieveInventory::where('sc', $record->code)->where('vd', '>=', Carbon::createFromDate(intval($request->year), 1, 1)->subMonths(6)->startOfMonth())->where('vd', '<=', Carbon::createFromDate(intval($request->year), 1, 1)->subMonths(6)->endOfMonth())->sum(DB::raw('nv'));
-        //         $record['aug']  = RecieveInventory::where('sc', $record->code)->where('vd', '>=', Carbon::createFromDate(intval($request->year), 1, 1)->subMonths(5)->startOfMonth())->where('vd', '<=', Carbon::createFromDate(intval($request->year), 1, 1)->subMonths(5)->endOfMonth())->sum(DB::raw('nv'));
-        //         $record['sep']  = RecieveInventory::where('sc', $record->code)->where('vd', '>=', Carbon::createFromDate(intval($request->year), 1, 1)->subMonths(4)->startOfMonth())->where('vd', '<=', Carbon::createFromDate(intval($request->year), 1, 1)->subMonths(4)->endOfMonth())->sum(DB::raw('nv'));
-        //         $record['oct']  = RecieveInventory::where('sc', $record->code)->where('vd', '>=', Carbon::createFromDate(intval($request->year), 1, 1)->subMonths(3)->startOfMonth())->where('vd', '<=', Carbon::createFromDate(intval($request->year), 1, 1)->subMonths(3)->endOfMonth())->sum(DB::raw('nv'));
-        //         $record['nov']  = RecieveInventory::where('sc', $record->code)->where('vd', '>=', Carbon::createFromDate(intval($request->year), 1, 1)->subMonths(2)->startOfMonth())->where('vd', '<=', Carbon::createFromDate(intval($request->year), 1, 1)->subMonths(2)->endOfMonth())->sum(DB::raw('nv'));
-        //         $record['dec']  = RecieveInventory::where('sc', $record->code)->where('vd', '>=', Carbon::createFromDate(intval($request->year), 1, 1)->subMonths(1)->startOfMonth())->where('vd', '<=', Carbon::createFromDate(intval($request->year), 1, 1)->subMonths(1)->endOfMonth())->sum(DB::raw('nv'));
-        //         $record['jan']  = RecieveInventory::where('sc', $record->code)->where('vd', '>=', Carbon::createFromDate(intval($request->year), 1, 1)->startOfMonth())->where('vd', '<=', Carbon::createFromDate(intval($request->year), 1, 1)->endOfMonth())->sum(DB::raw('nv'));
-        //         $record['feb']  = RecieveInventory::where('sc', $record->code)->where('vd', '>=', Carbon::createFromDate(intval($request->year), 1, 1)->addMonths(1)->startOfMonth())->where('vd', '<=', Carbon::createFromDate(intval($request->year), 1, 1)->addMonths(1)->endOfMonth())->sum(DB::raw('nv'));
-        //         $record['mar']  = RecieveInventory::where('sc', $record->code)->where('vd', '>=', Carbon::createFromDate(intval($request->year), 1, 1)->addMonths(2)->startOfMonth())->where('vd', '<=', Carbon::createFromDate(intval($request->year), 1, 1)->addMonths(2)->endOfMonth())->sum(DB::raw('nv'));
-        //         $record['apr']  = RecieveInventory::where('sc', $record->code)->where('vd', '>=', Carbon::createFromDate(intval($request->year), 1, 1)->addMonths(3)->startOfMonth())->where('vd', '<=', Carbon::createFromDate(intval($request->year), 1, 1)->addMonths(3)->endOfMonth())->sum(DB::raw('nv'));
-        //         $record['may']  = RecieveInventory::where('sc', $record->code)->where('vd', '>=', Carbon::createFromDate(intval($request->year), 1, 1)->addMonths(4)->startOfMonth())->where('vd', '<=', Carbon::createFromDate(intval($request->year), 1, 1)->addMonths(4)->endOfMonth())->sum(DB::raw('nv'));
-        //         $record['jun']  = RecieveInventory::where('sc', $record->code)->where('vd', '>=', Carbon::createFromDate(intval($request->year), 1, 1)->addMonths(5)->startOfMonth())->where('vd', '<=', Carbon::createFromDate(intval($request->year), 1, 1)->addMonths(5)->endOfMonth())->sum(DB::raw('nv'));
-        //     }
-        // }
+
         $request->flash();
+
+        //abhi dala
+        $request->flash();
+        $startYear = $request->year - 1;
+        $endYear = $request->year;
         // return $records;
-        return view('pages.recieve-inventories.reports-monthly', compact('records', 'years', 'report', 'dropDownData'));
+        // return view('pages.recieve-inventories.reports-monthly', compact('records', 'years', 'report', 'dropDownData'));
+        return view('pages.recieve-inventories.reports-monthly', compact('records', 'years', 'report', 'dropDownData', 'startYear', 'endYear'));
     }
 
     // public function categoryWiseReprt(Request $request) {
@@ -265,12 +261,13 @@ class RecieveInventoryController extends Controller
     //     return view('pages.recieve-inventories.category-wise-report', compact('categories', 'records'));
     // }
 
-    public function categoryWiseReprt(Request $request) {
+    public function categoryWiseReprt(Request $request)
+    {
         $categories = ProductCategory::all();
         $records = [];
         $totalQty = 0;
         $totalValue = 0;
-    
+
         if ($request->filled('category_code')) {
             $records = RecieveInventory::select('invrec.*', 'icitem.name1 as product')
                 ->when($request->filled('start_date'), function ($query) use ($request) {
@@ -286,23 +283,26 @@ class RecieveInventoryController extends Controller
                     return $query->where('icitem.name1', 'like', '%' . $request->saerch_keyword . '%');
                 })->leftJoin('icitem', 'icitem.code', '=', 'invrec.ic')
                 ->get();
-    
+
             // Calculate total Qty and total Value
             foreach ($records as $record) {
                 $totalQty += $record->qty;
                 $totalValue += ($record->qty * $record->rat);
             }
-    
+
             $request->flash();
         }
-    
+
         return view('pages.recieve-inventories.category-wise-report', compact('categories', 'records', 'totalQty', 'totalValue'));
     }
-    
 
-    public function supplierWiseReprt(Request $request) {
+
+    public function supplierWiseReprt(Request $request)
+    {
         $vendors = Vendor::all();
         $records = [];
+        $selectedSupplier = $request->input('vendor_code');
+        $selectedSupplierName = '';
         // return $request->all();
         if ($request->filled('vendor_code')) {
             // return 1;
@@ -320,62 +320,109 @@ class RecieveInventoryController extends Controller
                     return $query->where('icitem.name1', 'like', '%' . $request->saerch_keyword . '%');
                 })->leftJoin('icitem', 'icitem.code', '=', 'invrec.ic')
                 ->get();
+
+                if ($selectedSupplier && $selectedSupplier != 'All') {
+                    $selectedSupplierName = Vendor::where('code', $selectedSupplier)->value('name1');
+                }
             $request->flash();
         }
-        return view('pages.recieve-inventories.supplier-wise-report', compact('vendors', 'records'));
+        return view('pages.recieve-inventories.supplier-wise-report', compact('vendors', 'records', 'selectedSupplier', 'selectedSupplierName'));
     }
 
-    public function purchaseregister(Request $request) {
+    // public function purchaseregister(Request $request) {
+    //     $dropDownData = Product::select('code', 'name1')->get();
+    //     $vendors = Vendor::all();
+    //     $records = [];
+    //     // return $request->all();
+    //     if ($request->filled('code')) {
+    //         // return 1;
+    //         $productCode = $request->input('code');
+
+
+    //         $query = RecieveInventory::select('invrec.*', 'icitem.name1 as product', 'supplierrec.*')
+    //         ->where('ic', $productCode)
+    //         ->leftJoin('icitem', 'icitem.code', '=', 'invrec.ic')
+    //         ->leftJoin('supplierrec', 'supplierrec.code', '=', 'invrec.sc');
+
+    //     if ($request->filled('start_date')) {
+    //         $query->where('vd', '>=', $request->start_date);
+    //     }
+
+    //     if ($request->filled('end_date')) {
+    //         $query->where('vd', '<=', $request->end_date);
+    //     }
+
+    //     if ($request->filled('reportType')) {
+    //         if ($request->reportType === 'Taxable Parties') {
+    //             // Filter records where supplier has stn value greater than 0
+    //             $query->whereNotNull('supplierrec.stn')
+    //             ->where('supplierrec.stn', '<>', '0')
+    //             ->whereRaw('TRIM(supplierrec.stn) <> \'\'');
+    //         } else if($request->reportType === 'Non Taxable Parties'){
+    //             $query->where(function($q) {
+    //                 $q->whereNull('supplierrec.stn')
+    //                   ->orWhereRaw('TRIM(supplierrec.stn) = \'\'');
+    //             });
+    //         }
+    //     }
+    //     $reportType = $request->input('reportType'); // Assuming reportType is sent in the request
+
+    //     $records = $query->get();
+    //         $request->flash();
+    //     }
+    //     return view('pages.recieve-inventories.Purchase-register-sales-tax-report', compact('vendors', 'records','dropDownData', 'reportType'));
+    // }
+
+    public function purchaseregister(Request $request)
+    {
         $dropDownData = Product::select('code', 'name1')->get();
         $vendors = Vendor::all();
         $records = [];
-        // return $request->all();
+        $reportType = $request->input('reportType'); // Assigning value to $reportType
         if ($request->filled('code')) {
-            // return 1;
             $productCode = $request->input('code');
-
-            
             $query = RecieveInventory::select('invrec.*', 'icitem.name1 as product', 'supplierrec.*')
-            ->where('ic', $productCode)
-            ->leftJoin('icitem', 'icitem.code', '=', 'invrec.ic')
-            ->leftJoin('supplierrec', 'supplierrec.code', '=', 'invrec.sc');
-        
-        if ($request->filled('start_date')) {
-            $query->where('vd', '>=', $request->start_date);
-        }
+                ->where('ic', $productCode)
+                ->leftJoin('icitem', 'icitem.code', '=', 'invrec.ic')
+                ->leftJoin('supplierrec', 'supplierrec.code', '=', 'invrec.sc');
 
-        if ($request->filled('end_date')) {
-            $query->where('vd', '<=', $request->end_date);
-        }
-
-        if ($request->filled('reportType')) {
-            if ($request->reportType === 'Taxable Parties') {
-                // Filter records where supplier has stn value greater than 0
-                $query->whereNotNull('supplierrec.stn')
-                ->where('supplierrec.stn', '<>', '0')
-                ->whereRaw('TRIM(supplierrec.stn) <> \'\'');
-            } else if($request->reportType === 'Non Taxable Parties'){
-                $query->where(function($q) {
-                    $q->whereNull('supplierrec.stn')
-                      ->orWhereRaw('TRIM(supplierrec.stn) = \'\'');
-                });
+            if ($request->filled('start_date')) {
+                $query->where('vd', '>=', $request->start_date);
             }
-        }
-        
-        $records = $query->get();
+
+            if ($request->filled('end_date')) {
+                $query->where('vd', '<=', $request->end_date);
+            }
+
+            if ($request->filled('reportType')) {
+                if ($request->reportType === 'Taxable Parties') {
+                    $query->whereNotNull('supplierrec.stn')
+                        ->where('supplierrec.stn', '<>', '0')
+                        ->whereRaw('TRIM(supplierrec.stn) <> \'\'');
+                } else if ($request->reportType === 'Non Taxable Parties') {
+                    $query->where(function ($q) {
+                        $q->whereNull('supplierrec.stn')
+                            ->orWhereRaw('TRIM(supplierrec.stn) = \'\'');
+                    });
+                }
+            }
+
+            $records = $query->get();
             $request->flash();
         }
-        return view('pages.recieve-inventories.Purchase-register-sales-tax-report', compact('vendors', 'records','dropDownData'));
+        return view('pages.recieve-inventories.Purchase-register-sales-tax-report', compact('vendors', 'records', 'dropDownData', 'reportType'));
     }
-    public function categorywise(Request $request) {
+
+    public function categorywise(Request $request)
+    {
         // Retrieve all item categories
         $startDate = $request->input('start_date');
-    $endDate = $request->input('end_date');
+        $endDate = $request->input('end_date');
         $itemCategories = ProductCategory::all();
-    
+
         // Initialize array to store category totals
         $categoryTotals = [];
-    
+
         // Iterate over each item category
         foreach ($itemCategories as $itemCategory) {
             // Calculate the total sum of st and sed for the current category
@@ -389,7 +436,7 @@ class RecieveInventoryController extends Controller
                     return $query->where('invrec.vd', '<=', $endDate);
                 })
                 ->sum('invrec.st');
-    
+
             $categoryTotalSed = DB::table('icitem')
                 ->join('invrec', 'icitem.code', '=', 'invrec.ic')
                 ->where('icitem.catcode', $itemCategory->code)
@@ -402,15 +449,15 @@ class RecieveInventoryController extends Controller
                 ->sum('invrec.sed');
 
             $categoryTotalFed = DB::table('icitem')
-            ->join('invrec', 'icitem.code', '=', 'invrec.ic')
-            ->where('icitem.catcode', $itemCategory->code)
-            ->when($startDate, function ($query) use ($startDate) {
-                return $query->where('invrec.vd', '>=', $startDate);
-            })
-            ->when($endDate, function ($query) use ($endDate) {
-                return $query->where('invrec.vd', '<=', $endDate);
-            })
-            ->sum('invrec.fed');
+                ->join('invrec', 'icitem.code', '=', 'invrec.ic')
+                ->where('icitem.catcode', $itemCategory->code)
+                ->when($startDate, function ($query) use ($startDate) {
+                    return $query->where('invrec.vd', '>=', $startDate);
+                })
+                ->when($endDate, function ($query) use ($endDate) {
+                    return $query->where('invrec.vd', '<=', $endDate);
+                })
+                ->sum('invrec.fed');
 
             $categoryTotalod = DB::table('icitem')
                 ->join('invrec', 'icitem.code', '=', 'invrec.ic')
@@ -422,7 +469,7 @@ class RecieveInventoryController extends Controller
                     return $query->where('invrec.vd', '<=', $endDate);
                 })
                 ->sum('invrec.od');
-                $categoryTotalved= DB::table('icitem')
+            $categoryTotalved = DB::table('icitem')
                 ->join('invrec', 'icitem.code', '=', 'invrec.ic')
                 ->where('icitem.catcode', $itemCategory->code)
                 ->when($startDate, function ($query) use ($startDate) {
@@ -432,7 +479,7 @@ class RecieveInventoryController extends Controller
                     return $query->where('invrec.vd', '<=', $endDate);
                 })
                 ->sum('invrec.ved');
-                $categoryTotalnv= DB::table('icitem')
+            $categoryTotalnv = DB::table('icitem')
                 ->join('invrec', 'icitem.code', '=', 'invrec.ic')
                 ->where('icitem.catcode', $itemCategory->code)
                 ->when($startDate, function ($query) use ($startDate) {
@@ -442,7 +489,7 @@ class RecieveInventoryController extends Controller
                     return $query->where('invrec.vd', '<=', $endDate);
                 })
                 ->sum('invrec.nv');
-    
+
             $itemCategory->total_st = $categoryTotalSt;
             $itemCategory->total_sed = $categoryTotalSed;
             $itemCategory->total_fed = $categoryTotalFed;
@@ -450,10 +497,10 @@ class RecieveInventoryController extends Controller
             $itemCategory->total_ved = $categoryTotalved;
             $itemCategory->total_nv = $categoryTotalnv;
         }
-    
+
         return view('pages.recieve-inventories.Category-wise-summary-stax-register-report', compact('itemCategories'));
     }
-    
+
 
     /**
      * Show the form for creating a new resource.

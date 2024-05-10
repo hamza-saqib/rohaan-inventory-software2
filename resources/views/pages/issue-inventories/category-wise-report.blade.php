@@ -169,15 +169,18 @@
 <script>
     $("#productSelect").select2();
     var date = new Date().toISOString().slice(0, 10);
+    var sDate = '{{ $sDate }}';
+    var eDate = '{{ $eDate }}';
+    var categoryName = '{{ $selectedCategoryName }}'; // Make sure to add quotes around PHP variables in JavaScript
+
     $(document).ready(function() {
         $('.dataTables-example').DataTable({
             dom: '<"html5buttons"B>lTfgitp',
             buttons: [{
                     extend: 'pdf',
-                    title: 'CONTINENTAL AIR CONTROL (PVT) LTD.\n ' + 'Category Wise Issue Report ( ' +
-                        date + ' )',
+                    title: 'CONTINENTAL AIR CONTROL (PVT) LTD.\n ' + 'Category Wise Issue Report Of: ' + categoryName + '\n( From: ' + sDate + ' To: ' + eDate + ' )',
                     // orientation: 'landscape',
-                    filename: 'Category Wise Issue Report ( ' + date + ' )',
+                    filename: 'Category Wise Issue Report Of: ' + categoryName + '( From: ' + sDate + ' To: ' + eDate + ' )',
                     customize: function(doc) {
                         var colCount = new Array();
                         $('.dataTables-example').find('tbody tr:first-child td').each(
@@ -197,19 +200,11 @@
                         doc.content[1].table.body.push(totalRow);
                     }
                 },
-                // {extend: 'excel', title: 'ExampleFile'},
-                // {extend: 'pdf', title: 'ExampleFile'},
-
-                // {extend: 'print',
-                //  customize: function (win){
-                //         $(win.document.body).addClass('white-bg');
-                //         $(win.document.body).css('font-size', '10px');
-
-                //         $(win.document.body).find('table')
-                //                 .addClass('compact')
-                //                 .css('font-size', 'inherit');
-                // }
-                // }
+                {
+                    extend: 'excel',
+                    title: 'CONTINENTAL AIR CONTROL (PVT) LTD.\n ' + 'Category Wise Issue Report Of: ' + categoryName + '\n( From: ' + sDate + ' To: ' + eDate + ' )',
+                    filename: 'Category Wise Issue Report Of: ' + categoryName + '( From: ' + sDate + ' To: ' + eDate + ' )',
+                }
             ]
 
         });
@@ -280,7 +275,8 @@
         }, 1300);
     }
 
-    <script >
+    <
+    script >
         $(document).ready(function() {
             // Calculate and display total value
             calculateTotalValue();

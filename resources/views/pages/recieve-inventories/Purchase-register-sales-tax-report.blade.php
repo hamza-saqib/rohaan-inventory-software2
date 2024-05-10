@@ -143,10 +143,10 @@
                                     </tr> -->
                                     <tr>
                                         <th>Invoice Date</th>
-                                        <th  style="text-align: center">Supplier Name</th>
-                                        <th  style="text-align: center">Supplier Address</th>
-                                        <th  style="text-align: center">Sales Tax Number</th>
-                                        <th  style="text-align: center">Material Name / Description</th>
+                                        <th style="text-align: center">Supplier Name</th>
+                                        <th style="text-align: center">Supplier Address</th>
+                                        <th style="text-align: center">Sales Tax Number</th>
+                                        <th style="text-align: center">Material Name / Description</th>
                                         <th>Quantity</th>
                                         <th>Unit Rate</th>
                                         <th>Amount Excl. S.Tax</th>
@@ -158,14 +158,14 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($records as $record)
-                                    
+
                                     <tr class="gradeX" id="row-{{ $record->id_col }}">
-                                        
+
                                         <td>{{ $record->sid }}</td>
-                                        <td >{{ $record->name1 }}</td>
-                                        <td >{{ $record->address }}</td>
-                                        <td >{{ $record->stn }}</td>
-                                        <td >{{ $record->product }}</td>
+                                        <td>{{ $record->name1 }}</td>
+                                        <td>{{ $record->address }}</td>
+                                        <td>{{ $record->stn }}</td>
+                                        <td>{{ $record->product }}</td>
                                         <td>{{ $record->qty }}</td>
                                         <td>{{ $record->rat }}</td>
                                         <td>{{ $record->ved }}</td>
@@ -173,7 +173,7 @@
                                         <td>{{ $record->st }}</td>
                                         <td>{{ $record->ved + $record->st + $record->sed + $record->fed + $record->od }}</td>
                                         <td>{{ $record->remarks }}</td>
-                                        
+
                                     </tr>
                                     @endforeach
 
@@ -203,10 +203,10 @@
 <!-- datatables -->
 <script src="{{ asset('assets') }}/js/plugins/dataTables/datatables.min.js"></script>
 @if(isset($record) && !is_null($record))
-    <script>
-        var code = "{{ $record['ic'] }}";
-        var product = "{{ $record['product'] }}";
-    </script>
+<script>
+    var code = "{{ $record['ic'] }}";
+    var product = "{{ $record['product'] }}";
+</script>
 @endif
 <script>
     $("#productSelect").select2();
@@ -217,34 +217,37 @@
 
 
     $(document).ready(function() {
-    $('.dataTables-example').DataTable({
-        dom: '<"html5buttons"B>lTfgitp',
-        buttons: [
-            {
-                extend: 'pdf',
-                title: 'CONTINENTAL AIR CONTROL (PVT) LTD.\nPurchase Register '+ reportType +' Of: '  + code + ' ' + product + '\n( From: ' + sDate + ' To: ' + eDate + ' )',
-                orientation: 'landscape',
-                filename: 'Purchase Register Of: '  + code + ' ' + product + '( From: ' + sDate + ' To: ' + eDate + ' )',
-                customize: function(doc) {
-                    var colCount = new Array();
-                    $('.dataTables-example').find('tbody tr:first-child td').each(function() {
-                        if ($(this).attr('colspan')) {
-                            for (var i = 1; i <= $(this).attr('colspan'); $i++) {
+        $('.dataTables-example').DataTable({
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: [{
+                    extend: 'pdf',
+                    title: 'CONTINENTAL AIR CONTROL (PVT) LTD.\nPurchase Register ' + reportType + ' Of: ' + code + ' ' + product + '\n( From: ' + sDate + ' To: ' + eDate + ' )',
+                    orientation: 'landscape',
+                    filename: 'Purchase Register Of: ' + code + ' ' + product + '( From: ' + sDate + ' To: ' + eDate + ' )',
+                    customize: function(doc) {
+                        var colCount = new Array();
+                        $('.dataTables-example').find('tbody tr:first-child td').each(function() {
+                            if ($(this).attr('colspan')) {
+                                for (var i = 1; i <= $(this).attr('colspan'); $i++) {
+                                    colCount.push('*');
+                                }
+                            } else {
                                 colCount.push('*');
                             }
-                        } else {
-                            colCount.push('*');
-                        }
-                    });
-                    doc.content[1].table.widths = colCount;
+                        });
+                        doc.content[1].table.widths = colCount;
+                    }
+                },
+                {
+                    extend: 'excel',
+                    title: 'CONTINENTAL AIR CONTROL (PVT) LTD.\nPurchase Register ' + reportType + ' Of: ' + code + ' ' + product + '\n( From: ' + sDate + ' To: ' + eDate + ' )',
+                    filename: 'Purchase Register Of: ' + code + ' ' + product + '( From: ' + sDate + ' To: ' + eDate + ' )',
+
                 }
-            }
-        ]
+            ]
+        });
     });
-});
-
-
-   </script>
+</script>
 
 <script>
     var Success = `{{ \Session::has('success') }}`;

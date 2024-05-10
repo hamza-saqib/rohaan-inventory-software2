@@ -179,6 +179,11 @@
                         doc.content[1].table.widths = colCount;
                     }
                 },
+                {
+                        extend: 'excel',
+                        title: 'CONTINENTAL AIR CONTROL (PVT) LTD.\n ' + 'Category Wise Sales Tax Register Report ( From ' + sDate + ' To ' + eDate + ' )',
+                        filename: 'Category Wise Sales Tax Register Report ( From ' + sDate + ' To ' + eDate + ' )',
+                    }
             ]
 
         });

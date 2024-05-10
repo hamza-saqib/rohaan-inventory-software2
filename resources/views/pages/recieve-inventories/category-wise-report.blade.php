@@ -173,8 +173,8 @@
     var date = new Date().toISOString().slice(0, 10);
     var sDate = $('#date_added').val();
     var eDate = $('#date_modified').val();
+    // var selectedCategory = $('#productSelect option:selected').text();
     var selectedCategory = $('#productSelect option:selected').text();
-
     $(document).ready(function() {
         $('.dataTables-example').DataTable({
             dom: '<"html5buttons"B>lTfgitp',
@@ -208,6 +208,12 @@
                         doc.content[1].table.body.push(totalRow);
                     }
                 },
+                {
+                    extend: 'excel',
+                    title: 'CONTINENTAL AIR CONTROL (PVT) LTD.\n ' + 'Category Wise Reciept Report of Category: ' + selectedCategory + ' \n( From ' + sDate + ' To ' + eDate + ' )',
+                    filename: 'Category Wise Reciept Report of Category: ' + selectedCategory,
+
+                }
                 // {extend: 'excel', title: 'ExampleFile'},
                 // {extend: 'pdf', title: 'ExampleFile'},
 
