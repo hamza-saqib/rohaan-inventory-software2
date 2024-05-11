@@ -251,7 +251,7 @@
                                 <h3>FED: <strong id="gFED">0</strong> </h3>
                                 <h3>Other: <strong id="gOther">0</strong> </h3>
                                 <h3>Total Deduction: <strong id="gTotalDeduction">0</strong> </h3>
-                                <h3>Net Purchase value: <strong id="gNetPurchasevalue">0</strong> </h3>
+                                <h3>Net Purchase value: <strong id="gNetPurchaseValue">0</strong> </h3>
 
                             </div>
                             <br>
@@ -297,6 +297,7 @@
             // Set value to another input field
             $('#net_value').val((qty * l_rate) + parseFloat(sale_tax) + parseFloat(value_excle_tax) + parseFloat(sed) + parseFloat(fed) + parseFloat(other_deduction));
         }
+
         function calculateRate() {
             // Get values from other input fields
             var qty = $('#qty').val();
@@ -330,12 +331,15 @@
     var gNetPurchaseValue = 0;
 
     function addProduct() {
-        if ($('#qty').val() && $('#l_rate').val()) {
-            var productIndex = $('#productSelect').prop('selectedIndex') - 1;
+        var productIndex = $('#productSelect').prop('selectedIndex') - 1;
+        var supplierIndex = $('#vendorSelect').prop('selectedIndex') - 1;
+        var qty = $('#qty').val();
+        var l_rate = $('#l_rate').val();
+
+        // Check if both product and supplier are selected
+        if (productIndex >= 0 && supplierIndex >= 0 && qty && l_rate) {
             var name = $('#productSelect').find(":selected").text();
             var code = $('#productSelect').find(":selected").val();
-            var qty = $('#qty').val();
-            var l_rate = $('#l_rate').val();
             var sale_tax = $('#sale_tax').val();
             var value_excle_tax = $('#value_excle_tax').val();
             var sed = $('#sed').val();
@@ -345,47 +349,48 @@
             var remarks = $('#remarks').val();
             var ttype = $('#ttype').val();
 
-            if (productIndex) {
-                $('#productTableBody').append(`<tr id="row-${counter}">
-                        <td>${code}</td>
-                        <td>${name}</td>
-                        <td>${qty}</td>
-                        <td>${l_rate}</td>
-                        <td>${sale_tax}</td>
-                        <td>${value_excle_tax}</td>
-                        <td>${sed}</td>
-                        <td>${fed}</td>
-                        <td>${other_deduction}</td>
-                        <td>${net_value}</td>
-                        <td>${remarks}</td>
-                        <td>${ttype}</td>
-                        <td>
-                            <a onclick="deleteProduct(${counter})">
-                                <small class="label label-danger"><i class="fa"></i>delete</small>
-                            </a>
-                        </td>
+            $('#productTableBody').append(`<tr id="row-${counter}">
+                <td>${code}</td>
+                <td>${name}</td>
+                <td>${qty}</td>
+                <td>${l_rate}</td>
+                <td>${sale_tax}</td>
+                <td>${value_excle_tax}</td>
+                <td>${sed}</td>
+                <td>${fed}</td>
+                <td>${other_deduction}</td>
+                <td>${net_value}</td>
+                <td>${remarks}</td>
+                <td>${ttype}</td>
+                <td>
+                    <a onclick="deleteProduct(${counter})">
+                        <small class="label label-danger"><i class="fa"></i>delete</small>
+                    </a>
+                </td>
 
-                        <input type="hidden" name="products[code][]" value="${code}">
-                        <input type="hidden" name="products['name'][]" value="${name}">
-                        <input type="hidden" name="products[qty][]" value="${qty}">
-                        <input type="hidden" name="products[l_rate][]" value="${l_rate}">
-                        <input type="hidden" name="products[sale_tax][]" value="${sale_tax}">
-                        <input type="hidden" name="products[value_excle_tax][]" value="${value_excle_tax}">
-                        <input type="hidden" name="products[sed][]" value="${sed}">
-                        <input type="hidden" name="products[fed][]" value="${fed}">
-                        <input type="hidden" name="products[other_deduction][]" value="${other_deduction}">
-                        <input type="hidden" name="products[net_value][]" value="${net_value}">
-                        <input type="hidden" name="products[remarks][]" value="${remarks}">
-                        <input type="hidden" name="products[ttype][]" value="${ttype}">
+                <input type="hidden" name="products[code][]" value="${code}">
+                <input type="hidden" name="products['name'][]" value="${name}">
+                <input type="hidden" name="products[qty][]" value="${qty}">
+                <input type="hidden" name="products[l_rate][]" value="${l_rate}">
+                <input type="hidden" name="products[sale_tax][]" value="${sale_tax}">
+                <input type="hidden" name="products[value_excle_tax][]" value="${value_excle_tax}">
+                <input type="hidden" name="products[sed][]" value="${sed}">
+                <input type="hidden" name="products[fed][]" value="${fed}">
+                <input type="hidden" name="products[other_deduction][]" value="${other_deduction}">
+                <input type="hidden" name="products[net_value][]" value="${net_value}">
+                <input type="hidden" name="products[remarks][]" value="${remarks}">
+                <input type="hidden" name="products[ttype][]" value="${ttype}">
 
-                    </tr>`);
-                counter++;
+            </tr>`);
+            counter++;
 
-            }
             calculateTotalAmmount();
+        } else {
+            // If either product or supplier is not selected, show an alert or handle the validation error here
+            alert('Please select both item and supplier before adding.');
         }
-
     }
+
 
     function deleteProduct(rowId) {
         $("#row-" + rowId).remove();
@@ -421,6 +426,10 @@
             .map(function() {
                 return $(this).val();
             }).get();
+        var products_net_value = $("input[name='products[net_value][]']")
+            .map(function() {
+                return $(this).val();
+            }).get();
 
         products_sale_tax.forEach(function myFunction(value, index, arr) {
             gSaleTax = gSaleTax + parseFloat(value);
@@ -437,6 +446,10 @@
         products_other_deduction.forEach(function myFunction(value, index, arr) {
             gOther = gOther + parseFloat(value);
         })
+        products_net_value.forEach(function(value) {
+            gNetPurchaseValue += parseFloat(value);
+        });
+
 
         $('#gPurchaseValue').html(gPurchaseValue);
         $('#gSaleTax').html(gSaleTax);
@@ -444,7 +457,7 @@
         $('#gFED').html(gFED);
         $('#gOther').html(gOther);
         $('#gTotalDeduction').html(gOther);
-        $('#gNetPurchaseValue').html(gPurchaseValue);
+        $('#gNetPurchaseValue').html(gNetPurchaseValue);
     }
 
     // $('#discount').on('input', function(e) {

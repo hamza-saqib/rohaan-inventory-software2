@@ -162,8 +162,20 @@
                         <div class="widget style1 red-bg">
                             <div class="row">
                                 <div class="col-xs-12 text-left">
-                                    <span>Monthly</span>
-                                    <h2>Issue Item Report</h2>
+                                    <span>Issue Inventory</span>
+                                    <h2>Item Monthly Report</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                <a href="{{ route('reports.issue-inventories.category') }}">
+                    <div class="col-lg-3">
+                        <div class="widget style1 red-bg">
+                            <div class="row">
+                                <div class="col-xs-12 text-left">
+                                    <span>Issue Inventory</span>
+                                    <h2>Category Wise Report</h2>
                                 </div>
                             </div>
                         </div>
@@ -174,8 +186,8 @@
                         <div class="widget style1 red-bg">
                             <div class="row">
                                 <div class="col-xs-12 text-left">
-                                    <span>Monthly</span>
-                                    <h2>Reciept Item Report</h2>
+                                    <span>Inventory Receipt</span>
+                                    <h2>Item Monthly Report</h2>
                                 </div>
                             </div>
                         </div>
@@ -186,8 +198,56 @@
                         <div class="widget style1 red-bg">
                             <div class="row">
                                 <div class="col-xs-12 text-left">
-                                    <span>Monthly</span>
-                                    <h2>Reciept Supplier Report</h2>
+                                    <span>Inventory Receipt</span>
+                                    <h2>Supplier Monthly Report</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                <a href="{{ route('reports.recieve-inventories.supplier') }}">
+                    <div class="col-lg-3">
+                        <div class="widget style1 red-bg">
+                            <div class="row">
+                                <div class="col-xs-12 text-left">
+                                    <span>Inventory Receipt</span>
+                                    <h2>Supplier Sales Tax Report</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                <a href="{{ route('reports.recieve-inventories.purchaseregister') }}">
+                    <div class="col-lg-3">
+                        <div class="widget style1 red-bg">
+                            <div class="row">
+                                <div class="col-xs-12 text-left">
+                                    <span>Inventory Receipt</span>
+                                    <h2>Purchase Register Sale Tax Report</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                <a href="{{ route('reports.recieve-inventories.categorywise') }}">
+                    <div class="col-lg-3">
+                        <div class="widget style1 red-bg">
+                            <div class="row">
+                                <div class="col-xs-12 text-left">
+                                    <span>Inventory Receipt</span>
+                                    <h2>Category Wise Summary Sales Tax Register Report</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                <a href="{{ route('reports.recieve-inventories.category') }}">
+                    <div class="col-lg-3">
+                        <div class="widget style1 red-bg">
+                            <div class="row">
+                                <div class="col-xs-12 text-left">
+                                    <span>Inventory Receipt</span>
+                                    <h2>Category Wise Purchase Summary Report</h2>
                                 </div>
                             </div>
                         </div>
