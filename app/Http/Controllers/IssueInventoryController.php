@@ -56,6 +56,8 @@ class IssueInventoryController extends Controller
             })->when($request->filled('saerch_keyword'), function ($query) use ($request) {
                 return $query->where('icitem.name1', 'like', '%' . $request->saerch_keyword . '%');
             })->leftJoin('icitem', 'icitem.code', '=', 'oldissue.ic')
+            ->orderBy('isno', 'asc')
+            ->orderBy('isdt', 'asc')
             // ->leftJoin('supplierrec', 'supplierrec.code', '=', 'oldissue.sc')
             ->paginate(50);
 
