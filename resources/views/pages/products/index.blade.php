@@ -2,7 +2,6 @@
 
 @section('title-meta')
     <title>{{ config('app.name') }} | Item List</title>
-
     <meta name="description" content="this is description">
 @endsection
 
@@ -13,7 +12,6 @@
 
 @section('content')
     <div id="page-wrapper" class="gray-bg">
-
         <div class="row border-bottom">
             @include('partials.header')
         </div>
@@ -62,7 +60,6 @@
                             </div>
                         </div>
                         <div class="ibox-content">
-
                             <div class="table-responsive">
                                 <table class="table table-striped table-bordered table-hover dataTables-example">
                                     <thead>
@@ -72,10 +69,8 @@
                                             <th>UOM</th>
                                             <th>Category</th>
                                             <th>Misc. Code</th>
-                                            <th>Fax No.</th>
+                                            <!-- <th>Fax No.</th> -->
                                             <th>Remarks</th>
-                                            {{-- <th>History Qty</th>
-                                            <th>History value</th> --}}
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -85,22 +80,12 @@
                                                 <td>{{ $product->code }}</td>
                                                 <td>{{ $product->name1 }}</td>
                                                 <td>{{ $product->uom }}</td>
-                                                <td>{{ $product->catcode }}</td>
-                                                {{-- <td>{{ $product->loct }}</td> --}}
+                                                <td>{{ $product->category->name1 }}</td>
                                                 <td>{{ $product->misc_code }}</td>
-                                                <td>{{ $product->tax_rate }}</td>
+                                                <!-- <td>{{ $product->tax_rate }}</td> -->
                                                 <td>{{ $product->remarks }}</td>
-                                                </td>
-                                                {{-- <td class="text-center">
-                                                    @if ($product->is_active)
-                                                        <span class="label label-primary">Enable</span>
-                                                    @else
-                                                        <span class="label label-danger">Disabled</span>
-                                                    @endif
-                                                </td> --}}
                                                 <td class="text-center">
                                                     <div class="btn-group">
-
                                                         <a href="{{ route('products.edit', $product->code) }}"
                                                             class="btn-white btn btn-xs">Edit</a>
                                                         <button onclick="deleteRecord({{ $product->code }})"
@@ -109,37 +94,31 @@
                                                 </td>
                                             </tr>
                                         @endforeach
-
                                     </tbody>
                                     <tfoot>
                                         <tr>
-                                            <th>Cdde</th>
+                                            <th>Code</th>
                                             <th>Description</th>
                                             <th>UOM</th>
                                             <th>Category</th>
                                             <th>Misc. Code</th>
-                                            <th>Fax No.</th>
+                                            <!-- <th>Fax No.</th> -->
                                             <th>Remarks</th>
-                                            {{-- <th>History Qty</th>
-                                            <th>History value</th> --}}
                                             <th>Action</th>
                                         </tr>
                                     </tfoot>
                                 </table>
                             </div>
-
                         </div>
                     </div>
                 </div>
             </div>
-
         </div>
 
         @include('partials.footer')
 
     </div>
 @endsection
-
 
 @section('custom-script')
     <!-- Sweet alert -->
@@ -157,28 +136,11 @@
                         title: 'Products Data',
                         filename: 'Products Data',
                         exportOptions: {
-                            columns: [0, 1, 2, 3,4,5,6]
+                            columns: [0, 1, 2, 3, 4, 5, 6]
                         }
                     },
-                    // {extend: 'copy'},
-                    // {extend: 'csv'},
-                    // {extend: 'excel', title: 'ExampleFile'},
-                    // {extend: 'pdf', title: 'ExampleFile'},
-
-                    // {extend: 'print',
-                    //  customize: function (win){
-                    //         $(win.document.body).addClass('white-bg');
-                    //         $(win.document.body).css('font-size', '10px');
-
-                    //         $(win.document.body).find('table')
-                    //                 .addClass('compact')
-                    //                 .css('font-size', 'inherit');
-                    // }
-                    // }
                 ]
-
             });
-
         });
 
         function deleteRecord(id) {
@@ -205,7 +167,6 @@
                         } else if (response.error) {
                             swal("Error !", response.error, "error");
                         } else {
-                            log.
                             swal("Error !", "Not Authorize | Logical Error", "error");
                         }
                     },
@@ -213,9 +174,7 @@
                         swal("Error!", "Cannot delete !", "error");
                     }
                 });
-
             });
-
         }
     </script>
 

@@ -12,4 +12,9 @@ class Product extends Model
     protected  $table = "icitem";
     protected $primaryKey = 'code';
     public $timestamps = false;
+
+    public function category()
+    {
+        return $this->belongsTo(ProductCategory::class, 'catcode', 'code');
+    }
 }
