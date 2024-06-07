@@ -27,10 +27,17 @@ class LocationController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create()
-    {
-        $currentCode = Location::orderBy('code1', 'DESC')->get()->first()->code1 + 1;
-        return view('pages.locations.create', compact('currentCode'));
-    }
+{
+    // Count the number of rows in the Location table
+    $rowCount = Location::count();
+
+    // Increment the count by 1 to get the new code value
+    $currentCode = $rowCount + 1;
+
+    // Pass the currentCode variable to the view
+    return view('pages.locations.create', compact('currentCode'));
+}
+
 
     /**
      * Store a newly created resource in storage.
