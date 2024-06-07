@@ -120,26 +120,25 @@
                                     <tr>
                                         <!-- <th></th> -->
                                         <!-- <th></th> -->
-                                        <th colspan="4" style="text-align: center">Recieved</th>
-                                        <th colspan="4" style="text-align: center">Issued</th>
-                                        <th></th>
-                                        <th></th>
+                                        <th colspan="5" style="text-align: center">Recieved</th>
+                                        <th colspan="3" style="text-align: center">Issued</th>
+                                        <th colspan="2" style="text-align: center">Balance</th>
+                                        <!-- <th></th> -->
                                         <th></th>
                                     </tr>
                                     <tr>
                                         <th>Date</th>
-                                        <!-- <th>Code</th>
-                                        <th>Description</th> -->
                                         <th>GRN</th>
                                         <th>Qty In</th>
                                         <th>Rate</th>
                                         <th>Amount In</th>
                                         <th>Issue No.</th>
                                         <th>Qty Out</th>
-                                        <th>Rate</th>
+                                        <!-- <th>Rate</th> -->
                                         <th>Amount Out</th>
                                         <th>Balance Qty</th>
                                         <th>Balance Amount</th>
+                                        <th>Unit Price</th>
                                         {{-- <th>Amount</th> --}}
                                     </tr>
                                 </thead>
@@ -147,29 +146,19 @@
                                     @php
                                     $balanceQty = 0;
                                     $balanceAmount = 0;
+                                    $unitPrice = 0;
                                     @endphp
                                     @foreach ($records as $record)
                                     <tr class="gradeX" id="row-{{ $record['code'] }}">
                                         <td>{{ date('m/d/Y', strtotime($record['date'])) }}</td>
-                                        <!-- <td>{{ $record['code'] }}</td>
-                                        <td>{{ $record['product'] }}</td> -->
-                                        <!-- <td>{{ $record['grn'] ?? '' }}</td>
-                                        <td>{{ $record['qtyOut'] ?? '' }}</td>
-                                        <td>{{ $record['rateOut'] ?? '' }}</td>
-                                        <td>{{ $record['valueOut'] ?? '' }}</td>
-                                        <td>{{ $record['code'] ?? '' }}</td>
-                                        <td>{{ $record['qtyIn'] ?? '' }}</td>
-                                        <td>{{ $record['rateIn'] ?? '' }}</td>
-                                        <td>{{ $record['valueIn'] ?? '' }}</td> -->
-
                                         <td>{{ isset($record['grn']) ? number_format($record['grn'], 2) : '' }}</td>
-                                        <td>{{ isset($record['qtyOut']) ? number_format($record['qtyOut'], 2) : '' }}</td>
-                                        <td>{{ isset($record['rateOut']) ? number_format($record['rateOut'], 2) : '' }}</td>
-                                        <td>{{ isset($record['valueOut']) ? number_format($record['valueOut'], 2) : '' }}</td>
-                                        <td>{{ isset($record['code']) ? number_format($record['code'], 2) : '' }}</td>
                                         <td>{{ isset($record['qtyIn']) ? number_format($record['qtyIn'], 2) : '' }}</td>
                                         <td>{{ isset($record['rateIn']) ? number_format($record['rateIn'], 2) : '' }}</td>
                                         <td>{{ isset($record['valueIn']) ? number_format($record['valueIn'], 2) : '' }}</td>
+                                        <td>{{ isset($record['code']) ? number_format($record['code'], 2) : '' }}</td>
+                                        <td>{{ isset($record['qtyOut']) ? number_format($record['qtyOut'], 2) : '' }}</td>
+                                        <!-- <td>{{ isset($record['rateOut']) ? number_format($record['rateOut'], 2) : '' }}</td> -->
+                                        <td>{{ isset($record['valueOut']) ? number_format($record['valueOut'], 2) : '' }}</td>
 
                                         @php
                                         // Check if key exists before accessing its value
@@ -178,11 +167,22 @@
                                         $valueOut = isset($record['valueOut']) ? $record['valueOut'] : 0;
                                         $valueIn = isset($record['valueIn']) ? $record['valueIn'] : 0;
 
-                                        $balanceQty -= $qtyIn - $qtyOut;
-                                        $balanceAmount -= $valueIn - $valueOut;
+                                        if ($qtyOut > 0 && $valueOut > 0) {
+                                        $balanceQty -= $qtyIn + $qtyOut;
+                                        $balanceAmount -= $valueIn + $valueOut;
+                                        } else {
+                                        $balanceQty += $qtyIn - $qtyOut;
+                                        $balanceAmount += $valueIn - $valueOut;
+                                        }
+
+                                        if ($balanceQty != 0 && $balanceAmount !=0)
+                                        $unitPrice = $balanceAmount / $balanceQty;
+                                        else
+                                        $unitPrice = 0;
                                         @endphp
                                         <td>{{ number_format($balanceQty, 2) }}</td>
                                         <td>{{ number_format($balanceAmount, 2) }}</td>
+                                        <td>{{ number_format($unitPrice, 2) }}</td>
 
                                         <!-- <td>{{ $balanceQty }}</td>
                                         <td>{{ $balanceAmount }}</td> -->
@@ -191,17 +191,17 @@
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <th></th>
+                                        <th colspan="2">Total:</th>
                                         <!-- <th></th>
                                         <th></th> -->
-                                        <th></th>
-                                        <th>{{ $sum['totalQtyOut'] ?? '' }}</th>
-                                        <th></th>
-                                        <th>{{ $sum['totalValueOut'] ?? '' }}</th>
-                                        <th></th>
+                                        <!-- <th></th> -->
                                         <th>{{ $sum['totalQtyIn'] ?? '' }}</th>
                                         <th></th>
                                         <th>{{ $sum['totalValueIn'] ?? '' }}</th>
+                                        <th></th>
+                                        <th>{{ $sum['totalQtyOut'] ?? '' }}</th>
+                                        <!-- <th></th> -->
+                                        <th>{{ $sum['totalValueOut'] ?? '' }}</th>
                                         <th>{{ $balanceQty }}</th>
                                         <th>{{ $balanceAmount }}</th>
                                     </tr>
@@ -227,17 +227,17 @@
 <!-- datatables -->
 <script src="{{ asset('assets') }}/js/plugins/dataTables/datatables.min.js"></script>
 @if(isset($record) && !is_null($record))
-    <script>
-        var code = "{{ $record['code'] }}";
-        var product = "{{ $record['product'] }}";
-    </script>
+<script>
+    var code = "{{ $record['code'] }}";
+    var product = "{{ $record['product'] }}";
+</script>
 @endif
 <script>
     $("#productSelect").select2();
     var date = new Date().toISOString().slice(0, 10);
     var sDate = $('#date_added').val();
     var eDate = $('#date_modified').val();
-    
+
 
 
 
@@ -247,9 +247,9 @@
             buttons: [{
                     extend: 'pdf',
                     // title: 'CONTINENTAL AIR CONTROL (PVT) LTD.\n ' + 'Item Ledger Report of :' + '\n ( ' + sDate + ' to ' + eDate + ' )',
-                    title: 'CONTINENTAL AIR CONTROL (PVT) LTD.\n ' + 'Item Ledger Report of: ' + code + ' ' + product  + '( From: ' + sDate + ' To: ' + eDate + ' )',
+                    title: 'CONTINENTAL AIR CONTROL (PVT) LTD.\n ' + 'Item Ledger Report of: ' + code + ' ' + product + '( From: ' + sDate + ' To: ' + eDate + ' )',
                     orientation: 'landscape',
-                    filename: 'Item Ledger Report of: ' + code + ' ' + product  + '( From: ' + sDate + ' To: ' + eDate + ' )',
+                    filename: 'Item Ledger Report of: ' + code + ' ' + product + '( From: ' + sDate + ' To: ' + eDate + ' )',
 
                     customize: function(doc) {
                         var colCount = new Array();
