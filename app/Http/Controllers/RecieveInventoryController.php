@@ -61,6 +61,8 @@ class RecieveInventoryController extends Controller
                     ->orWhere('remarks', 'like', '%' . $request->saerch_keyword . '%');
             })->leftJoin('icitem', 'icitem.code', '=', 'invrec.ic')
             ->leftJoin('supplierrec', 'supplierrec.code', '=', 'invrec.sc')
+            ->orderBy('gd') // Sort by GRN date
+            ->orderBy('gn') // Then sort by GRN number
             ->paginate(50);
         // $sum = [
         //     'rate' => $query->sum(DB::raw('rat * qty')),
@@ -321,9 +323,9 @@ class RecieveInventoryController extends Controller
                 })->leftJoin('icitem', 'icitem.code', '=', 'invrec.ic')
                 ->get();
 
-                if ($selectedSupplier && $selectedSupplier != 'All') {
-                    $selectedSupplierName = Vendor::where('code', $selectedSupplier)->value('name1');
-                }
+            if ($selectedSupplier && $selectedSupplier != 'All') {
+                $selectedSupplierName = Vendor::where('code', $selectedSupplier)->value('name1');
+            }
             $request->flash();
         }
         return view('pages.recieve-inventories.supplier-wise-report', compact('vendors', 'records', 'selectedSupplier', 'selectedSupplierName'));
@@ -533,7 +535,7 @@ class RecieveInventoryController extends Controller
         $this->validate($request, [
             'grn' => ['required', 'numeric'],
             'grn_date' => ['required', 'string'],
-            'voucher_no' => ['required', 'numeric'],
+            'voucher_no' => ['required', 'string'],
             'voucher_date' => ['required', 'string'],
             'vendor_code' => 'required|numeric',
             'vendor_inv' => 'required|string',
@@ -554,7 +556,7 @@ class RecieveInventoryController extends Controller
             $inventory->ic = $products['code'][$key];
             $inventory->qty = $products['qty'][$key];
             $inventory->rat = $products['l_rate'][$key];
-            $inventory->ved = $products['value_excle_tax'][$key];
+            // $inventory->ved = $products['value_excle_tax'][$key];
             $inventory->st = $products['sale_tax'][$key];
             $inventory->sed = $products['sed'][$key];
             $inventory->fed = $products['fed'][$key];
@@ -610,7 +612,7 @@ class RecieveInventoryController extends Controller
         $this->validate($request, [
             'grn' => ['required', 'numeric'],
             'grn_date' => ['required', 'string'],
-            'voucher_no' => ['required', 'numeric'],
+            'voucher_no' => ['required', 'string'],
             'voucher_date' => ['required', 'string'],
             'vendor_code' => 'required|numeric',
             'vendor_inv' => 'required|string',

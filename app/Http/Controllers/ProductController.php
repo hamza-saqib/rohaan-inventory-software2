@@ -68,6 +68,7 @@ class ProductController extends Controller
 
             $recordsIn = RecieveInventory::select(
                 'invrec.vn',
+                'invrec.sc',
                 'invrec.gn as grn',
                 'invrec.qty as qtyIn',
                 'invrec.vd as date',

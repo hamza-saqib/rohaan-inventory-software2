@@ -168,11 +168,11 @@
                                 <div class="col-sm-2">
                                     <input id="sale_tax" class="form-control" type="text" name="sale_tax" value="0">
                                 </div>
-                                <label class="col-sm-1 control-label">Excl. Stax</label>
+                                <!-- <label class="col-sm-1 control-label">Excl. Stax</label>
 
                                 <div class="col-sm-2">
                                     <input id="value_excle_tax" class="form-control" type="text" name="value_excle_tax" value="0">
-                                </div>
+                                </div> -->
                                 <label class="col-sm-1 control-label">SED</label>
 
                                 <div class="col-sm-2">
@@ -183,14 +183,15 @@
                                     <div class="col-sm-2">
                                         <input id="fed" class="form-control" type="text" name="fed" value="0">
                                     </div> -->
-                            </div>
-
-                            <div class="form-group">
-                                <label class="col-sm-1 control-label">FED</label>
+                                    <label class="col-sm-1 control-label">FED</label>
 
                                 <div class="col-sm-2">
                                     <input id="fed" class="form-control" type="text" name="fed" value="0">
                                 </div>
+                            </div>
+
+                            <div class="form-group">
+                                
                                 <label class="col-sm-1 control-label">Other Deduction</label>
                                 <div class="col-sm-2">
                                     <input id="other_deduction" class="form-control" type="text" name="other_deduction" value="0">
@@ -203,14 +204,15 @@
                                 <div class="col-sm-2">
                                     <input id="remarks" class="form-control" type="text" name="remarks">
                                 </div>
-                            </div>
-
-                            <div class="form-group">
                                 <label class="col-sm-1 control-label">Type</label>
                                 <div class="col-sm-1">
                                     <input id="ttype" class="form-control" type="text" placeholder="E/S" name="ttype">
                                 </div>
-                                <div class="col-sm-9"></div>
+                            </div>
+
+                            <div class="form-group">
+                                
+                                <div class="col-sm-11"></div>
 
                                 <div class="col-sm-1 " style="text-align: right">
                                     <button onclick="addProduct()" class="btn btn-primary" type="button">Add</button>
@@ -244,7 +246,7 @@
                             {{-- </div> --}}
 
                             <div class="ibox-content">
-                                <h3>Purchase value: <strong id="gPurchaseValue">0</strong></h3>
+                                <h3>Purchase value: <strong id="gValue">0</strong></h3>
                                 <h3><strong>Deductions:</strong></h3>
                                 <h3>Sales Tax: <strong id="gSaleTax">0</strong> </h3>
                                 <h3>SED: <strong id="gSED">0</strong> </h3>
@@ -286,7 +288,7 @@
             var qty = $('#qty').val();
             var l_rate = $('#l_rate').val();
             var sale_tax = $('#sale_tax').val();
-            var value_excle_tax = $('#value_excle_tax').val();
+            // var value_excle_tax = $('#value_excle_tax').val();
             var sed = $('#sed').val();
             var fed = $('#fed').val();
             var other_deduction = $('#other_deduction').val();
@@ -295,7 +297,8 @@
 
             $('#value').val(parseFloat(l_rate * qty));
             // Set value to another input field
-            $('#net_value').val((qty * l_rate) + parseFloat(sale_tax) + parseFloat(value_excle_tax) + parseFloat(sed) + parseFloat(fed) + parseFloat(other_deduction));
+            // $('#net_value').val((qty * l_rate) + parseFloat(sale_tax) + parseFloat(value_excle_tax) + parseFloat(sed) + parseFloat(fed) + parseFloat(other_deduction));
+            $('#net_value').val((qty * l_rate) + parseFloat(sale_tax) + parseFloat(sed) + parseFloat(fed) + parseFloat(other_deduction));
         }
 
         function calculateRate() {
@@ -310,7 +313,7 @@
         $('#qty').on('input', calculateValue);
         $('#l_rate').on('input', calculateValue);
         $('#sale_tax').on('input', calculateValue);
-        $('#value_excle_tax').on('input', calculateValue);
+        // $('#value_excle_tax').on('input', calculateValue);
         $('#sed').on('input', calculateValue);
         $('#fed').on('input', calculateValue);
         $('#other_deduction').on('input', calculateValue);
@@ -322,7 +325,7 @@
     var vendors = @json($vendors);
     //console.log(products);
     var counter = 1;
-    var gPurchaseValue = 0;
+    var gValue = 0;
     var gSaleTax = 0;
     var gSED = 0;
     var gFED = 0;
@@ -341,7 +344,7 @@
             var name = $('#productSelect').find(":selected").text();
             var code = $('#productSelect').find(":selected").val();
             var sale_tax = $('#sale_tax').val();
-            var value_excle_tax = $('#value_excle_tax').val();
+            var value = $('#value').val();
             var sed = $('#sed').val();
             var fed = $('#fed').val();
             var net_value = $('#net_value').val();
@@ -355,7 +358,7 @@
                 <td>${qty}</td>
                 <td>${l_rate}</td>
                 <td>${sale_tax}</td>
-                <td>${value_excle_tax}</td>
+                <td>${value}</td>
                 <td>${sed}</td>
                 <td>${fed}</td>
                 <td>${other_deduction}</td>
@@ -373,7 +376,7 @@
                 <input type="hidden" name="products[qty][]" value="${qty}">
                 <input type="hidden" name="products[l_rate][]" value="${l_rate}">
                 <input type="hidden" name="products[sale_tax][]" value="${sale_tax}">
-                <input type="hidden" name="products[value_excle_tax][]" value="${value_excle_tax}">
+                <input type="hidden" name="products[value][]" value="${value}">
                 <input type="hidden" name="products[sed][]" value="${sed}">
                 <input type="hidden" name="products[fed][]" value="${fed}">
                 <input type="hidden" name="products[other_deduction][]" value="${other_deduction}">
@@ -398,7 +401,7 @@
     }
 
     function calculateTotalAmmount() {
-        gPurchaseValue = 0;
+        gValue = 0;
         gSaleTax = 0;
         gSED = 0;
         gFED = 0;
@@ -418,7 +421,7 @@
             .map(function() {
                 return $(this).val();
             }).get();
-        var products_value_excle_tax = $("input[name='products[value_excle_tax][]']")
+        var products_value = $("input[name='products[value][]']")
             .map(function() {
                 return $(this).val();
             }).get();
@@ -440,8 +443,8 @@
         products_fed.forEach(function myFunction(value, index, arr) {
             gFED = gFED + parseFloat(value);
         })
-        products_value_excle_tax.forEach(function myFunction(value, index, arr) {
-            gPurchaseValue = gPurchaseValue + parseFloat(value);
+        products_value.forEach(function myFunction(value, index, arr) {
+            gValue = gValue + parseFloat(value);
         })
         products_other_deduction.forEach(function myFunction(value, index, arr) {
             gOther = gOther + parseFloat(value);
@@ -450,13 +453,13 @@
             gNetPurchaseValue += parseFloat(value);
         });
 
-
-        $('#gPurchaseValue').html(gPurchaseValue);
+        gTotalDeduction = gSaleTax + gSED + gFED + gOther;
+        $('#gValue').html(gValue);
         $('#gSaleTax').html(gSaleTax);
         $('#gSED').html(gSED);
         $('#gFED').html(gFED);
         $('#gOther').html(gOther);
-        $('#gTotalDeduction').html(gOther);
+        $('#gTotalDeduction').html(gTotalDeduction);
         $('#gNetPurchaseValue').html(gNetPurchaseValue);
     }
 

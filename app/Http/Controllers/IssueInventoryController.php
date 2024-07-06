@@ -31,37 +31,74 @@ class IssueInventoryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
-    {
-        // return $request->all();
-        if ($request->filled('button') && ($request->input('button') == 'export')) {
-            set_time_limit(3000); //3000 seconds = 50 minutes
-            ini_set('memory_limit', -1);
-            return Excel::download(new IssueInventoryExport([
-                'startDate' => $request->start_date, 'endDate' => $request->end_date, 'code' => $request->product_code,
-                'saerch_keyword' => $request->saerch_keyword
-            ]), 'issue inventory data.xls', \Maatwebsite\Excel\Excel::XLS);
-        }
-        $products = Product::all();
-        $inventories = IssueInventory::select('oldissue.*', 'icitem.name1 as product')
-            ->when($request->filled('start_date'), function ($query) use ($request) {
-                return $query->where('isdt', '>=', $request->start_date);
-            })
-            ->when($request->filled('end_date'), function ($query) use ($request) {
-                return $query->where('isdt', '<=', $request->end_date);
-            })->when($request->filled('start_date'), function ($query) use ($request) {
-                return $query->where('isdt', '>=', $request->start_date);
-            })->when($request->filled('product_code') && ($request->product_code != 'All'), function ($query) use ($request) {
-                return $query->where('ic', '=', $request->product_code);
-            })->when($request->filled('saerch_keyword'), function ($query) use ($request) {
-                return $query->where('icitem.name1', 'like', '%' . $request->saerch_keyword . '%');
-            })->leftJoin('icitem', 'icitem.code', '=', 'oldissue.ic')
-            // ->leftJoin('supplierrec', 'supplierrec.code', '=', 'oldissue.sc')
-            ->paginate(50);
+    // public function index(Request $request)
+    // {
+    //     // return $request->all();
+    //     if ($request->filled('button') && ($request->input('button') == 'export')) {
+    //         set_time_limit(3000); //3000 seconds = 50 minutes
+    //         ini_set('memory_limit', -1);
+    //         return Excel::download(new IssueInventoryExport([
+    //             'startDate' => $request->start_date, 'endDate' => $request->end_date, 'code' => $request->product_code,
+    //             'saerch_keyword' => $request->saerch_keyword
+    //         ]), 'issue inventory data.xls', \Maatwebsite\Excel\Excel::XLS);
+    //     }
+    //     $products = Product::all();
 
-        $request->flash();
-        return view('pages.issue-inventories.index', compact('inventories', 'products'));
+    //     $inventories = IssueInventory::select('oldissue.*', 'icitem.name1 as product')
+    //         ->when($request->filled('start_date'), function ($query) use ($request) {
+    //             return $query->where('isdt', '>=', $request->start_date);
+    //         })
+    //         ->when($request->filled('end_date'), function ($query) use ($request) {
+    //             return $query->where('isdt', '<=', $request->end_date);
+    //         })->when($request->filled('start_date'), function ($query) use ($request) {
+    //             return $query->where('isdt', '>=', $request->start_date);
+    //         })->when($request->filled('product_code') && ($request->product_code != 'All'), function ($query) use ($request) {
+    //             return $query->where('ic', '=', $request->product_code);
+    //         })->when($request->filled('saerch_keyword'), function ($query) use ($request) {
+    //             return $query->where('icitem.name1', 'like', '%' . $request->saerch_keyword . '%');
+    //         })->leftJoin('icitem', 'icitem.code', '=', 'oldissue.ic')
+    //         ->orderBy('isdt', 'asc')
+    //         ->orderByRaw('CAST(isno AS BIGINT) ASC')
+    //         ->paginate(50);
+
+
+    //     $request->flash();
+    //     return view('pages.issue-inventories.index', compact('inventories', 'products'));
+    // }
+
+    public function index(Request $request)
+{
+    // return $request->all();
+    if ($request->filled('button') && ($request->input('button') == 'export')) {
+        set_time_limit(3000); //3000 seconds = 50 minutes
+        ini_set('memory_limit', -1);
+        return Excel::download(new IssueInventoryExport([
+            'startDate' => $request->start_date, 'endDate' => $request->end_date, 'code' => $request->product_code,
+            'saerch_keyword' => $request->saerch_keyword
+        ]), 'issue inventory data.xls', \Maatwebsite\Excel\Excel::XLS);
     }
+    $products = Product::all();
+
+    $inventories = IssueInventory::select('oldissue.*', 'icitem.name1 as product')
+        ->when($request->filled('start_date'), function ($query) use ($request) {
+            return $query->where('isdt', '>=', $request->start_date);
+        })
+        ->when($request->filled('end_date'), function ($query) use ($request) {
+            return $query->where('isdt', '<=', $request->end_date);
+        })->when($request->filled('start_date'), function ($query) use ($request) {
+            return $query->where('isdt', '>=', $request->start_date);
+        })->when($request->filled('product_code') && ($request->product_code != 'All'), function ($query) use ($request) {
+            return $query->where('ic', '=', $request->product_code);
+        })->when($request->filled('saerch_keyword'), function ($query) use ($request) {
+            return $query->where('icitem.name1', 'like', '%' . $request->saerch_keyword . '%');
+        })->leftJoin('icitem', 'icitem.code', '=', 'oldissue.ic')
+        ->orderBy('isdt', 'asc') // Order by isdt in ascending order
+        ->orderByRaw('CAST(isno AS BIGINT) ASC') // Then order by isno in ascending order
+        ->paginate(50);
+
+    $request->flash();
+    return view('pages.issue-inventories.index', compact('inventories', 'products'));
+}
 
     // public function monthlyReportProduct(Request $request)
     // {

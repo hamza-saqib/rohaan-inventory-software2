@@ -118,9 +118,10 @@
                             <table class="table table-striped table-bordered table-hover dataTables-example">
                                 <thead>
                                     <tr>
+                                        <th colspan="2" style="text-align: center"></th>
                                         <!-- <th></th> -->
                                         <!-- <th></th> -->
-                                        <th colspan="5" style="text-align: center">Recieved</th>
+                                        <th colspan="4" style="text-align: center">Recieved</th>
                                         <th colspan="3" style="text-align: center">Issued</th>
                                         <th colspan="2" style="text-align: center">Balance</th>
                                         <!-- <th></th> -->
@@ -128,6 +129,7 @@
                                     </tr>
                                     <tr>
                                         <th>Date</th>
+                                        <th>Particulars</th>
                                         <th>GRN</th>
                                         <th>Qty In</th>
                                         <th>Rate</th>
@@ -151,6 +153,15 @@
                                     @foreach ($records as $record)
                                     <tr class="gradeX" id="row-{{ $record['code'] }}">
                                         <td>{{ date('m/d/Y', strtotime($record['date'])) }}</td>
+                                        <td>
+                                            @if (isset($record['sc'])) <!-- Checking if 'sc' exists in the record -->
+                                                {{ $record['sc'] }} <!-- Displaying supplier name -->
+                                            @elseif (isset($record['dpt'])) <!-- Checking if 'dpt' exists in the record -->
+                                                {{ $record['dpt'] }} <!-- Displaying department name -->
+                                            @else
+                                                Unknown <!-- If neither 'sc' nor 'dpt' exists -->
+                                            @endif
+                                        </td>
                                         <td>{{ isset($record['grn']) ? number_format($record['grn'], 2) : '' }}</td>
                                         <td>{{ isset($record['qtyIn']) ? number_format($record['qtyIn'], 2) : '' }}</td>
                                         <td>{{ isset($record['rateIn']) ? number_format($record['rateIn'], 2) : '' }}</td>
@@ -191,19 +202,18 @@
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <th colspan="2">Total:</th>
-                                        <!-- <th></th>
-                                        <th></th> -->
-                                        <!-- <th></th> -->
+                                        <th>Total:</th>
+                                        <th></th>
+                                        <th></th>
                                         <th>{{ $sum['totalQtyIn'] ?? '' }}</th>
                                         <th></th>
                                         <th>{{ $sum['totalValueIn'] ?? '' }}</th>
                                         <th></th>
                                         <th>{{ $sum['totalQtyOut'] ?? '' }}</th>
-                                        <!-- <th></th> -->
                                         <th>{{ $sum['totalValueOut'] ?? '' }}</th>
                                         <th>{{ $balanceQty }}</th>
                                         <th>{{ $balanceAmount }}</th>
+                                        <th></th>
                                     </tr>
                                 </tfoot>
                             </table>
@@ -246,24 +256,25 @@
             dom: '<"html5buttons"B>lTfgitp',
             buttons: [{
                     extend: 'pdf',
-                    // title: 'CONTINENTAL AIR CONTROL (PVT) LTD.\n ' + 'Item Ledger Report of :' + '\n ( ' + sDate + ' to ' + eDate + ' )',
                     title: 'CONTINENTAL AIR CONTROL (PVT) LTD.\n ' + 'Item Ledger Report of: ' + code + ' ' + product + '( From: ' + sDate + ' To: ' + eDate + ' )',
                     orientation: 'landscape',
                     filename: 'Item Ledger Report of: ' + code + ' ' + product + '( From: ' + sDate + ' To: ' + eDate + ' )',
-
                     customize: function(doc) {
-                        var colCount = new Array();
-                        $('.dataTables-example').find('tbody tr:first-child td').each(
-                            function() {
-                                if ($(this).attr('colspan')) {
-                                    for (var i = 1; i <= $(this).attr('colspan'); $i++) {
-                                        colCount.push('*');
-                                    }
-                                } else {
-                                    colCount.push('*');
-                                }
+                        var colCount = $('.dataTables-example').find('tbody tr:first-child td').length;
+                        var colWidth = (100 / colCount).toFixed(2) + '%';
+                        var colWidths = new Array(colCount).fill(colWidth);
+                        doc.content[1].table.widths = colWidths;
+
+                        // Append the table footer (totals) to the PDF
+                        var footerRow = [];
+                        $('.dataTables-example tfoot th').each(function() {
+                            footerRow.push({
+                                text: $(this).text(),
+                                style: 'tableFooter'
                             });
-                        doc.content[1].table.widths = colCount;
+                        });
+
+                        doc.content[1].table.body.push(footerRow);
                     }
                 },
                 {
