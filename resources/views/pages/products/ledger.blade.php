@@ -145,21 +145,36 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td><strong>{{ $previousQty }}</strong></td>
+                                        <td><strong>{{ $previousAmount }}</strong></td>
+                                        <td></td>
+                                    </tr>
                                     @php
-                                    $balanceQty = 0;
-                                    $balanceAmount = 0;
-                                    $unitPrice = 0;
+                                    
+                                    $balanceQty = $previousQty;
+                                    $balanceAmount = $previousAmount;
+                                    $unitPrice = $balanceQty != 0 ? $balanceAmount / $balanceQty : 0;
                                     @endphp
                                     @foreach ($records as $record)
                                     <tr class="gradeX" id="row-{{ $record['code'] }}">
                                         <td>{{ date('m/d/Y', strtotime($record['date'])) }}</td>
                                         <td>
                                             @if (isset($record['sc'])) <!-- Checking if 'sc' exists in the record -->
-                                                {{ $record['sc'] }} <!-- Displaying supplier name -->
+                                            {{ $record['sc'] }} <!-- Displaying supplier name -->
                                             @elseif (isset($record['dpt'])) <!-- Checking if 'dpt' exists in the record -->
-                                                {{ $record['dpt'] }} <!-- Displaying department name -->
+                                            {{ $record['dpt'] }} <!-- Displaying department name -->
                                             @else
-                                                Unknown <!-- If neither 'sc' nor 'dpt' exists -->
+                                            Unknown <!-- If neither 'sc' nor 'dpt' exists -->
                                             @endif
                                         </td>
                                         <td>{{ isset($record['grn']) ? number_format($record['grn'], 2) : '' }}</td>
@@ -250,7 +265,6 @@
 
 
 
-
     $(document).ready(function() {
         $('.dataTables-example').DataTable({
             dom: '<"html5buttons"B>lTfgitp',
@@ -300,7 +314,6 @@
         });
 
     });
-
 
     function deleteRecord(id) {
         swal({

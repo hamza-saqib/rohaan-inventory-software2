@@ -40,13 +40,17 @@ class ProductController extends Controller
         return view('pages.products.negative-balance', compact('products'));
     }
 
+    
     public function ledger(Request $request)
     {
-        // return $request;
         $records = [];
         $sum = [];
+        $previousQty = 0;
+        $previousAmount = 0;
         $products = Product::select('code', 'name1')->get();
+        
         if ($request->filled('product_code')) {
+            // Retrieve records
             $records = IssueInventory::select(
                 'oldissue.ic',
                 'oldissue.Qty as qtyOut',
@@ -56,16 +60,16 @@ class ProductController extends Controller
                 'oldissue.Irate as rateOut',
                 'oldissue.dpt'
             )
-                ->where('ic', $request->product_code)
-                ->when($request->filled('start_date'), function ($query) use ($request) {
-                    return $query->where('isdt', '>=', $request->start_date);
-                })
-                ->when($request->filled('end_date'), function ($query) use ($request) {
-                    return $query->where('isdt', '<=', $request->end_date);
-                })
-                ->leftJoin('icitem', 'icitem.code', '=', 'oldissue.ic')
-                ->get()->toArray();
-
+            ->where('ic', $request->product_code)
+            ->when($request->filled('start_date'), function ($query) use ($request) {
+                return $query->where('isdt', '>=', $request->start_date);
+            })
+            ->when($request->filled('end_date'), function ($query) use ($request) {
+                return $query->where('isdt', '<=', $request->end_date);
+            })
+            ->leftJoin('icitem', 'icitem.code', '=', 'oldissue.ic')
+            ->get()->toArray();
+    
             $recordsIn = RecieveInventory::select(
                 'invrec.vn',
                 'invrec.sc',
@@ -76,48 +80,101 @@ class ProductController extends Controller
                 'icitem.code as code',
                 'invrec.rat as rateIn'
             )
-                ->where('ic', $request->product_code)
-                ->when($request->filled('start_date'), function ($query) use ($request) {
-                    return $query->where('vd', '>=', $request->start_date);
-                })
-                ->when($request->filled('end_date'), function ($query) use ($request) {
-                    return $query->where('vd', '<=', $request->end_date);
-                })
-                ->leftJoin('icitem', 'icitem.code', '=', 'invrec.ic')
-                ->get()->toArray();
-            // $records = $records->merge($recordsIn);
+            ->where('ic', $request->product_code)
+            ->when($request->filled('start_date'), function ($query) use ($request) {
+                return $query->where('vd', '>=', $request->start_date);
+            })
+            ->when($request->filled('end_date'), function ($query) use ($request) {
+                return $query->where('vd', '<=', $request->end_date);
+            })
+            ->leftJoin('icitem', 'icitem.code', '=', 'invrec.ic')
+            ->get()->toArray();
+    
+            // Calculate previousQty and previousAmount
+            $previousRecordsOut = IssueInventory::select(
+                'oldissue.Qty as qtyOut',
+                'oldissue.Irate as rateOut'
+            )
+            ->where('ic', $request->product_code)
+            ->when($request->filled('start_date'), function ($query) use ($request) {
+                return $query->where('isdt', '<', $request->start_date);
+            })
+            ->leftJoin('icitem', 'icitem.code', '=', 'oldissue.ic')
+            ->get();
+    
+            $previousRecordsIn = RecieveInventory::select(
+                'invrec.qty as qtyIn',
+                'invrec.rat as rateIn'
+            )
+            ->where('ic', $request->product_code)
+            ->when($request->filled('start_date'), function ($query) use ($request) {
+                return $query->where('vd', '<', $request->start_date);
+            })
+            ->leftJoin('icitem', 'icitem.code', '=', 'invrec.ic')
+            ->get();
+    
+            foreach ($previousRecordsOut as $record) {
+                $previousQty -= $record->qtyOut;
+                $previousAmount -= $record->qtyOut * $record->rateOut;
+            }
+    
+            foreach ($previousRecordsIn as $record) {
+                $previousQty += $record->qtyIn;
+                $previousAmount += $record->qtyIn * $record->rateIn;
+            }
+    
+            // Merge and sort records
             $records = array_merge($records, $recordsIn);
             usort($records, function ($a, $b) {
                 return strtotime($a['date']) - strtotime($b['date']);
             });
-            $balance = 0;
-            $sum = [];
-            $sum['totalQtyIn'] = 0;
-            $sum['totalQtyOut'] = 0;
-            $sum['totalValueIn'] = 0;
-            $sum['totalValueOut'] = 0;
+    
+            // Calculate balance
+            $balanceQty = $previousQty;
+            $balanceAmount = $previousAmount;
+            $sum = [
+                'totalQtyIn' => 0,
+                'totalQtyOut' => 0,
+                'totalValueIn' => 0,
+                'totalValueOut' => 0
+            ];
+    
             foreach ($records as &$value) {
                 if (isset($value['qtyIn'])) {
                     $value['qtyIn'] = intval($value['qtyIn']);
                     $value['rateIn'] = floatval($value['rateIn']);
-                    $balance += $value['qtyIn'];
+                    $balanceQty += $value['qtyIn'];
+                    $balanceAmount += $value['qtyIn'] * $value['rateIn'];
                     $value['valueIn'] = $value['qtyIn'] * $value['rateIn'];
                     $sum['totalQtyIn'] += $value['qtyIn'];
                     $sum['totalValueIn'] += $value['valueIn'];
                 } else {
                     $value['qtyOut'] = intval($value['qtyOut']);
                     $value['rateOut'] = floatval($value['rateOut']);
-                    $balance -= $value['qtyOut'];
+                    $balanceQty -= $value['qtyOut'];
+                    $balanceAmount -= $value['qtyOut'] * $value['rateOut'];
                     $value['valueOut'] = $value['qtyOut'] * $value['rateOut'];
-                    $sum['totalQtyOut'] -= $value['qtyOut'];
-                    $sum['totalValueOut'] -= $value['valueOut'];
+                    $sum['totalQtyOut'] += $value['qtyOut'];
+                    $sum['totalValueOut'] += $value['valueOut'];
                 }
-                $value['balance'] = $balance;
+    
+                if ($balanceQty != 0) {
+                    $value['unitPrice'] = $balanceAmount / $balanceQty;
+                } else {
+                    $value['unitPrice'] = 0;
+                }
+    
+                $value['balanceQty'] = $balanceQty;
+                $value['balanceAmount'] = $balanceAmount;
             }
         }
+    
         $request->flash();
-        return view('pages.products.ledger', compact('products', 'records', 'sum'));
+        return view('pages.products.ledger', compact('products', 'records', 'sum', 'previousQty', 'previousAmount'));
     }
+    
+
+
 
     /**
      * Show the form for creating a new resource.
