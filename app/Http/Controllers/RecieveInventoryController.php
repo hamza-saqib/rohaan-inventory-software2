@@ -82,41 +82,8 @@ class RecieveInventoryController extends Controller
 
 
     public function index(Request $request)
-    {
-        if ($request->filled('button') && $request->input('button') == 'export') {
-            $inventories = RecieveInventory::select('invrec.*', 'icitem.name1 as product', 'supplierrec.name1 as supplier')
-                ->when($request->filled('start_date'), function ($query) use ($request) {
-                    return $query->where('vd', '>=', $request->start_date);
-                })
-                ->when($request->filled('end_date'), function ($query) use ($request) {
-                    return $query->where('vd', '<=', $request->end_date);
-                })
-                ->when($request->filled('product_code') && $request->product_code != 'All', function ($query) use ($request) {
-                    return $query->where('ic', '=', $request->product_code);
-                })
-                ->when($request->filled('vendor_code') && $request->vendor_code != 'All', function ($query) use ($request) {
-                    return $query->where('sc', '=', $request->vendor_code);
-                })
-                ->when($request->filled('saerch_keyword'), function ($query) use ($request) {
-                    return $query->where('supplierrec.name1', 'like', '%' . $request->saerch_keyword . '%')
-                        ->orWhere('icitem.name1', 'like', '%' . $request->saerch_keyword . '%')
-                        ->orWhere('remarks', 'like', '%' . $request->saerch_keyword . '%');
-                })
-                ->leftJoin('icitem', 'icitem.code', '=', 'invrec.ic')
-                ->leftJoin('supplierrec', 'supplierrec.code', '=', 'invrec.sc')
-                ->orderBy('gd')
-                ->orderBy('gn')
-                ->get();
-
-            // Convert collection to array
-            $dataArray = $inventories->toArray();
-
-            return Excel::download(new RecieveInventoryExport($dataArray), 'reciept_inventory_data.xls', \Maatwebsite\Excel\Excel::XLS);
-        }
-
-        $products = Product::all();
-        $vendors = Vendor::all();
-
+{
+    if ($request->filled('button') && $request->input('button') == 'export') {
         $inventories = RecieveInventory::select('invrec.*', 'icitem.name1 as product', 'supplierrec.name1 as supplier')
             ->when($request->filled('start_date'), function ($query) use ($request) {
                 return $query->where('vd', '>=', $request->start_date);
@@ -139,12 +106,47 @@ class RecieveInventoryController extends Controller
             ->leftJoin('supplierrec', 'supplierrec.code', '=', 'invrec.sc')
             ->orderBy('gd')
             ->orderBy('gn')
-            ->paginate(50);
+            ->get(); // Fetch all records without pagination
 
-        $request->flash();
+        // Convert collection to array
+        $dataArray = $inventories->toArray();
 
-        return view('pages.recieve-inventories.index', compact('inventories', 'products', 'vendors'));
+        return Excel::download(new RecieveInventoryExport($dataArray), 'reciept_inventory_data.xls', \Maatwebsite\Excel\Excel::XLS);
     }
+
+    // For displaying paginated results
+    $products = Product::all();
+    $vendors = Vendor::all();
+
+    $inventories = RecieveInventory::select('invrec.*', 'icitem.name1 as product', 'supplierrec.name1 as supplier')
+        ->when($request->filled('start_date'), function ($query) use ($request) {
+            return $query->where('vd', '>=', $request->start_date);
+        })
+        ->when($request->filled('end_date'), function ($query) use ($request) {
+            return $query->where('vd', '<=', $request->end_date);
+        })
+        ->when($request->filled('product_code') && $request->product_code != 'All', function ($query) use ($request) {
+            return $query->where('ic', '=', $request->product_code);
+        })
+        ->when($request->filled('vendor_code') && $request->vendor_code != 'All', function ($query) use ($request) {
+            return $query->where('sc', '=', $request->vendor_code);
+        })
+        ->when($request->filled('saerch_keyword'), function ($query) use ($request) {
+            return $query->where('supplierrec.name1', 'like', '%' . $request->saerch_keyword . '%')
+                ->orWhere('icitem.name1', 'like', '%' . $request->saerch_keyword . '%')
+                ->orWhere('remarks', 'like', '%' . $request->saerch_keyword . '%');
+        })
+        ->leftJoin('icitem', 'icitem.code', '=', 'invrec.ic')
+        ->leftJoin('supplierrec', 'supplierrec.code', '=', 'invrec.sc')
+        ->orderBy('gd')
+        ->orderBy('gn')
+        ->paginate(50); // Paginate for displaying in the view
+
+    $request->flash();
+
+    return view('pages.recieve-inventories.index', compact('inventories', 'products', 'vendors'));
+}
+
 
     public function monthlyReportProduct(Request $request)
     {
