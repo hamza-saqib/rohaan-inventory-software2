@@ -21,18 +21,23 @@ class IssueInventoryExport implements FromCollection, WithHeadings
     public function collection()
     {
         $data = $this->data;
-        return IssueInventory::select('oldissue.isno', 'oldissue.isdt', 'oldissue.dpt',
-        'icitem.name1', 'oldissue.Qty', 'oldissue.Irate', 'oldissue.Iamt', 'oldissue.remarks')
-        ->when(isset($data['startDate']), function ($query) use ($data) {
-            return $query->where('isdt', '>=', $data['startDate']);
-        })->when(isset($data['endDate']), function ($query) use ($data) {
-            return $query->where('isdt', '<=', $data['endDate']);
-        })->when(isset($data['code']) && ($data['code'] != 'All'), function ($query) use ($data) {
-            return $query->where('ic', '=', $data['code']);
-        })->when(isset($data['saerch_keyword']), function ($query) use ($data) {
-            return $query->where('icitem.name1', 'like', '%' . $data['saerch_keyword'] . '%');
-        })->leftJoin('icitem', 'icitem.code', '=', 'oldissue.ic')
-        ->get();
+        return IssueInventory::select('oldissue.isno', 'oldissue.isdt', 'oldissue.dpt', 'icitem.name1', 'oldissue.Qty', 'oldissue.Irate', 'oldissue.Iamt', 'oldissue.remarks')
+            ->when(isset($data['startDate']), function ($query) use ($data) {
+                return $query->where('isdt', '>=', $data['startDate']);
+            })
+            ->when(isset($data['endDate']), function ($query) use ($data) {
+                return $query->where('isdt', '<=', $data['endDate']);
+            })
+            ->when(isset($data['code']) && ($data['code'] != 'All'), function ($query) use ($data) {
+                return $query->where('ic', '=', $data['code']);
+            })
+            ->when(isset($data['saerch_keyword']), function ($query) use ($data) {
+                return $query->where('icitem.name1', 'like', '%' . $data['saerch_keyword'] . '%');
+            })
+            ->leftJoin('icitem', 'icitem.code', '=', 'oldissue.ic')
+            ->orderBy('isdt', 'asc') // Order by isdt in ascending order
+            ->orderByRaw('CAST(isno AS BIGINT) ASC') // Then order by isno in ascending order
+            ->get();
     }
 
     public function headings(): array
