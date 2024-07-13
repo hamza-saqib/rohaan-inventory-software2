@@ -244,7 +244,7 @@
                                         </tr> --}}
                                     </tfoot>
                                 </table>
-                                {{ $inventories->links('vendor.pagination.bootstrap-5') }}
+                                {{ $inventories->appends(request()->query())->links('vendor.pagination.bootstrap-5') }}
                             </div>
 
                         </div>
